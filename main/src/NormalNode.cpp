@@ -1,52 +1,46 @@
 //NormalNode.cpp
-#include "NormalNode.h"
+#include "../header/NormalNode.h"
 
 /******************************************************************************
-//  FUNCTION: Overloaded RootNode constructor 
+//  FUNCTION: Overloaded RootNode constructor
 //  PURPOSE	: Creates and intializes a root node for a BStarTree.
 //
 //  CALL EXAMPLE: Node* ptrNode = new NormalNode(false);
-//                                                         
-//  PRE CONDITIONS:  Enough memory has to exist to create a NormalNode Object			
+//
+//  PRE CONDITIONS:  Enough memory has to exist to create a NormalNode Object
 //  POST CONDITIONS: Memory for a NormalNode object has been allocated and members intialized.
 //******************************************************************************/
+NormalNode::NormalNode(int order, bool rootflag, Node* ancestor): Node(order, rootflag, ancestor)
+{
+    const unsigned normalNodeOrder = ceil( (2*order-1) / 3 );
 
-NormalNode::NormalNode(bool isRoot):Node(NODE_ORDER, isRoot, 0)
-{          
-	// Allocate memory for storage
-	piStore = new int[NODE_ORDER -1];          // Data items are 1 less than the Specific Nodes order
+    keysList = std::list<double>(); //creates an empty list
+    childList = std::list<Node*>(normalNodeOrder); //creates a list of keys with the minimum number of keys
+}
 
-	//Set all stores to 0
-	for(int x =0; x < (NODE_ORDER - 1); x++)
-	{
-		piStore[x] = 0;
-	}
+bool NormalNode::addItem(double elem)
+{
+    return true;
+}
 
-	//Set pointers to null
-	for(x = 0; x < NODE_ORDER; x++)
-	{
-		pNodeArray[x] = NULL;
-	}
+Node* NormalNode::getNode(int iPos)
+{
+    auto it = childList.begin();
+    std::advance(it, iPos);
 
-	
-}  
+    return *it;
+}
 
 //******************************************************************************
-//  FUNCTION: Print 
+//  FUNCTION: Print
 //  PURPOSE	: Prints all the data values except those of the Node*
 //
 //  CALL EXAMPLE: Node* ptrNode->Print()
-//                                                         
-//  PRE CONDITIONS:  NormalNode has to exist	
+//
+//  PRE CONDITIONS:  NormalNode has to exist
 //  POST CONDITIONS: Menber data printed to monitor
 //******************************************************************************
-void NormalNode::Print()
+void NormalNode::print()
 {
-	cout << "iNumInNode is: " <<iNumInNode <<endl; 
-	cout << "bIsRoot is: " << bIsRoot <<endl;
-	for(int x = 0; x < NODE_ORDER - 1; x++)
-	{
-		cout << "X is: " << piStore[x] << endl;
-	}
-	cout << "iOrder is: " << iOrder << endl << endl;
+
 }
