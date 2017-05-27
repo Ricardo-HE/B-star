@@ -31,7 +31,7 @@ class Node
 {
 public:
 	Node(){};
-	Node(int order, bool rootflag, int howMany =0):iOrder(order), bIsRoot(rootflag),iNumInNode(0){}
+	Node(int order, bool rootflag, int howMany =0):iOrder(order), bIsRoot(rootflag),iNumInNode(howMany){}
 
 	//Pure virtual function
 	virtual void Print() = 0;
@@ -50,7 +50,7 @@ public:
 
 
 protected:
-	int	  iOrder;             // Order of this node
+	int   iOrder;             // Order of this node
 	int   iNumInNode;		  // Number of data in this node
 	int*  piStore;			  // Pointer for allocating dynamic memory store
 	bool  bIsRoot;			  // Tracks if root or not.
