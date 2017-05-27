@@ -21,39 +21,35 @@
 #ifndef NODE_H
 #define NODE_H
 
-//#include "fstream.h"
-#include <cstdlib>
-#include <cmath>
 
-const int NODE_ORDER = 9;           // The order of a Node inheriting this class
+#define NORMAL_NODE_ORDER = 5;           // The order of a Node inheriting this class
+#define ROOT_NODE_ORDER = 5;           // The order of a Root Node inheriting this class
 
 class Node
 {
 public:
 	Node(){};
-	Node(int order, bool rootflag, int howMany =0):iOrder(order), bIsRoot(rootflag),iNumInNode(howMany){}
+	Node(int order, bool rootflag, ancestor = nullptr):order(order), isRoot(rootflag), ancestor(ancestor){}
+    virtual ~Node(){};
 
 	//Pure virtual function
-	virtual void Print() = 0;
-	virtual bool AddItem(int iItem) = 0;
-	virtual Node* GetNodePtrs(int iPos) = 0;
+	virtual void print() = 0;
+	virtual bool addItem(double item) = 0;
+	virtual Node getNode(int iPos) = 0;
 
 	//Access Functions
-
-	int GetOrder(){return iOrder;}
-	int GetNumInNode(){return iNumInNode;}
-	int* GetIntStore(){return piStore;}
-	bool IsRoot(){return bIsRoot;}
-
-
-	~Node(){};
-
+	int getOrder(){ return order; }
+	int getNumKeys(){ return listKeys.size(); }
+	std::list<double> getKeysList(){ return keysList; }
+	std::list<Node> getChildList(){ return childList; }
+	bool IsRoot(){ return isRoot; }
 
 protected:
-	int   iOrder;             // Order of this node
-	int   iNumInNode;		  // Number of data in this node
-	int*  piStore;			  // Pointer for allocating dynamic memory store
-	bool  bIsRoot;			  // Tracks if root or not.
+	int order;                      // Order of this node
+	std::list<double> keysList;     // Pointer for allocating dynamic memory store
+	std::list<Node> childList;
+	bool  isRoot;			        // Tracks if root or not.
+	Node* ancestor;
 
 };
 
