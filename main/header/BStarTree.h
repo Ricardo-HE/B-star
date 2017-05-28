@@ -22,8 +22,6 @@ public:
     bool rotateRight(Node* node);
 
     void splitNode(Node* node);
-    
-    void prueba();
 };
 
 #endif //BSTARTREE_H
