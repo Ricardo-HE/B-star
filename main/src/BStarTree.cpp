@@ -12,7 +12,7 @@ bool BStarTree::add(double val){
     return found;
 }
 
-bool BStarTree::find(double val){
+bool BStarTree::find(double val, Node* nodeAdd){
     bool found, keepSearching, goToRightMostChild;
     Node* currentNode;
 
@@ -23,6 +23,7 @@ bool BStarTree::find(double val){
         goToRightMostChild = true;
         for (std::size_t i = 0; i < currentNode.getNumKeys(); i++) {
             if (val < currentNode.getKey(i)) {     //Compare the value with ith key of the node.
+                nodeAdd = currentNode;
                 currentNode = getChildNode(i);      //If the value was lower than the ith key of the node
                                                     //the current node change to the left child of the
                                                     //ith key of the node.
@@ -33,13 +34,15 @@ bool BStarTree::find(double val){
                     found = true;
                     keepSearching = false;
                     goToRightMostChild = false;
+                    nodeAdd = nullptr;
                     break;
                 }
             }
         }
 
         if (goToRightMostChild) {       //If val was higher than all the keys then we
-                                //change the current node to the rightmost child
+                                        //change the current node to the rightmost child
+            nodeAdd = currentNode;
             currentNode = getChildNode( currentNode.getNumKeys() );
         }
 
