@@ -31,17 +31,17 @@ public:
 	/**
 	* @brief Default constructor.
 	*/
-	Node(){};
+	Node(){}
 
 	/**
 	* @brief Constructor with parameters to initialize the variables from the class.
 	*/
-	Node(int order, bool rootflag, ancestor = nullptr):order(order), isRoot(rootflag), ancestor(ancestor){}
+	Node(int order, bool rootflag, Node* ancestor = nullptr):order(order), isRoot(rootflag), ancestor(ancestor){}
 
 	/**
 	*@brief Virtual destructor
 	*/
-    virtual ~Node(){};
+    virtual ~Node(){}
 
 
 	//******************Pure virtual function***********************************
@@ -59,7 +59,7 @@ public:
 	* @brief Given an index number return the Node child of the list of child nodes.
 	* @return The node child of the position given of the list of child.
 	*/
-	virtual Node getNode(int iPos) = 0;
+	virtual Node getChildNode(int iPos) = 0;
 
 	//************************Access Functions**********************************
 	/**
@@ -71,7 +71,7 @@ public:
 	*@brief Get the current size of the list of keys in the node.
 	*@ The current size of the list of keys in the node.
 	*/
-	int getNumKeys(){ return listKeys.size(); }
+	int getNumKeys(){ return keysList.size(); }
 	/**
 	*@brief Get the list of keys from the node.
 	*@return The list of keys from the node.
@@ -81,7 +81,7 @@ public:
 	*@brief Get the list of childs from the node.
 	*@return The list of keys from the node.
 	*/
-	std::list<Node> getChildList(){ return childList; }
+	std::list<Node*> getChildList(){ return childList; }
 	/**
 	*@brief Says if the node is root or not.
 	*@return True if the node is root, false if isn't.
@@ -91,7 +91,7 @@ public:
 protected:
 	int order;                      // Order of this node
 	std::list<double> keysList;     // Pointer for allocating dynamic memory store
-	std::list<Node> childList;
+	std::list<Node*> childList;
 	bool  isRoot;			        // Tracks if root or not.
 	Node* ancestor;
 

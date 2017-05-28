@@ -31,7 +31,7 @@
 #include "Node.h"
 #include "NormalNode.h"
 
-const int ROOT_ORDER = ((2 * ((2*(NODE_ORDER - 1))/3)) + 1);    // Order for a root node
+
 																// with an order of
 																// NODE_ORDER (defined in Node.h)
 
@@ -48,9 +48,7 @@ public:
 	~RootNode(){}				  // destructor for a RootNode
 	bool AddItem(int iItem);					  // Inserts an item to a root node
 
-	Node getNode(int iPos){return childList[iPos];}   // Returns the ptr using iPos as index
-
-private:
+	Node getChildNode(int iPos);   // Returns the ptr using iPos as index
 
 };
 

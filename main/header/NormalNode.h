@@ -39,10 +39,10 @@ public:												// by NormalNode
 	NormalNode(){}
 
 	NormalNode(bool notRoot);						// Overloaded constructor false = NormalNode
-	~NormalNode(){					                // destructor for a NormalNode
+	~NormalNode();					                // destructor for a NormalNode
 
 	//Definitions of Node class pure virtual functions
-	Node getNode(int iPos);	// Returns ptr using iPos as an index
+	Node getChildNode(int iPos);	// Returns ptr using iPos as an index
 	void print();											// Print for a NormalNode
 	bool addItem(int iItem);					// Inserts an item to a NormalNode
 
