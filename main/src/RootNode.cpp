@@ -25,12 +25,25 @@ bool RootNode::addItem(double elem)
     return true;
 }
 
-Node* RootNode::getNode(int iPos)
+Node* RootNode::getChildNode(int iPos)
 {
     auto it = childList.begin();
     std::advance(it, iPos);
 
     return *it;
+}
+
+double RootNode::getKey(int iPos)
+{
+    auto it = keysList.begin();
+    std::advance(it, iPos);
+
+    return *it;
+}
+
+bool RootNode::isOverloaded()
+{
+    return false;
 }
 //******************************************************************************
 //  FUNCTION: Print

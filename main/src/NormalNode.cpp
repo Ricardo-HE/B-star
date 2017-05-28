@@ -21,11 +21,11 @@ NormalNode::NormalNode(int order, bool rootflag, Node* ancestor): Node(order, ro
 bool NormalNode::addItem(double elem)
 {
     this->keysList.push_back(elem);
-    this->keyList.sort();
+    this->keysList.sort();
     return true;
 }
 
-Node* NormalNode::getNode(int iPos)
+Node* NormalNode::getChildNode(int iPos)
 {
     auto it = childList.begin();
     std::advance(it, iPos);
@@ -33,6 +33,18 @@ Node* NormalNode::getNode(int iPos)
     return *it;
 }
 
+double NormalNode::getKey(int iPos)
+{
+    auto it = keysList.begin();
+    std::advance(it, iPos);
+
+    return *it;
+}
+
+bool NormalNode::isOverloaded()
+{
+    return false;
+}
 //******************************************************************************
 //  FUNCTION: Print
 //  PURPOSE	: Prints all the data values except those of the Node*

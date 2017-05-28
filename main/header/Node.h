@@ -21,9 +21,7 @@
 #ifndef NODE_H
 #define NODE_H
 
-
-#define NORMAL_NODE_ORDER = 5;           // The order of a Node inheriting this class
-#define ROOT_NODE_ORDER = 5;           // The order of a Root Node inheriting this class
+#include <list>
 
 class Node
 {
@@ -59,19 +57,23 @@ public:
 	* @brief Given an index number return the Node child of the list of child nodes.
 	* @return The node child of the position given of the list of child.
 	*/
-	virtual Node getChildNode(int iPos) = 0;
+	virtual Node* getChildNode(int iPos) = 0;
+
+	virtual double getKey(int iPos) = 0;
+
+	virtual bool isOverloaded() = 0;
 
 	//************************Access Functions**********************************
 	/**
 	*@brief Get the order of the node.
 	*@return The order of the node.
 	*/
-	int getOrder(){ return order; }
+	unsigned getOrder(){ return order; }
 	/**
 	*@brief Get the current size of the list of keys in the node.
 	*@ The current size of the list of keys in the node.
 	*/
-	int getNumKeys(){ return keysList.size(); }
+	std::size_t getNumKeys(){ return keysList.size(); }
 	/**
 	*@brief Get the list of keys from the node.
 	*@return The list of keys from the node.

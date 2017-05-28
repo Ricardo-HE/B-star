@@ -38,13 +38,14 @@ public:												// by NormalNode
 
 	NormalNode(){}
 
-	NormalNode(bool notRoot);						// Overloaded constructor false = NormalNode
-	~NormalNode();					                // destructor for a NormalNode
+	NormalNode(int order, bool rootflag, Node* ancestor = nullptr);						// Overloaded constructor false = NormalNode
+	~NormalNode(){}					                // destructor for a NormalNode
 
 	//Definitions of Node class pure virtual functions
-	Node getChildNode(int iPos);	// Returns ptr using iPos as an index
+	Node* getChildNode(int iPos);	// Returns ptr using iPos as an index
+	double getKey(int iPos);
 	void print();											// Print for a NormalNode
-	bool addItem(int iItem);					// Inserts an item to a NormalNode
-
+	bool addItem(double iItem);					// Inserts an item to a NormalNode
+    bool isOverloaded();
 };
 #endif

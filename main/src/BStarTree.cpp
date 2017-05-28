@@ -1,4 +1,4 @@
-#include "../headers/BStarTree.h"
+#include "../header/BStarTree.h"
 
 bool BStarTree::add(double val){
     bool found;
@@ -8,13 +8,13 @@ bool BStarTree::add(double val){
     if (find(val, nodeAdd)) {
         found = true;
     }else{
-        nodeAdd->AddItem(val);  //overcharge AddItem to add to the keys list and
+        nodeAdd->addItem(val);  //overcharge AddItem to add to the keys list and
                                 //sort them
         if (nodeAdd->isOverloaded()) {  //make isOverloaded function
 
-            if (this->isLeftSiblingsFull(nodeAdd)) {    //Make isLeftSiblingsFull
+            if (this->isLeftSiblingFull(nodeAdd)) {    //Make isLeftSiblingsFull
 
-                if (this->isRightSiblingsFull(nodeAdd)) {   //Make isRightSiblingsFull
+                if (this->isRightSiblingFull(nodeAdd)) {   //Make isRightSiblingsFull
                     this->splitNode(nodeAdd);   //Make splitNode
 
 
@@ -39,16 +39,16 @@ bool BStarTree::find(double val, Node* nodeAdd){
 
     while (keepSearching) {
         goToRightMostChild = true;
-        for (std::size_t i = 0; i < currentNode.getNumKeys(); i++) {
-            if (val < currentNode.getKey(i)) {     //Compare the value with ith key of the node.
+        for (std::size_t i = 0; i < currentNode->getNumKeys(); i++) {
+            if (val < currentNode->getKey(i)) {     //Compare the value with ith key of the node.
                 nodeAdd = currentNode;
-                currentNode = getChildNode(i);      //If the value was lower than the ith key of the node
+                currentNode = currentNode->getChildNode(i);      //If the value was lower than the ith key of the node
                                                     //the current node change to the left child of the
                                                     //ith key of the node.
                 goToRightMostChild = false;
                 break;
             }else{
-                if (val == currentNode.getKey(i)) {
+                if (val == currentNode->getKey(i)) {
                     found = true;
                     keepSearching = false;
                     goToRightMostChild = false;
@@ -61,7 +61,7 @@ bool BStarTree::find(double val, Node* nodeAdd){
         if (goToRightMostChild) {       //If val was higher than all the keys then we
                                         //change the current node to the rightmost child
             nodeAdd = currentNode;
-            currentNode = getChildNode( currentNode.getNumKeys() );
+            currentNode = currentNode->getChildNode( currentNode->getNumKeys() );
         }
 
         if (currentNode == nullptr) {
@@ -71,4 +71,28 @@ bool BStarTree::find(double val, Node* nodeAdd){
 
     }
     return found;
+}
+
+bool BStarTree::isLeftSiblingFull(Node* node) const
+{
+    return false;
+}
+bool BStarTree::isRightSiblingFull(Node* node) const
+{
+    return false;
+}
+
+bool BStarTree::rotateLeft(Node* node)
+{
+    return false;
+}
+
+bool BStarTree::rotateRight(Node* node)
+{
+    return false;
+}
+
+void BStarTree::splitNode(Node* node)
+{
+
 }
