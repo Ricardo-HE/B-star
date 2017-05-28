@@ -20,6 +20,8 @@ NormalNode::NormalNode(int order, bool rootflag, Node* ancestor): Node(order, ro
 
 bool NormalNode::addItem(double elem)
 {
+    this->keysList.push_back(elem);
+    this->keyList.sort();
     return true;
 }
 

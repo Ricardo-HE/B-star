@@ -20,6 +20,8 @@ RootNode::RootNode(int order, bool rootflag, Node* ancestor): Node(order, rootfl
 
 bool RootNode::addItem(double elem)
 {
+    this->keysList.push_back(elem);
+    this->keysList.sort();
     return true;
 }
 
