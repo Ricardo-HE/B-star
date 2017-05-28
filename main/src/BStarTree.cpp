@@ -2,11 +2,29 @@
 
 bool BStarTree::add(double val){
     bool found;
+    Node* nodeAdd = nullptr;    //Node where it will add the number if the number
+                                //doesn't exist in the tree.
 
-    if (find(val)) {
+    if (find(val, nodeAdd)) {
         found = true;
     }else{
-        //finish later
+        nodeAdd->AddItem(val);  //overcharge AddItem to add to the keys list and
+                                //sort them
+        if (nodeAdd->isOverloaded()) {  //make isOverloaded function
+
+            if (this->isLeftSiblingsFull(nodeAdd)) {    //Make isLeftSiblingsFull
+
+                if (this->isRightSiblingsFull(nodeAdd)) {   //Make isRightSiblingsFull
+                    this->splitNode(nodeAdd);   //Make splitNode
+
+
+                }else{
+                    this->rotateRight(nodeAdd); //Make rotateRight;
+                }
+            }else{
+                this->rotateLeft(nodeAdd);  //make rotateLeft
+            }
+        }
     }
 
     return found;
