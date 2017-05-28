@@ -9,6 +9,8 @@ private:
 public:
     BStarTree (int order): mOrder(order < 3 ? 3 : order), root(new RootNode(mOrder, true)) {}
     ~BStarTree ();
+    bool add(double val);
+    bool search(double val);
 };
 
 #endif //BSTARTREE_H
