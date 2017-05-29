@@ -78,12 +78,23 @@ bool BStarTree::find(double val, Node* nodeAdd)
 bool BStarTree::isLeftSiblingFull(Node* node) const
 {
     Node* ancestorCopy;
+    int nodeNumberOfChild;
 
     ancestorCopy = node->getAncestor();
 
-    for (std::size_t i = 0; i < ancestorCopy->getNumKeys(); i++) {
-        /* code */
-    }
+    /*std::list<Node*>::iterator*/ auto it = ancestorCopy->getChildList().begin();
+    //std::advance(it, nodeCopy);
+
+    //for (; it != node; it++)
+
+    /*
+    for (std::size_t i = 0, nodeNumberOfChild = 0; i <= ancestorCopy->getNumKeys(); i++, nodeNumberOfChild++) {
+        if (ancestorCopy->getChildNode(i) == node) {
+            break;
+        }
+    }*/
+
+
     return false;
 }
 bool BStarTree::isRightSiblingFull(Node* node) const
