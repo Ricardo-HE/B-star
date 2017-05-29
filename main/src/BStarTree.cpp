@@ -79,13 +79,19 @@ bool BStarTree::isLeftSiblingFull(Node* node) const
 {
     Node* ancestorCopy;
     int nodeNumberOfChild;
+    bool isFull;
 
     ancestorCopy = node->getAncestor();
+    auto it = ancestorCopy->getChildList().begin();
+    nodeNumberOfChild = 0;
 
-    /*std::list<Node*>::iterator*/ auto it = ancestorCopy->getChildList().begin();
-    //std::advance(it, nodeCopy);
+    for (; *it != node; it++, nodeNumberOfChild++)
 
-    //for (; it != node; it++)
+    for (std::size_t i = nodeNumberOfChild -1 ; i <= 0; i--) {   //this iters from the
+                                                            //left brothers of the node
+                                                            //including the leftmost brother
+
+    }
 
     /*
     for (std::size_t i = 0, nodeNumberOfChild = 0; i <= ancestorCopy->getNumKeys(); i++, nodeNumberOfChild++) {
