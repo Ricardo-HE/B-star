@@ -84,28 +84,45 @@ bool BStarTree::isLeftSiblingFull(Node* node) const
     ancestorCopy = node->getAncestor();
     auto it = ancestorCopy->getChildList().begin();
     nodeNumberOfChild = 0;
+    isFull = true;
 
     for (; *it != node; it++, nodeNumberOfChild++)
 
     for (std::size_t i = nodeNumberOfChild -1 ; i <= 0; i--) {   //this iters from the
                                                             //left brothers of the node
                                                             //including the leftmost brother
-
-    }
-
-    /*
-    for (std::size_t i = 0, nodeNumberOfChild = 0; i <= ancestorCopy->getNumKeys(); i++, nodeNumberOfChild++) {
-        if (ancestorCopy->getChildNode(i) == node) {
+        if ( !(ancestorCopy->getChildNode(i))->isOverloaded() ) {
+            isFull = false;
             break;
         }
-    }*/
-
-
-    return false;
+    }
+    return isFull;
 }
 bool BStarTree::isRightSiblingFull(Node* node) const
 {
-    return false;
+    Node* ancestorCopy;
+    int nodeNumberOfChild;
+    bool isFull;
+
+    ancestorCopy = node->getAncestor();
+    auto it = ancestorCopy->getChildList().end();
+    nodeNumberOfChild = ancestorCopy->getChildList().size() - 1;    //-1 because we are
+                                                                    //our childList starts from 0
+    isFull = true;
+
+    for (; *it != node; it--, nodeNumberOfChild--)
+
+    for (std::size_t i = nodeNumberOfChild +1 ; i < ancestorCopy->getChildList().size(); i++) {
+                                                            //this iters from the
+                                                            //right brothers of the node
+                                                            //including the rightmost brother
+        if ( !(ancestorCopy->getChildNode(i))->isOverloaded() ) {   //If some node brother
+                                                                    //isn't full (Overloaded)
+            isFull = false;
+            break;
+        }
+    }
+    return isFull;
 }
 
 bool BStarTree::rotateLeft(Node* node)
