@@ -43,7 +43,14 @@ double NormalNode::getKey(int iPos)
 
 bool NormalNode::isOverloaded()
 {
-    return false;
+    bool overloaded = false;
+    const unsigned MAX_SIZE = order - 1;
+
+    if(keysList.size() > MAX_SIZE){
+        overloaded = true;
+    }
+
+    return overloaded;
 }
 //******************************************************************************
 //  FUNCTION: Print

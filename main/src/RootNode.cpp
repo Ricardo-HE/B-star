@@ -43,7 +43,14 @@ double RootNode::getKey(int iPos)
 
 bool RootNode::isOverloaded()
 {
-    return false;
+    bool overloaded = false;
+    const unsigned MAX_SIZE = 2 * floor( (2*order - 2) / 3 );
+
+    if(keysList.size() > MAX_SIZE){
+        overloaded = true;
+    }
+
+    return overloaded;
 }
 //******************************************************************************
 //  FUNCTION: Print
