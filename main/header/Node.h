@@ -90,6 +90,8 @@ public:
 	*/
 	bool IsRoot(){ return isRoot; }
 
+	Node* getAncestor(){ return ancestor; }
+
 protected:
 	int order;                      // Order of this node
 	std::list<double> keysList;     // Pointer for allocating dynamic memory store

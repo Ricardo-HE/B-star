@@ -1,6 +1,7 @@
 #include "../header/BStarTree.h"
 
-bool BStarTree::add(double val){
+bool BStarTree::add(double val)
+{
     bool found;
     Node* nodeAdd = nullptr;    //Node where it will add the number if the number
                                 //doesn't exist in the tree.
@@ -12,7 +13,7 @@ bool BStarTree::add(double val){
                                 //sort them
         if (nodeAdd->isOverloaded()) {  //make isOverloaded function
 
-            if (this->isLeftSiblingFull(nodeAdd)) {    //Make isLeftSiblingsFull
+            if (this->isLeftSiblingFull(nodeAdd)){    //Make isLeftSiblingsFull
 
                 if (this->isRightSiblingFull(nodeAdd)) {   //Make isRightSiblingsFull
                     this->splitNode(nodeAdd);   //Make splitNode
@@ -30,7 +31,8 @@ bool BStarTree::add(double val){
     return found;
 }
 
-bool BStarTree::find(double val, Node* nodeAdd){
+bool BStarTree::find(double val, Node* nodeAdd)
+{
     bool found, keepSearching, goToRightMostChild;
     Node* currentNode;
 
@@ -75,6 +77,13 @@ bool BStarTree::find(double val, Node* nodeAdd){
 
 bool BStarTree::isLeftSiblingFull(Node* node) const
 {
+    Node* ancestorCopy;
+
+    ancestorCopy = node->getAncestor();
+
+    for (std::size_t i = 0; i < ancestorCopy->getNumKeys(); i++) {
+        /* code */
+    }
     return false;
 }
 bool BStarTree::isRightSiblingFull(Node* node) const
@@ -89,6 +98,7 @@ bool BStarTree::rotateLeft(Node* node)
 
 bool BStarTree::rotateRight(Node* node)
 {
+
     return false;
 }
 
