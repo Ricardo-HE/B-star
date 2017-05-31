@@ -15,6 +15,8 @@ public:
     bool add(double val);
     bool find(double val, Node* nodeAdd);
 
+    bool searchSpace(Node* nodeAdd);
+
     bool isLeftSiblingFull(Node* node) const;
     bool isRightSiblingFull(Node* node) const;
 
@@ -22,6 +24,7 @@ public:
     bool rotateRight(Node* node);
 
     void splitNode(Node* node);
+    
 };
 
 #endif //BSTARTREE_H

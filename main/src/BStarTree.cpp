@@ -1,4 +1,5 @@
 #include "../header/BStarTree.h"
+#include <stack>
 
 bool BStarTree::add(double val)
 {
@@ -9,22 +10,9 @@ bool BStarTree::add(double val)
     if (find(val, nodeAdd)) {
         found = true;
     }else{
-        nodeAdd->addItem(val);  //overcharge AddItem to add to the keys list and
-                                //sort them
-        if (nodeAdd->isOverloaded()) {  //make isOverloaded function
-
-            if (this->isLeftSiblingFull(nodeAdd)){    //Make isLeftSiblingsFull
-
-                if (this->isRightSiblingFull(nodeAdd)) {   //Make isRightSiblingsFull
-                    this->splitNode(nodeAdd);   //Make splitNode
-
-
-                }else{
-                    this->rotateRight(nodeAdd); //Make rotateRight;
-                }
-            }else{
-                this->rotateLeft(nodeAdd);  //make rotateLeft
-            }
+        nodeAdd->addItem(val);
+        if (nodeAdd->isOverloaded()) {
+            this->searchSpace(nodeAdd);
         }
     }
 
@@ -73,6 +61,42 @@ bool BStarTree::find(double val, Node* nodeAdd)
 
     }
     return found;
+}
+
+bool BStarTree::searchSpace(Node* node)
+{
+    Node* currentNode;
+    std::stack<Node*> nodesStack;
+
+    currentNode = node;
+    nodesStack.push(currentNode);
+
+    while (!nodesStack.empty()) {
+        if (this->isLeftSiblingFull(currentNode)){
+            if (this->isRightSiblingFull(currentNode)) {
+                if (!(currentNode->getAncestor())->IsRoot()) {
+                    currentNode = currentNode->getAncestor();
+                    nodesStack.push(currentNode);
+                }else{
+                    //do something when the father is the root node
+                    //Maybe empty the stack and return false and state that
+                    //there is no space in the tree to give the new key so the
+                    //node have split.
+                }
+            }else{
+                currentNode = nodesStack.top();
+                nodesStack.pop();
+                this->rotateRight(currentNode); //Make rotateRight;
+            }
+        }else{
+            currentNode = nodesStack.top();
+            nodesStack.pop();
+            this->rotateLeft(currentNode);  //make rotateLeft
+        }
+
+    }
+
+    return false;
 }
 
 bool BStarTree::isLeftSiblingFull(Node* node) const
@@ -127,6 +151,7 @@ bool BStarTree::isRightSiblingFull(Node* node) const
 
 bool BStarTree::rotateLeft(Node* node)
 {
+
     return false;
 }
 
