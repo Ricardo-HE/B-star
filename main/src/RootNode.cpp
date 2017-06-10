@@ -12,10 +12,8 @@
 //******************************************************************************
 RootNode::RootNode(int order, bool rootflag, Node* ancestor): Node(order, rootflag, ancestor)
 {
-    const unsigned rootNodeOrder = 1;
-
     keysList = std::list<double>(); //creates an empty list
-    childList = std::list<Node*>(rootNodeOrder); //creates a list of keys with the minimum number of keys
+    childList = std::list<Node*>(); //creates an empty list
 }
 
 bool RootNode::addItem(double elem)
