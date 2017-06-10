@@ -12,10 +12,11 @@
 //******************************************************************************/
 NormalNode::NormalNode(int order, bool rootflag, Node* ancestor): Node(order, rootflag, ancestor)
 {
-    const unsigned normalNodeOrder = ceil( (2*order-1) / 3 );
+    //this might become handy later
+    //const unsigned normalNodeOrder = ceil( (2*order-1) / 3 );
 
     keysList = std::list<double>(); //creates an empty list
-    childList = std::list<Node*>(normalNodeOrder); //creates a list of keys with the minimum number of keys
+    childList = std::list<Node*>(); //creates an empty list
 }
 
 bool NormalNode::addItem(double elem)
