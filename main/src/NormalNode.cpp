@@ -1,15 +1,6 @@
 //NormalNode.cpp
 #include "../header/NormalNode.h"
 
-/******************************************************************************
-//  FUNCTION: Overloaded RootNode constructor
-//  PURPOSE	: Creates and intializes a root node for a BStarTree.
-//
-//  CALL EXAMPLE: Node* ptrNode = new NormalNode(false);
-//
-//  PRE CONDITIONS:  Enough memory has to exist to create a NormalNode Object
-//  POST CONDITIONS: Memory for a NormalNode object has been allocated and members intialized.
-//******************************************************************************/
 NormalNode::NormalNode(int order, bool rootflag, Node* ancestor): Node(order, rootflag, ancestor)
 {
     //this might become handy later
@@ -53,15 +44,7 @@ bool NormalNode::isOverloaded()
 
     return overloaded;
 }
-//******************************************************************************
-//  FUNCTION: Print
-//  PURPOSE	: Prints all the data values except those of the Node*
-//
-//  CALL EXAMPLE: Node* ptrNode->Print()
-//
-//  PRE CONDITIONS:  NormalNode has to exist
-//  POST CONDITIONS: Menber data printed to monitor
-//******************************************************************************
+
 void NormalNode::print()
 {
     std::cout << "keys: ";
@@ -70,5 +53,5 @@ void NormalNode::print()
         std::cout << key << " ";
     });
 
-    std::cout << '\n\n';
+    std::cout << '\n' << std::endl;
 }
