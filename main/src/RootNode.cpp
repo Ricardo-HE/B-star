@@ -64,4 +64,11 @@ bool RootNode::isOverloaded()
 void RootNode::print()
 {
 
+    std::cout << "keys: ";
+
+    std::for_each(keysList.begin(), keysList.end(), [](auto key){
+        std::cout << key << " ";
+    });
+
+    std::cout <<  "\n\n";
 }

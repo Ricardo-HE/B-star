@@ -63,5 +63,11 @@ bool NormalNode::isOverloaded()
 //******************************************************************************
 void NormalNode::print()
 {
+    std::cout << "keys: ";
 
+    std::for_each(keysList.begin(), keysList.end(), [](auto key){
+        std::cout << key << " ";
+    });
+
+    std::cout << '\n\n';
 }

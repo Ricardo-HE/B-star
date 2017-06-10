@@ -92,6 +92,21 @@ public:
 
 	Node* getAncestor(){ return ancestor; }
 
+	double& operator[](int index){
+		auto it = this->keysList.begin();
+		std::advance(it, index);
+
+		return *it;
+	}
+
+	const double& operator[](int index) const{
+		auto it = this->keysList.begin();
+		std::advance(it, index);
+
+		return *it;
+	}
+
+
 protected:
 	int order;                      // Order of this node
 	std::list<double> keysList;     // Pointer for allocating dynamic memory store
@@ -100,5 +115,7 @@ protected:
 	Node* ancestor;
 
 };
+
+
 
 #endif

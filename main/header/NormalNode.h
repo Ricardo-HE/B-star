@@ -29,6 +29,8 @@
 #define NORMALNODE_H
 
 #include <cmath>
+#include <iostream>
+#include <algorithm>
 
 #include "Node.h"
 
@@ -47,5 +49,6 @@ public:												// by NormalNode
 	void print();											// Print for a NormalNode
 	bool addItem(double iItem);					// Inserts an item to a NormalNode
     bool isOverloaded();
+	void setAncestor(Node* newAncestor){ancestor = newAncestor;}
 };
 #endif

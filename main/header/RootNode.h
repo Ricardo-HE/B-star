@@ -28,6 +28,9 @@
 #ifndef ROOTNODE_H
 #define ROOTNODE_H
 
+#include <iostream>
+#include <algorithm>
+
 #include "Node.h"
 #include "NormalNode.h"
 
