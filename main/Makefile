@@ -1,16 +1,18 @@
-IDIR= header
-CXX= g++
-CXXFLAGS= -std=c++14 -O2 -Wall -I$(IDIR)
+IDIR = header
+CXX = g++
+CXXFLAGS = -std=c++14 -O2 -Wall -I$(IDIR)
 
-ODIR= obj
-SDIR= src
-OUTDIR= bin
+ODIR = obj
+SDIR = src
+OUTDIR = bin
 
-_DEPS= BStarTree.h Node.h NormalNode.h RootNode.h
-DEPS= $(patsubst %, $(IDIR)/%, $(_DEPS))
+GENMOD = BStarTree NormalNode RootNode
 
-_OBJ= main.o BStarTree.o NormalNode.o RootNode.o
-OBJ= $(patsubst %, $(ODIR)/%, $(_OBJ))
+_DEPS = Node
+DEPS = $(patsubst %, $(IDIR)/%.h, $(_DEPS) $(GENMOD))
+
+_OBJ = main
+OBJ = $(patsubst %, $(ODIR)/%.o, $(_OBJ) $(GENMOD))
 
 $(ODIR)/%.o: $(SDIR)/%.cpp $(DEPS)
 	$(CXX) -c -o $@ $< $(CXXFLAGS)
