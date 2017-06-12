@@ -31,7 +31,7 @@ bool BStarTree::add(double val)
 
     return added;
 }
-
+/*
 bool BStarTree::find(double val, Node* nodeAdd)
 {
     bool found, keepSearching, goToRightMostChild;
@@ -77,6 +77,59 @@ bool BStarTree::find(double val, Node* nodeAdd)
     }
     return found;
 }
+*/
+bool BStarTree::find(double val)
+{
+    Node* currentNode = mRoot;
+    bool found = false;
+    unsigned index;
+
+    while(!found){
+        index = 0;
+        for(auto key = currentNode->getKeysList().begin();
+                *key > val && currentNode->getKeysList().end();
+                ++key, ++index)
+        if(key == currentNode->getKeysList().end()){
+            --key; //if all the list was processed, the iterator must return to the last element of the list
+        }
+        if(*key == val){
+            found = true;
+        }else if(index < currentNode->getKeysList().size()){
+            currentNode = currentNode->getChild(index);
+        }else{  //index is out of bounds so the child where the value might be doesn't exists
+            break;
+        }
+    }
+
+    return found;
+}
+
+Node* findPlace(double val)
+{
+    Node* currentNode = root;
+    bool foundPlace = false;
+    unsigned index;
+
+    while(!foundPlace){
+        for(auto key = currentNode->getKeysList().begin();
+                currentNode->getKeysList().end();
+                ++key, ++index)
+
+        if(key == currentNode->getKeysList().end()){
+            --key; //if the iterator is out of the array, it is returned to the last element
+        }
+        if(*key == val){
+            //Since the list can't have repetitions, a nullptr is returned to signal that
+            currentNode = nullptr;
+            break;
+        }else if(index >= currentNode->getKeysList().size()){
+            //no child where the value should be exists so the current one is where the node should be put in
+            foundPlace = true;
+        }
+    }
+
+    return currentNode;
+}
 
 bool BStarTree::searchSpace(Node* node)
 {
@@ -99,6 +152,39 @@ bool BStarTree::searchSpace(Node* node)
 
     return foundSpace;
 }
+
+bool BStarTree::areLeftSiblingsFull(Node* node) const
+{
+    Node* ancestorCopy;
+    int nodeNumberOfChild;
+    bool isFull;
+
+    ancestorCopy = node->getAncestor();
+    auto it = ancestorCopy->getChildList().begin();
+    nodeNumberOfChild = 0;
+    isFull = true;
+
+    for (; *it != node; it++, nodeNumberOfChild++)
+
+
+    ancestorCopy = node->getAncestor();
+    auto it = ancestorCopy->getChildList().begin();
+    nodeNumberOfChild = 0;
+    isFull = true;
+
+    for (; *it != node; it++, nodeNumberOfChild++)
+
+
+    ancestorCopy = node->getAncestor();
+    auto it = ancestorCopy->getChildList().begin();
+    nodeNumberOfChild = 0;
+    isFull = true;
+
+    for (; *it != node; it++, nodeNumberOfChild++)
+
+    for (std::size_t i = nodeNumberOfChild -1 ; i <= 0; i--) {   //this iters from the
+                                                            //left brothers of the node
+                                                            //including the leftmost brother
 
 bool BStarTree::areLeftSiblingsFull(Node* node) const
 {
@@ -304,22 +390,6 @@ void BStarTree::splitRoot(){
             root->getChildList().pop_front();
         }
     };
-    unsigned limitForChild1 = child1->getKeysList().size() + 1;
-    unsigned limitForChild2 = child2->getKeysList().size() + 1;
-
-    putChildren(limitForChild1, child1);
-    putChildren(limitForChild2, child2);
-
-    root->getChildList().push_back(child1);
-    root->getChildList().push_back(child2);
-}
-
-/*
-A node is split when it is overloaded and all its siblings are also overloaded
-this split with the left sibling.
-*/
-void BStarTree::splitLeft(Node* node)
-{
     Node *leftSibling, *ancestorCopy;
     double parentKey;
     unsigned listIndex;
@@ -330,23 +400,6 @@ void BStarTree::splitLeft(Node* node)
         ++listIndex;
     }
     parentKey = (*ancestorCopy)[listIndex-1];
-
-    leftSibling = this->getLeftSibling(node);
-
-    std::list<double> auxList(std::move(leftSibling->getKeysList()));
-    auxList.push_back(parentKey);
-
-    auxList.merge(node->getKeysList());
-
-    Node *newNode;
-
-    newNode = new NormalNode(mOrder, false, ancestorCopy);
-
-    ancestorCopy->getChildList().push_back(newNode);
-
-    auto putKeys = [&](unsigned limit, Node*& lNode){
-        for (std::size_t i = 0; i < limit; i++) {
-            lNode->getKeysList().push_front( auxList.front() );
             auxList.pop_front();
         }
     };

@@ -22,6 +22,9 @@ public:
     bool add(double val);
     bool find(double val, Node* nodeAdd);
 
+    bool find(double val);
+    bool findPlace(double val);
+
     bool searchSpace(Node* nodeAdd);
     bool isLeftMost(Node* node) const;
 

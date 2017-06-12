@@ -17,7 +17,7 @@ OBJ = $(patsubst %, $(ODIR)/%.o, $(_OBJ) $(GENMOD))
 $(ODIR)/%.o: $(SDIR)/%.cpp $(DEPS)
 	$(CXX) -c -o $@ $< $(CXXFLAGS)
 
-test: $(OBJ)
+BStarTree: $(OBJ)
 	$(CXX) -o $(OUTDIR)/$@ $^ $(CXXFLAGS)
 
 .PHONY: clean
