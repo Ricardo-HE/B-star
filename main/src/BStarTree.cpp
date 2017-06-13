@@ -80,7 +80,7 @@ bool BStarTree::find(double val, Node* nodeAdd)
 */
 bool BStarTree::find(double val)
 {
-    Node* currentNode = mRoot;
+    Node* currentNode = root;
     bool found = false;
     bool childExists = true;
     std::list<Node*>::iterator child;
@@ -88,7 +88,7 @@ bool BStarTree::find(double val)
     while(!found && childExists){
         child = currentNode->getChildList().begin();
         for(auto key = currentNode->getKeysList().begin();
-                *key > val && currentNode->getKeysList().end();
+                *key > val && key != currentNode->getKeysList().end();
                 ++key, ++child){
 
             if(*key == val){
@@ -106,7 +106,7 @@ bool BStarTree::find(double val)
     return found;
 }
 
-Node* findPlace(double val)
+Node* BStarTree::findPlace(double val)
 {
     Node* currentNode = root;
     bool childExists = true;
@@ -116,7 +116,7 @@ Node* findPlace(double val)
         child = currentNode->getChildList().begin();
 
         for(auto key = currentNode->getKeysList().begin();
-                currentNode->getKeysList().end();
+                key != currentNode->getKeysList().end();
                 ++key, ++child){
             if(*key == val){ //exceptional case, the value already is in the tree
                 return nullptr;
