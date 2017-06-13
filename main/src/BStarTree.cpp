@@ -7,7 +7,7 @@ bool BStarTree::add(double val)
     Node* nodeAdd = nullptr;    //Node where it will add the number if the number
                                 //doesn't exist in the tree.
 
-    if (find(val, nodeAdd)) {
+    /*if (find(val, nodeAdd)) {
         added = false;
     }else{
         nodeAdd->addItem(val);
@@ -28,7 +28,7 @@ bool BStarTree::add(double val)
         }
         added = true;
     }
-
+*/
     return added;
 }
 /*
@@ -156,39 +156,6 @@ bool BStarTree::searchSpace(Node* node)
 
     return foundSpace;
 }
-
-bool BStarTree::areLeftSiblingsFull(Node* node) const
-{
-    Node* ancestorCopy;
-    int nodeNumberOfChild;
-    bool isFull;
-
-    ancestorCopy = node->getAncestor();
-    auto it = ancestorCopy->getChildList().begin();
-    nodeNumberOfChild = 0;
-    isFull = true;
-
-    for (; *it != node; it++, nodeNumberOfChild++)
-
-
-    ancestorCopy = node->getAncestor();
-    auto it = ancestorCopy->getChildList().begin();
-    nodeNumberOfChild = 0;
-    isFull = true;
-
-    for (; *it != node; it++, nodeNumberOfChild++)
-
-
-    ancestorCopy = node->getAncestor();
-    auto it = ancestorCopy->getChildList().begin();
-    nodeNumberOfChild = 0;
-    isFull = true;
-
-    for (; *it != node; it++, nodeNumberOfChild++)
-
-    for (std::size_t i = nodeNumberOfChild -1 ; i <= 0; i--) {   //this iters from the
-                                                            //left brothers of the node
-                                                            //including the leftmost brother
 
 bool BStarTree::areLeftSiblingsFull(Node* node) const
 {
@@ -394,38 +361,14 @@ void BStarTree::splitRoot(){
             root->getChildList().pop_front();
         }
     };
-    Node *leftSibling, *ancestorCopy;
-    double parentKey;
-    unsigned listIndex;
+    unsigned limitForChild1 = child1->getKeysList().size() + 1;
+    unsigned limitForChild2 = child2->getKeysList().size() + 1;
 
-    ancestorCopy = node->getAncestor();
-    listIndex = 0;
-    for(auto it = ancestorCopy->getChildList().begin(); *it != node && it != ancestorCopy->getChildList().end(); ++it){
-        ++listIndex;
-    }
-    parentKey = (*ancestorCopy)[listIndex-1];
-            auxList.pop_front();
-        }
-    };
+    putChildren(limitForChild1, child1);
+    putChildren(limitForChild2, child2);
 
-    auto putKeyAncestor = [&ancestorCopy, &auxList](){
-        ancestorCopy->getKeysList().push_front( auxList.front() );
-        auxList.pop_front();
-    };
-
-    unsigned limitOne = std::floor( (2*mOrder - 2)/3 );
-    putKeys(limitOne, leftSibling);
-    putKeyAncestor();
-
-    unsigned limitTwo = std::floor( (2*mOrder - 1)/3 );
-    putKeys(limitTwo, newNode);
-    putKeyAncestor();
-
-    unsigned limitThree = std::floor( 2*mOrder/3 );
-    putKeys(limitThree, node);
-
-    ancestorCopy->getKeysList().sort();
-    ancestorCopy->getChildList().sort( compareKeyNodes );
+    root->getChildList().push_back(child1);
+    root->getChildList().push_back(child2);
 }
 
 /*
