@@ -82,22 +82,25 @@ bool BStarTree::find(double val)
 {
     Node* currentNode = mRoot;
     bool found = false;
-    unsigned index;
+    bool childExists = true;
+    std::list<double>::iterator key;
+    std::list<Node*>::iterator child;
 
-    while(!found){
-        index = 0;
-        for(auto key = currentNode->getKeysList().begin();
+    while(!found && childExists){
+        child = currentNode->getChildList().begin();
+        for(key = currentNode->getKeysList().begin();
                 *key > val && currentNode->getKeysList().end();
-                ++key, ++index)
-        if(key == currentNode->getKeysList().end()){
-            --key; //if all the list was processed, the iterator must return to the last element of the list
+                ++key, ++child){
+
+            if(*key == val){
+                return false;
+            }
+            if(child == currentNode->getChildList().end()){
+                childExists = false;
+            }
         }
-        if(*key == val){
-            found = true;
-        }else if(index < currentNode->getKeysList().size()){
-            currentNode = currentNode->getChild(index);
-        }else{  //index is out of bounds so the child where the value might be doesn't exists
-            break;
+        if(childExists){
+            currentNode = *child;
         }
     }
 
@@ -107,24 +110,27 @@ bool BStarTree::find(double val)
 Node* findPlace(double val)
 {
     Node* currentNode = root;
-    bool foundPlace = false;
-    unsigned index;
+    bool childExists = true;
+    std::list<double>::iterator key;
+    std::list<Node*>::iterator child;
 
-    while(!foundPlace){
-        for(auto key = currentNode->getKeysList().begin();
+    while(childExists){
+        child = currentNode->getChildList().begin();
+
+        for(key = currentNode->getKeysList().begin();
                 currentNode->getKeysList().end();
-                ++key, ++index)
-
-        if(key == currentNode->getKeysList().end()){
-            --key; //if the iterator is out of the array, it is returned to the last element
+                ++key, ++child){
+            if(*key == val){ //exceptional case, the value already is in the tree
+                return nullptr;
+            }
+            if(child == currentNode->getChildList().end()){
+                childExists = false;
+            }
         }
-        if(*key == val){
-            //Since the list can't have repetitions, a nullptr is returned to signal that
-            currentNode = nullptr;
-            break;
-        }else if(index >= currentNode->getKeysList().size()){
+
+        if(childExists){
             //no child where the value should be exists so the current one is where the node should be put in
-            foundPlace = true;
+            currentNode = *child;
         }
     }
 
