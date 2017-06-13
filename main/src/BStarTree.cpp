@@ -83,12 +83,11 @@ bool BStarTree::find(double val)
     Node* currentNode = mRoot;
     bool found = false;
     bool childExists = true;
-    std::list<double>::iterator key;
     std::list<Node*>::iterator child;
 
     while(!found && childExists){
         child = currentNode->getChildList().begin();
-        for(key = currentNode->getKeysList().begin();
+        for(auto key = currentNode->getKeysList().begin();
                 *key > val && currentNode->getKeysList().end();
                 ++key, ++child){
 
@@ -111,13 +110,12 @@ Node* findPlace(double val)
 {
     Node* currentNode = root;
     bool childExists = true;
-    std::list<double>::iterator key;
     std::list<Node*>::iterator child;
 
     while(childExists){
         child = currentNode->getChildList().begin();
 
-        for(key = currentNode->getKeysList().begin();
+        for(auto key = currentNode->getKeysList().begin();
                 currentNode->getKeysList().end();
                 ++key, ++child){
             if(*key == val){ //exceptional case, the value already is in the tree
