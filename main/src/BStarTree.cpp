@@ -112,6 +112,7 @@ Node* BStarTree::findPlace(double val)
     std::list<Node*>::iterator child;
 
 
+
     while(currentNode->getChildList().begin() != currentNode->getChildList().end() ){
         child = currentNode->getChildList().begin();
 
@@ -495,6 +496,7 @@ void BStarTree::print(){
         currentNode = nodeQueue.front();
         nodeQueue.pop();
 
+        std::cout << "currentNode childs: " << currentNode->getChildList().size() << '\n';
         currentNode->print();
 
         std::for_each(currentNode->getChildList().begin(),

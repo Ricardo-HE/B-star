@@ -78,12 +78,12 @@ public:
 	*@brief Get the list of keys from the node.
 	*@return The list of keys from the node.
 	*/
-	std::list<double> getKeysList(){ return keysList; }
+	std::list<double> &getKeysList(){ return keysList; }
 	/**
 	*@brief Get the list of childs from the node.
 	*@return The list of keys from the node.
 	*/
-	std::list<Node*> getChildList(){ return childList; }
+	std::list<Node*> &getChildList(){ return childList; }
 	/**
 	*@brief Says if the node is root or not.
 	*@return True if the node is root, false if isn't.
