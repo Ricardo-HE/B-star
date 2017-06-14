@@ -14,7 +14,6 @@ bool BStarTree::add(double val)
         if (nodeAdd->isOverloaded()) {
             if (!nodeAdd->IsRoot()) {
                 if (!this->searchSpace(nodeAdd)) {
-
                     if (!this->isLeftMost(nodeAdd)) {
                         splitLeft(nodeAdd);    //This split every node with their left sibling
                     }else{
@@ -112,10 +111,8 @@ Node* BStarTree::findPlace(double val)
     std::list<Node*>::iterator child;
 
 
-
     while(currentNode->getChildList().begin() != currentNode->getChildList().end() ){
         child = currentNode->getChildList().begin();
-
         for(auto key = currentNode->getKeysList().begin();
                 key != currentNode->getKeysList().end();
                 ++key){
@@ -131,6 +128,15 @@ Node* BStarTree::findPlace(double val)
         }
     }
 
+    auto firstKey = currentNode->getKeysList().begin();
+    auto lastKey = currentNode->getKeysList().end();
+
+
+    //Search in the
+    if (std::find(firstKey, lastKey, val) != lastKey) {
+        return nullptr;
+    }
+
     return currentNode;
 }
 
@@ -142,9 +148,11 @@ bool BStarTree::searchSpace(Node* node)
     foundSpace = true;
     nodeCopy = node;
 
-
+    std::cout << "searching space" << '\n';
     if (this->areLeftSiblingsFull(nodeCopy)){
+        std::cout << "Hermanos izquierdos llenos" << '\n';
         if (this->areRightSiblingsFull(nodeCopy)) {
+            std::cout << "hermanos derechos llenos" << '\n';
             foundSpace = false;
         }else{
             this->rotateRight(nodeCopy);
@@ -160,24 +168,34 @@ bool BStarTree::areLeftSiblingsFull(Node* node) const
 {
     Node* ancestorCopy;
     int nodeNumberOfChild;
-    bool isFull;
+    bool nodeIsFull;
 
     ancestorCopy = node->getAncestor();
     auto it = ancestorCopy->getChildList().begin();
     nodeNumberOfChild = 0;
-    isFull = true;
+    nodeIsFull = true;
 
-    for (; *it != node; it++, nodeNumberOfChild++)
+    for (; *it != node; it++, nodeNumberOfChild++){}
 
-    for (std::size_t i = nodeNumberOfChild -1 ; i <= 0; i--) {   //this iters from the
+    for (std::size_t i = nodeNumberOfChild-1; i >= 0; i--) {   //this iters from the
                                                             //left brothers of the node
                                                             //including the leftmost brother
-        if ( !(ancestorCopy->getChildNode(i))->isOverloaded() ) {
-            isFull = false;
+        std::cout << "i: " << i << '\n';
+        if ( !(ancestorCopy->getChildNode(i)->isFull()) ) {
+            std::cout << "No esta sobrecargado" << '\n';
+            ancestorCopy->getChildNode(i)->print();
+            nodeIsFull = false;
             break;
+        }else{
+            std::cout << "esta sobrecargado" << '\n';
         }
     }
-    return isFull;
+    if (nodeIsFull) {
+        std::cout << "verdadero" << '\n';
+    }else{
+        std::cout << "falso" << '\n';
+    }
+    return nodeIsFull;
 }
 bool BStarTree::areRightSiblingsFull(Node* node) const
 {
@@ -191,7 +209,7 @@ bool BStarTree::areRightSiblingsFull(Node* node) const
                                                                     //our childList starts from 0
     isFull = true;
 
-    for (; *it != node; it--, nodeNumberOfChild--)
+    for (; *it != node; it--, nodeNumberOfChild--){}
 
     for (std::size_t i = nodeNumberOfChild +1 ; i < ancestorCopy->getChildList().size(); i++) {
                                                             //this iters from the
@@ -225,12 +243,19 @@ Node* BStarTree::getLeftSibling(Node* node)
     Node* ancestorCopy, *sibling;
 
     ancestorCopy = node->getAncestor();
-    auto it = ancestorCopy->getChildList().begin();
+    //std::list<Node*>::iterator it = ancestorCopy->getChildList().begin();
+    std::list<Node*>::iterator it;
 
     sibling = nullptr;
 
+    //std::cout << "it: " << *it << " - - - " << '\n';
+    for (it = ancestorCopy->getChildList().begin(); it != ancestorCopy->getChildList().end() && *it != node; it++){
+        //std::cout << "++it: " << *it << '\n';
+        //std::advance(it, 1);
+        //std::cout << "begin: " << *(ancestorCopy->getChildList().begin()) << '\n';
+        //std::cout << "end: " << *(ancestorCopy->getChildList().end()) << '\n';
+    }
 
-    for (; it != ancestorCopy->getChildList().end() && *it != node; it++)
     if (it != ancestorCopy->getChildList().begin()) {
         sibling = *(--it);
     }
@@ -272,14 +297,15 @@ bool BStarTree::rotateLeft(Node* node)
         //leftSiblingCopy = ancestorCopy->getChildNode(listIndex - 1);
         leftSiblingCopy = this->getLeftSibling(node);
 
+
         //key rotation
         parentKey = (*ancestorCopy)[listIndex-1];
         (*ancestorCopy)[listIndex-1] = currentNode->getKeysList().front();
         currentNode->getKeysList().pop_front();
-        leftSiblingCopy->getKeysList().back() = parentKey;
+        leftSiblingCopy->getKeysList().push_back(parentKey);
 
         //child rotation
-        if(currentNode->getChildList().front() != nullptr){
+        if(!currentNode->getChildList().empty()){
             childCopy = currentNode->getChildList().front();
             currentNode->getChildList().pop_front();
             dynamic_cast<NormalNode*>(childCopy)->setAncestor(leftSiblingCopy);
@@ -287,7 +313,7 @@ bool BStarTree::rotateLeft(Node* node)
         }
 
         currentNode = leftSiblingCopy;
-    } while(currentNode != nullptr && !currentNode->isOverloaded());
+    } while(currentNode != nullptr && currentNode->isOverloaded());
 
     return true;
 }
@@ -313,10 +339,10 @@ bool BStarTree::rotateRight(Node* node)
         parentKey = (*ancestorCopy)[listIndex+1];
         (*ancestorCopy)[listIndex+1] = currentNode->getKeysList().back();
         currentNode->getKeysList().pop_back();
-        rightSiblingCopy->getKeysList().front() = parentKey;
+        rightSiblingCopy->getKeysList().push_front(parentKey);
 
         //child rotation
-        if(currentNode->getChildList().back() != nullptr){
+        if(!currentNode->getChildList().empty()){
             childCopy = currentNode->getChildList().back();
             currentNode->getChildList().pop_back();
             dynamic_cast<NormalNode*>(childCopy)->setAncestor(rightSiblingCopy);
@@ -337,7 +363,7 @@ void BStarTree::splitRoot(){
 
     auto putKeys = [&](unsigned limit, Node*& lNode){
         for (std::size_t i = 0; i < limit; i++) {
-            lNode->getKeysList().push_front( root->getKeysList().front() );
+            lNode->getKeysList().push_back( root->getKeysList().front() );
             root->getKeysList().pop_front();
         }
     };
@@ -347,6 +373,7 @@ void BStarTree::splitRoot(){
 
     putKeys(limitRoot, child1);
 
+
     double auxKey = root->getKeysList().front();
     root->getKeysList().pop_front();
 
@@ -354,17 +381,24 @@ void BStarTree::splitRoot(){
 
     root->getKeysList().push_front(auxKey);
     //////////////////////////////////////////s///////////////////
+    //Review this lamnda
+    ////////////////////////////////////////////
     auto putChildren = [&](unsigned limit, Node*& lNode){
-        for (std::size_t i = 0; i < limit; i++) {
-            lNode->getChildList().push_front( root->getChildList().front() );
-            root->getChildList().pop_front();
+        if(!root->getChildList().empty()){
+            for (std::size_t i = 0; i < limit; i++) {
+                lNode->getChildList().push_back( root->getChildList().front() );
+                root->getChildList().pop_front();
+            }
         }
+
     };
+    //////////////////////////////////////////////////
     unsigned limitForChild1 = child1->getKeysList().size() + 1;
     unsigned limitForChild2 = child2->getKeysList().size() + 1;
 
     putChildren(limitForChild1, child1);
     putChildren(limitForChild2, child2);
+
 
     root->getChildList().push_back(child1);
     root->getChildList().push_back(child2);

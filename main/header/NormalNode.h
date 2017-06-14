@@ -49,6 +49,7 @@ public:												// by NormalNode
 	void print();											// Print for a NormalNode
 	bool addItem(double iItem);					// Inserts an item to a NormalNode
     bool isOverloaded();
+	bool isFull();
 	void setAncestor(Node* newAncestor){ancestor = newAncestor;}
 };
 #endif

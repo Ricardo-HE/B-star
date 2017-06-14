@@ -54,6 +54,7 @@ public:
 	Node* getChildNode(int iPos);   // Returns the ptr using iPos as index
 	double getKey(int iPos);
     bool isOverloaded();
+	bool isFull();
 };
 
 #endif

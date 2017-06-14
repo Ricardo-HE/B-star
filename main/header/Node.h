@@ -63,6 +63,8 @@ public:
 
 	virtual bool isOverloaded() = 0;
 
+	virtual bool isFull() = 0;
+
 	//************************Access Functions**********************************
 	/**
 	*@brief Get the order of the node.

@@ -50,6 +50,17 @@ bool RootNode::isOverloaded()
 
     return overloaded;
 }
+
+bool RootNode::isFull(){
+    bool full = false;
+
+    const unsigned MAX_SIZE = 2 * floor( (2*order - 2) / 3 );
+    if (keysList.size() ==  MAX_SIZE) {
+        full = true;
+    }
+
+    return full;
+}
 //******************************************************************************
 //  FUNCTION: Print
 //  PURPOSE	: Prints all the data values except those of the Node*

@@ -45,6 +45,15 @@ bool NormalNode::isOverloaded()
     return overloaded;
 }
 
+bool NormalNode::isFull(){
+    bool full = false;
+
+    const unsigned MAX_SIZE = order - 1;
+    if (keysList.size() ==  MAX_SIZE) {
+        full = true;
+    }
+}
+
 void NormalNode::print()
 {
     std::cout << "keys: ";
