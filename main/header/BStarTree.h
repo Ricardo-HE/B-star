@@ -20,7 +20,7 @@ public:
     BStarTree (int order): mOrder(order < 3 ? 3 : order), root(new RootNode(mOrder, true)) {}
     //  ~BStarTree (){};
     bool add(double val);
-    bool find(double val, Node* nodeAdd);
+    //bool find(double val, Node* nodeAdd);
 
     bool find(double val);
     Node* findPlace(double val);

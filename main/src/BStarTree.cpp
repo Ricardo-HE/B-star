@@ -6,8 +6,8 @@ bool BStarTree::add(double val)
     bool added;
     Node* nodeAdd = nullptr;    //Node where it will add the number if the number
                                 //doesn't exist in the tree.
-
-    /*if (find(val, nodeAdd)) {
+    nodeAdd = findPlace(val);
+    if (nodeAdd == nullptr) {
         added = false;
     }else{
         nodeAdd->addItem(val);
@@ -28,7 +28,7 @@ bool BStarTree::add(double val)
         }
         added = true;
     }
-*/
+
     return added;
 }
 /*
@@ -109,24 +109,22 @@ bool BStarTree::find(double val)
 Node* BStarTree::findPlace(double val)
 {
     Node* currentNode = root;
-    bool childExists = true;
     std::list<Node*>::iterator child;
 
-    while(childExists){
+
+    while(currentNode->getChildList().begin() != currentNode->getChildList().end() ){
         child = currentNode->getChildList().begin();
 
         for(auto key = currentNode->getKeysList().begin();
                 key != currentNode->getKeysList().end();
-                ++key, ++child){
+                ++key){
             if(*key == val){ //exceptional case, the value already is in the tree
                 return nullptr;
-            }
-            if(child == currentNode->getChildList().end()){
-                childExists = false;
+            }else if(*key < val){
+                ++child;
             }
         }
-
-        if(childExists){
+        if(currentNode->getChildList().begin() != currentNode->getChildList().end()){
             //no child where the value should be exists so the current one is where the node should be put in
             currentNode = *child;
         }
@@ -369,6 +367,59 @@ void BStarTree::splitRoot(){
 
     root->getChildList().push_back(child1);
     root->getChildList().push_back(child2);
+}
+
+void BStarTree::splitLeft(Node* node)
+{
+    Node *leftSibling, *ancestorCopy;
+    double parentKey;
+    unsigned listIndex;
+
+    ancestorCopy = node->getAncestor();
+    listIndex = 0;
+    for(auto it = ancestorCopy->getChildList().begin(); *it != node && it != ancestorCopy->getChildList().end(); ++it){
+        ++listIndex;
+    }
+    parentKey = (*ancestorCopy)[listIndex-1];
+
+    leftSibling = this->getLeftSibling(node);
+
+    std::list<double> auxList(std::move(leftSibling->getKeysList()));
+    auxList.push_back(parentKey);
+
+    auxList.merge(node->getKeysList());
+
+    Node *newNode;
+
+    newNode = new NormalNode(mOrder, false, ancestorCopy);
+
+    ancestorCopy->getChildList().push_back(newNode);
+
+    auto putKeys = [&](unsigned limit, Node*& lNode){
+        for (std::size_t i = 0; i < limit; i++) {
+            lNode->getKeysList().push_front( auxList.front() );
+            auxList.pop_front();
+        }
+    };
+
+    auto putKeyAncestor = [&ancestorCopy, &auxList](){
+        ancestorCopy->getKeysList().push_front( auxList.front() );
+        auxList.pop_front();
+    };
+
+    unsigned limitOne = std::floor( (2*mOrder - 2)/3 );
+    putKeys(limitOne, leftSibling);
+    putKeyAncestor();
+
+    unsigned limitTwo = std::floor( (2*mOrder - 1)/3 );
+    putKeys(limitTwo, newNode);
+    putKeyAncestor();
+
+    unsigned limitThree = std::floor( 2*mOrder/3 );
+    putKeys(limitThree, node);
+
+    ancestorCopy->getKeysList().sort();
+    ancestorCopy->getChildList().sort( compareKeyNodes );
 }
 
 /*
