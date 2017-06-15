@@ -52,6 +52,8 @@ bool NormalNode::isFull(){
     if (keysList.size() ==  MAX_SIZE) {
         full = true;
     }
+
+    return full;
 }
 
 void NormalNode::print()

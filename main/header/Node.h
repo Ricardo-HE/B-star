@@ -108,6 +108,15 @@ public:
 		return *it;
 	}
 
+    //Alternate ways to get the list of keys and children
+    std::list<double>& keys() { return getKeysList(); }
+    std::list<Node*>& children() { return getChildList(); }
+
+    //Iterators for the keys
+    auto begin() { return keysList.begin(); }
+    auto end() { return keysList.end(); }
+    auto rbegin() { return keysList.rbegin(); }
+    auto rend() { return keysList.rend(); }
 
 protected:
 	int order;                      // Order of this node
