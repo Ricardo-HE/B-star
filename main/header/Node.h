@@ -99,11 +99,11 @@ public:
     auto rend() { return keysList.rend(); }
 
 protected:
-	int order;                      // Order of this node
-	std::list<double> keysList;     // Pointer for allocating dynamic memory store
-	std::list<Node*> childList;
-	bool  isRoot;			        // Tracks if root or not.
-	Node* ancestor;
+    int order;                      // Order of this node
+    std::list<double> keysList;     // Pointer for allocating dynamic memory store
+    std::list<Node*> childList;
+    bool  isRoot;			        // Tracks if root or not.
+    Node* ancestor;
 
 };
 

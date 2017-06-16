@@ -176,23 +176,22 @@ Node* BStarTree::getRightSibling(Node* node)
 bool BStarTree::rotateLeft(Node* node)
 {
     Node *currentNode, *ancestor, *leftSibling, *child;
-    unsigned listIndex = 0;
-    double parentKey;
+    std::list<double>::iterator ancestorKey;
+    std::list<Node*>::iterator nodeIt;
 
     currentNode = node;
     do {
         ancestor = currentNode->getAncestor();
-        listIndex = 0;
-        for(auto it = ancestor->children().begin(); *it != currentNode && it != ancestor->children().end(); ++it){
-            ++listIndex;
+        ancestorKey = ancestor->keys().begin();
+        for(nodeIt = next(ancestor->children().begin()); *nodeIt != currentNode; ++nodeIt){
+            ++ancestorKey;
         }
-        leftSibling = getLeftSibling(currentNode);
+        leftSibling = *prev(nodeIt);
 
         //key rotation
-        parentKey = (*ancestor)[listIndex-1];
-        (*ancestor)[listIndex-1] = currentNode->keys().front();
+        leftSibling->keys().push_back(*ancestorKey);
+        *ancestorKey = currentNode->keys().front();
         currentNode->keys().pop_front();
-        leftSibling->keys().push_back(parentKey);
 
         //child rotation
         if(!currentNode->children().empty()){
@@ -212,16 +211,16 @@ bool BStarTree::rotateRight(Node* node)
 {
     Node *currentNode, *ancestor, *rightSibling, *child;
     std::list<double>::iterator ancestorKey;
-    std::list<Node*>::iterator ancestorChild;
+    std::list<Node*>::iterator nodeIt;
 
     currentNode = node;
     do {
         ancestor = currentNode->getAncestor();
         ancestorKey = ancestor->keys().begin();
-        for(ancestorChild = ancestor->children().begin(); *ancestorChild != currentNode; ++ancestorChild){
+        for(nodeIt = ancestor->children().begin(); *nodeIt != currentNode; ++nodeIt){
             ++ancestorKey;
         }
-        rightSibling = getRightSibling(currentNode);
+        rightSibling = *next(nodeIt);
 
         //key rotation
         rightSibling->keys().push_front(*ancestorKey);
@@ -292,24 +291,24 @@ void BStarTree::splitRoot(){
 void BStarTree::splitLeft(Node* node)
 {
     Node *leftSibling, *ancestor;
-    double parentKey;
-    unsigned listIndex; //this is the index of the node in the list of children of its ancestor
+    double ancestorKeyCopy;
+    std::list<double>::iterator ancestorKey;
+    std::list<Node*>::iterator nodeIt;
 
     ancestor = node->getAncestor();
-    listIndex = 0;
-    for(auto it = ancestor->children().begin();
-            *it != node && it != ancestor->children().end();
-            ++it){
-        ++listIndex;
+    ancestorKey = ancestor->keys().begin();
+    for(nodeIt = next(ancestor->children().begin()); *nodeIt != node; ++nodeIt){
+        ++ancestorKey;
     }
-    parentKey = (*ancestor)[listIndex-1];
-    ancestor->keys().remove(parentKey);
 
-    leftSibling = this->getLeftSibling(node);
+    ancestorKeyCopy = *ancestorKey;
+    ancestor->keys().erase(ancestorKey);
+
+    leftSibling = *prev(nodeIt);
 
     //moves all the keys of the left sibling to an auxiliar list, leaving the sibling empty
     std::list<double> auxList(std::move(leftSibling->keys()));
-    auxList.push_back(parentKey);
+    auxList.push_back(ancestorKeyCopy);
     //moves all the keys of the node to the auxiliar list, leaving the node empty
     auxList.merge(node->keys());
 
@@ -349,22 +348,23 @@ void BStarTree::splitLeft(Node* node)
 /*
 this split with the right sibling.
 */
-//update this to be like splitLeft
 void BStarTree::splitRight(Node* node)
 {
     Node *rightSibling, *ancestor;
     double ancestorKeyCopy;
     std::list<double>::iterator ancestorKey;
+    std::list<Node*>::iterator nodeIt;
 
     ancestor = node->getAncestor();
     ancestorKey = ancestor->keys().begin();
-    for(auto it = ancestor->children().begin(); *it != node; ++it){
+    for(nodeIt = ancestor->children().begin(); *nodeIt != node; ++nodeIt){
         ++ancestorKey;
     }
+
     ancestorKeyCopy = *ancestorKey;
     ancestor->keys().erase(ancestorKey);
 
-    rightSibling = this->getRightSibling(node);
+    rightSibling = *next(nodeIt);
 
     //moves all the keys of the node to the auxiliar list, leaving the node empty
     std::list<double> auxList(std::move(node->keys()));

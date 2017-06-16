@@ -5,9 +5,6 @@ NormalNode::NormalNode(int order, bool rootflag, Node* ancestor): Node(order, ro
 {
     //this might become handy later
     //const unsigned normalNodeOrder = ceil( (2*order-1) / 3 );
-
-    keysList = std::list<double>(); //creates an empty list
-    childList = std::list<Node*>(); //creates an empty list
 }
 
 bool NormalNode::addItem(double elem)
