@@ -3,6 +3,10 @@
 
 #include "../header/BStarTree.h"
 
+/**
+*Prueba de que funciono codeanywhere
+*/
+
 int main()
 {
 	std::cout << "Main test file for testing the tree. This file will most likely change along with the project." << std::endl;
