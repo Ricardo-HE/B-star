@@ -26,7 +26,8 @@ public:
     Node* findPlace(double val);
 
     bool searchSpace(Node* nodeAdd);
-    bool isLeftMost(Node* node) const;
+    bool isLeftmost(Node* node) const;
+    bool isRightmost(Node* node) const;
 
     bool areLeftSiblingsFull(Node* node) const;
     bool areRightSiblingsFull(Node* node) const;
@@ -47,5 +48,10 @@ public:
 };
 
 bool compareKeyNodes(Node* nodeA, Node* nodeB);
+
+//Functions to compare two nodes for equality or inequality. This functions assume that two
+//nodes will never have the same keys at the same time.
+bool areEqual(Node* nodeA, Node* nodeB);
+bool areNotEqual(Node* nodeA, Node* nodeB);
 
 #endif //BSTARTREE_H

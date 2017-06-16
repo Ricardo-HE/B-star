@@ -11,22 +11,14 @@ bool BStarTree::add(double val)
         return false;
     }
     nodeAdd->addItem(val);
-    std::cout << val << " was added to the tree " << std::endl;
     if (nodeAdd->isOverloaded()) {
         if (!nodeAdd->IsRoot()) {
             if (!this->searchSpace(nodeAdd)) {
-                std::cout << "Search space returned false" << std::endl;
-                if (!this->isLeftMost(nodeAdd)) {
-                    std::cout << "A node has to be splitted and it is not the leftmost" << std::endl;
+                if (!this->isLeftmost(nodeAdd)) {
                     splitLeft(nodeAdd);    //This split every node with their left sibling
-                    std::cout << "A node was splitted using its left sibling" << std::endl;
                 }else{
-
-                    std::cout << "A node has to be splitted and it is not the rightmost" << std::endl;
                     splitRight(nodeAdd);   //This split the leftmost node with his right sibling
                                             //because he has no left sibling
-
-                    std::cout << "A node was splitted using its right sibling" << std::endl;
                 }
             }
         }else{
@@ -37,53 +29,7 @@ bool BStarTree::add(double val)
 
     return added;
 }
-/*
-bool BStarTree::find(double val, Node* nodeAdd)
-{
-    bool found, keepSearching, goToRightMostChild;
-    Node* currentNode;
 
-    keepSearching = true;
-    currentNode = this->root;
-    nodeAdd = this->root;
-
-
-    while (keepSearching) {
-        goToRightMostChild = true;
-        for (std::size_t i = 0; i < currentNode->getNumKeys(); i++) {
-            if (val < currentNode->getKey(i)) {     //Compare the value with ith key of the node.
-                nodeAdd = currentNode;
-                currentNode = currentNode->getChildNode(i);      //If the value was lower than the ith key of the node
-                                                    //the current node change to the left child of the
-                                                    //ith key of the node.
-                goToRightMostChild = false;
-                break;
-            }else{
-                if (val == currentNode->getKey(i)) {
-                    found = true;
-                    keepSearching = false;
-                    goToRightMostChild = false;
-                    nodeAdd = nullptr;
-                    break;
-                }
-            }
-        }
-
-        if (goToRightMostChild) {       //If val was higher than all the keys then we
-                                        //change the current node to the rightmost child
-            nodeAdd = currentNode;
-            currentNode = currentNode->getChildNode( currentNode->getNumKeys() );
-        }
-
-        if (currentNode == nullptr) {
-            found = false;
-            keepSearching = false;
-        }
-
-    }
-    return found;
-}
-*/
 bool BStarTree::find(double val)
 {
     //remember to check if there is a more optimal way to do this
@@ -98,10 +44,10 @@ Node* BStarTree::findPlace(double val)
     std::list<Node*>::iterator child;
 
 
-    while(!currentNode->getChildList().empty()){
-        child = currentNode->getChildList().begin();
-        for(auto key = currentNode->getKeysList().begin();
-                key != currentNode->getKeysList().end();
+    while(!currentNode->children().empty()){
+        child = currentNode->children().begin();
+        for(auto key = currentNode->keys().begin();
+                key != currentNode->keys().end();
                 ++key){
             if(*key == val){ //exceptional case, the value already is in the tree
                 return nullptr;
@@ -109,7 +55,7 @@ Node* BStarTree::findPlace(double val)
                 ++child;
             }
         }
-        if(!currentNode->getChildList().empty()){
+        if(!currentNode->children().empty()){
             currentNode = *child;
         }
     }
@@ -134,11 +80,8 @@ bool BStarTree::searchSpace(Node* node)
     foundSpace = true;
     nodeCopy = node;
 
-    std::cout << "searching space" << '\n';
     if (this->areLeftSiblingsFull(nodeCopy)){
-        std::cout << "Hermanos izquierdos llenos" << '\n';
         if (this->areRightSiblingsFull(nodeCopy)) {
-            std::cout << "hermanos derechos llenos" << '\n';
             foundSpace = false;
         }else{
             this->rotateRight(nodeCopy);
@@ -152,93 +95,59 @@ bool BStarTree::searchSpace(Node* node)
 
 bool BStarTree::areLeftSiblingsFull(Node* node) const
 {
-    Node* ancestor;
-    int nodeNumberOfChild;
-    bool nodeIsFull;
+    Node* ancestor = node->getAncestor();
+    bool nodeIsFull = true;
 
-    ancestor = node->getAncestor();
-    auto it = ancestor->getChildList().begin();
-    nodeNumberOfChild = 0;
-    nodeIsFull = true;
-
-    for (; *it != node; it++, nodeNumberOfChild++){}
-
-    for (int i = nodeNumberOfChild-1; i >= 0; i--) {     //iterates from left sibling
-                                                        //up to the leftmost sibling
-        if ( !(ancestor->getChildNode(i)->isFull()) ) {
+    //this checks all the nodes before the received one to see if at least one of them is
+    //not full
+    for(auto leftSibling = ancestor->children().begin(); *leftSibling != node;  ++leftSibling){
+         if ( !(*leftSibling)->isFull() ) {
             nodeIsFull = false;
             break;
         }
     }
 
-    if (nodeIsFull) {
-        std::cout << "A node is full" << '\n';
-    }else{
-        std::cout << "A node is not full" << '\n';
-    }
-    return nodeIsFull;
+   return nodeIsFull;
 }
 bool BStarTree::areRightSiblingsFull(Node* node) const
 {
-    Node* ancestor;
-    int nodeNumberOfChild;
-    bool isFull;
+    Node* ancestor = node->getAncestor();
+    bool nodeIsFull = true;
 
-    ancestor = node->getAncestor();
-    auto it = ancestor->getChildList().end();
-    nodeNumberOfChild = ancestor->getChildList().size() - 1;    //-1 because we are
-                                                                    //our childList starts from 0
-    isFull = true;
-
-    for (; *it != node; it--, nodeNumberOfChild--){}
-
-    for (std::size_t i = nodeNumberOfChild +1 ; i < ancestor->getChildList().size(); i++) {
-                                                            //this iters from the
-                                                            //right brothers of the node
-                                                            //including the rightmost brother
-        if ( !(ancestor->getChildNode(i))->isOverloaded() ) {   //If some node brother
-                                                                    //isn't full (Overloaded)
-            isFull = false;
+    for(auto rightSibling = ancestor->children().rbegin(); *rightSibling != node; ++rightSibling){
+         if ( !(*rightSibling)->isFull() ) {
+            nodeIsFull = false;
             break;
         }
     }
-    return isFull;
+
+    return nodeIsFull;
 }
 
-bool BStarTree::isLeftMost(Node* node) const
+bool BStarTree::isLeftmost(Node* node) const
 {
-    Node *ancestor;
-    bool isLeftMost;
-
-    ancestor = node->getAncestor();
-    isLeftMost = false;
-    if (ancestor->getChildNode(0) == node) {
-        isLeftMost = true;
-    }
-
-    return isLeftMost;
+    return *node->getAncestor()->children().begin() ==  node ? true : false;
 }
 
+bool BStarTree::isRightmost(Node* node) const
+{
+    return *node->getAncestor()->children().rbegin() ==  node ? true : false;
+}
 Node* BStarTree::getLeftSibling(Node* node)
 {
     Node* ancestor, *sibling;
 
     ancestor = node->getAncestor();
-    //std::list<Node*>::iterator it = ancestor->getChildList().begin();
-    std::list<Node*>::iterator it;
 
     sibling = nullptr;
 
-    //std::cout << "it: " << *it << " - - - " << '\n';
-    for (it = ancestor->getChildList().begin(); it != ancestor->getChildList().end() && *it != node; it++){
-        //std::cout << "++it: " << *it << '\n';
-        //std::advance(it, 1);
-        //std::cout << "begin: " << *(ancestor->getChildList().begin()) << '\n';
-        //std::cout << "end: " << *(ancestor->getChildList().end()) << '\n';
+    auto it = ancestor->children().begin();
+    while(*it != node){
+        ++it;
     }
 
-    if (it != ancestor->getChildList().begin()) {
-        sibling = *(--it);
+    if (it != ancestor->children().begin()) {
+        sibling = *prev(it);
     }
 
     return sibling;
@@ -248,14 +157,17 @@ Node* BStarTree::getRightSibling(Node* node)
 {
     Node* ancestor, *sibling;
 
-
     ancestor = node->getAncestor();
-    sibling = nullptr;
-    auto it = ancestor->getChildList().rend();
 
-    for (; it != ancestor->getChildList().rbegin() && *it != node; it--)
-    if (it != ancestor->getChildList().rbegin()) {
-        sibling = *(--it);
+    sibling = nullptr;
+
+    auto it = ancestor->children().begin();
+    while(*it != node){
+        ++it;
+    }
+
+    if (it != prev(ancestor->children().end())) {
+        sibling = *next(it);
     }
 
     return sibling;
@@ -267,34 +179,31 @@ bool BStarTree::rotateLeft(Node* node)
     unsigned listIndex = 0;
     double parentKey;
 
-
     currentNode = node;
     do {
         ancestor = currentNode->getAncestor();
         listIndex = 0;
-        for(auto it = ancestor->getChildList().begin(); *it != currentNode && it != ancestor->getChildList().end(); ++it){
+        for(auto it = ancestor->children().begin(); *it != currentNode && it != ancestor->children().end(); ++it){
             ++listIndex;
         }
-        //leftSibling = ancestor->getChildNode(listIndex - 1);
-        leftSibling = this->getLeftSibling(node);
-
+        leftSibling = getLeftSibling(currentNode);
 
         //key rotation
         parentKey = (*ancestor)[listIndex-1];
-        (*ancestor)[listIndex-1] = currentNode->getKeysList().front();
-        currentNode->getKeysList().pop_front();
-        leftSibling->getKeysList().push_back(parentKey);
+        (*ancestor)[listIndex-1] = currentNode->keys().front();
+        currentNode->keys().pop_front();
+        leftSibling->keys().push_back(parentKey);
 
         //child rotation
-        if(!currentNode->getChildList().empty()){
-            child = currentNode->getChildList().front();
-            currentNode->getChildList().pop_front();
+        if(!currentNode->children().empty()){
+            child = currentNode->children().front();
+            currentNode->children().pop_front();
             dynamic_cast<NormalNode*>(child)->setAncestor(leftSibling);
-            leftSibling->getChildList().push_back(child);
+            leftSibling->children().push_back(child);
         }
 
         currentNode = leftSibling;
-    } while(currentNode != nullptr && currentNode->isOverloaded());
+    } while(!isLeftmost(currentNode) && currentNode->isOverloaded());
 
     return true;
 }
@@ -302,42 +211,37 @@ bool BStarTree::rotateLeft(Node* node)
 bool BStarTree::rotateRight(Node* node)
 {
     Node *currentNode, *ancestor, *rightSibling, *child;
-    unsigned listIndex = 0;
-    double parentKey;
-
+    std::list<double>::iterator ancestorKey;
+    std::list<Node*>::iterator ancestorChild;
 
     currentNode = node;
     do {
         ancestor = currentNode->getAncestor();
-        listIndex = 0;
-        for(auto it = ancestor->getChildList().begin(); *it != currentNode && it != ancestor->getChildList().end(); ++it){
-            ++listIndex;
+        ancestorKey = ancestor->keys().begin();
+        for(ancestorChild = ancestor->children().begin(); *ancestorChild != currentNode; ++ancestorChild){
+            ++ancestorKey;
         }
-        //rightSibling = ancestor->getChildNode(listIndex + 1);
-        rightSibling = getRightSibling(node);
+        rightSibling = getRightSibling(currentNode);
 
         //key rotation
-        parentKey = (*ancestor)[listIndex+1];
-        (*ancestor)[listIndex+1] = currentNode->getKeysList().back();
-        currentNode->getKeysList().pop_back();
-        rightSibling->getKeysList().push_front(parentKey);
+        rightSibling->keys().push_front(*ancestorKey);
+        *ancestorKey = currentNode->keys().back();
+        currentNode->keys().pop_back();
 
         //child rotation
-        if(!currentNode->getChildList().empty()){
-            child = currentNode->getChildList().back();
-            currentNode->getChildList().pop_back();
+        if(!currentNode->children().empty()){
+            child = currentNode->children().back();
+            currentNode->children().pop_back();
             dynamic_cast<NormalNode*>(child)->setAncestor(rightSibling);
-            rightSibling->getChildList().push_front(child);
+            rightSibling->children().push_front(child);
         }
 
         currentNode = rightSibling;
-    } while(currentNode != nullptr && !currentNode->isOverloaded());
+    } while(!isRightmost(currentNode) && currentNode->isOverloaded());
 
     return true;
 }
-
 void BStarTree::splitRoot(){
-    std::cout << "Splitting the root!" << std::endl << std::endl;
     Node *child1, *child2;
 
     child1 = new NormalNode(mOrder, false, root);
@@ -345,57 +249,48 @@ void BStarTree::splitRoot(){
 
     auto putKeys = [&](unsigned limit, Node*& lNode){
         for (std::size_t i = 0; i < limit; i++) {
-            lNode->getKeysList().push_back( root->getKeysList().front() );
-            root->getKeysList().pop_front();
+            lNode->keys().push_back( root->keys().front() );
+            root->keys().pop_front();
         }
     };
 
 
-    unsigned limitRoot = std::floor((2*mOrder - 2)/3) /*root->getKeysList().size()/2*/;
-    std::cout << "Number of keys to give to the children when the root splits: " << limitRoot << std::endl;
+    unsigned limitRoot = std::floor((2*mOrder - 2)/3) /*root->keys().size()/2*/;
     putKeys(limitRoot, child1);
 
-    double auxKey = root->getKeysList().front();
-    root->getKeysList().pop_front();
+    double auxKey = root->keys().front();
+    root->keys().pop_front();
 
     putKeys(limitRoot, child2);
 
-    root->getKeysList().push_front(auxKey);
+    root->keys().push_front(auxKey);
     //////////////////////////////////////////s///////////////////
     //Review this lamnda
     ////////////////////////////////////////////
     auto putChildren = [&](unsigned limit, Node*& lNode){
-        if(!root->getChildList().empty()){
+        if(!root->children().empty()){
             for (std::size_t i = 0; i < limit; i++) {
-                lNode->getChildList().push_back( root->getChildList().front() );
-                root->getChildList().pop_front();
+                lNode->children().push_back( root->children().front() );
+                root->children().pop_front();
             }
         }
 
     };
     //////////////////////////////////////////////////
-    unsigned limitForChild1 = child1->getKeysList().size() + 1;
-    unsigned limitForChild2 = child2->getKeysList().size() + 1;
+    unsigned limitForChild1 = child1->keys().size() + 1;
+    unsigned limitForChild2 = child2->keys().size() + 1;
 
-    std::cout << "Maximum number of children for the first child " << limitForChild1 << std::endl;
-    std::cout << "Maximum number of children for the first child " << limitForChild1 << std::endl;
 
     putChildren(limitForChild1, child1);
     putChildren(limitForChild2, child2);
 
 
-    root->getChildList().push_back(child1);
-    root->getChildList().push_back(child2);
-
-    std::cout << "Printing the new root: " << std::endl;
-    root->print();
+    root->children().push_back(child1);
+    root->children().push_back(child2);
 }
 
 void BStarTree::splitLeft(Node* node)
 {
-    std::cout << "Splitting this node along with its left sibling: " << std::endl;
-    node->print();
-
     Node *leftSibling, *ancestor;
     double parentKey;
     unsigned listIndex; //this is the index of the node in the list of children of its ancestor
@@ -408,30 +303,31 @@ void BStarTree::splitLeft(Node* node)
         ++listIndex;
     }
     parentKey = (*ancestor)[listIndex-1];
+    ancestor->keys().remove(parentKey);
 
     leftSibling = this->getLeftSibling(node);
 
     //moves all the keys of the left sibling to an auxiliar list, leaving the sibling empty
-    std::list<double> auxList(std::move(leftSibling->getKeysList()));
+    std::list<double> auxList(std::move(leftSibling->keys()));
     auxList.push_back(parentKey);
     //moves all the keys of the node to the auxiliar list, leaving the node empty
-    auxList.merge(node->getKeysList());
+    auxList.merge(node->keys());
 
     Node *newNode; //new node that goes in the middle of the current node and its left sibling
 
     newNode = new NormalNode(mOrder, false, ancestor);
 
-    ancestor->getChildList().push_back(newNode);
+    ancestor->children().push_back(newNode);
 
     auto putKeys = [&auxList](unsigned limit, Node*& lNode){
         for (std::size_t i = 0; i < limit; i++) {
-            lNode->getKeysList().push_back( auxList.front() );
+            lNode->keys().push_back( auxList.front() );
             auxList.pop_front();
         }
     };
 
     auto putKeyAncestor = [&ancestor, &auxList](){
-        ancestor->getKeysList().push_back( auxList.front() );
+        ancestor->keys().push_back( auxList.front() );
         auxList.pop_front();
     };
 
@@ -446,48 +342,51 @@ void BStarTree::splitLeft(Node* node)
     unsigned limitThree = std::floor( 2*mOrder/3 );
     putKeys(limitThree, node);
 
-    ancestor->getKeysList().sort();
-    ancestor->getChildList().sort( compareKeyNodes );
+    ancestor->keys().sort();
+    ancestor->children().sort( compareKeyNodes );
 }
 
 /*
 this split with the right sibling.
 */
+//update this to be like splitLeft
 void BStarTree::splitRight(Node* node)
 {
     Node *rightSibling, *ancestor;
-    double parentKey;
-    unsigned listIndex;
+    double ancestorKeyCopy;
+    std::list<double>::iterator ancestorKey;
 
     ancestor = node->getAncestor();
-    listIndex = 0;
-    for(auto it = ancestor->getChildList().begin(); *it != node && it != ancestor->getChildList().end(); ++it){
-        ++listIndex;
+    ancestorKey = ancestor->keys().begin();
+    for(auto it = ancestor->children().begin(); *it != node; ++it){
+        ++ancestorKey;
     }
-    parentKey = (*ancestor)[listIndex-1];
+    ancestorKeyCopy = *ancestorKey;
+    ancestor->keys().erase(ancestorKey);
 
     rightSibling = this->getRightSibling(node);
 
-    std::list<double> auxList(std::move(rightSibling->getKeysList()));
-    auxList.push_back(parentKey);
+    //moves all the keys of the node to the auxiliar list, leaving the node empty
+    std::list<double> auxList(std::move(node->keys()));
+    auxList.push_back(ancestorKeyCopy);
+    //moves all the keys of the right sibling to an auxiliar list, leaving the sibling empty
+    auxList.merge(rightSibling->keys());
 
-    auxList.merge(node->getKeysList());
-
-    Node *newNode;
+    Node *newNode; //new node that goes in the middle of the current node and its right sibling
 
     newNode = new NormalNode(mOrder, false, ancestor);
 
-    ancestor->getChildList().push_back(newNode);
+    ancestor->children().push_back(newNode);
 
-    auto putKeys = [&](unsigned limit, Node*& lNode){
+    auto putKeys = [&auxList](unsigned limit, Node*& lNode){
         for (std::size_t i = 0; i < limit; i++) {
-            lNode->getKeysList().push_front( auxList.front() );
+            lNode->keys().push_back( auxList.front() );
             auxList.pop_front();
         }
     };
 
     auto putKeyAncestor = [&ancestor, &auxList](){
-        ancestor->getKeysList().push_front( auxList.front() );
+        ancestor->keys().push_back( auxList.front() );
         auxList.pop_front();
     };
 
@@ -502,18 +401,12 @@ void BStarTree::splitRight(Node* node)
     unsigned limitThree = std::floor( 2*mOrder/3 );
     putKeys(limitThree, node);
 
-    ancestor->getKeysList().sort();
-    ancestor->getChildList().sort( compareKeyNodes );
-
-
+    ancestor->keys().sort();
+    ancestor->children().sort( compareKeyNodes );
 }
 
-bool compareKeyNodes(Node* nodeA, Node* nodeB)
+void BStarTree::print()
 {
-	return (*nodeA)[0] < (*nodeB)[0];
-}
-
-void BStarTree::print(){
     Node* currentNode;
     std::queue<Node*> nodeQueue;
 
@@ -523,14 +416,19 @@ void BStarTree::print(){
         currentNode = nodeQueue.front();
         nodeQueue.pop();
 
-        std::cout << "currentNode childs: " << currentNode->getChildList().size() << '\n';
+        std::cout << "Current node's children: " << currentNode->children().size() << std::endl;
         currentNode->print();
 
-        std::for_each(currentNode->getChildList().begin(),
-                      currentNode->getChildList().end(),
-                      [&](auto child){
+        std::for_each(currentNode->children().begin(),
+                      currentNode->children().end(),
+                      [&nodeQueue](auto child){
             nodeQueue.push(child);
         });
     }
 
+}
+
+bool compareKeyNodes(Node* nodeA, Node* nodeB)
+{
+	return *nodeA->keys().begin() < *nodeB->keys().begin();
 }
