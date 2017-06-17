@@ -45,25 +45,25 @@ bool BStarTree::add(double val)
     return added;
 }
 
-bool BStarTree::delete(double val)
+bool BStarTree::erase(double val)
 {
-    bool deleted;
-    Node* nodeDelete = nullptr;  //Node where it will add the number if the number
+    bool erased;
+    Node* nodeErase = nullptr;  //Node where it will add the number if the number
                                 //doesn't exist in the tree.
-    //do findPlaceDelete
-	nodeDelete = findPlaceDelete(val);
-    if (nodeDelete == nullptr) {
+    //do findPlaceerase
+	nodeErase = findPlaceErase(val);
+    if (nodeErase == nullptr) {
         return false;
     }
-    nodeDelete->keys().remove(val);
-    if (nodeDelete->isUnderloaded()) {
-		if(!searchSpaceDelete(nodeDelete)){
+    nodeErase->keys().remove(val);
+    if (nodeErase->isUnderloaded()) {
+		if(!searchSpaceErase(nodeErase)){
 			
 		}
     }
-    deleted = true;
+    erased = true;
 
-    return deleted;
+    return erased;
 }
 
 bool BStarTree::find(double val)
@@ -109,7 +109,7 @@ Node* BStarTree::findPlace(double val)
 }
 
 // can probably be more optimized
-Node* BStarTree::findPlaceDelete(double val)
+Node* BStarTree::findPlaceErase(double val)
 {
 	Node* currentNode = root;
     std::list<Node*>::iterator child;
@@ -163,7 +163,7 @@ bool BStarTree::searchSpace(Node* node)
     return foundSpace;
 }
 
-bool BStarTree::searchSpaceDelete(Node* node)
+bool BStarTree::searchSpaceErase(Node* node)
 {
 	// FILL THIS WITH DELICIOUS CODE
 	Node* nodeCopy;
@@ -176,10 +176,10 @@ bool BStarTree::searchSpaceDelete(Node* node)
         if (this->areRightSiblingsAtMinimum(nodeCopy)) {
             foundSpace = false;
         }else{
-            this->rotateRightDelete(nodeCopy);
+            this->rotateRightErase(nodeCopy);
         }
     }else{
-        this->rotateLeftDelete(nodeCopy);
+        this->rotateLeftErase(nodeCopy);
     }
 
     return foundSpace;
@@ -367,7 +367,7 @@ bool BStarTree::rotateRight(Node* node)
 	
 }
 
-bool BStarTree::rotateLeftDelete(Node* node)
+bool BStarTree::rotateLeftErase(Node* node)
 {
 	Node *currentNode, *ancestor, *leftSibling, *child;
     std::list<double>::iterator ancestorKey;
@@ -401,7 +401,7 @@ bool BStarTree::rotateLeftDelete(Node* node)
     return true;
 }
 
-bool BStarTree::rotateRightDelete(Node* node)
+bool BStarTree::rotateRightErase(Node* node)
 {
     Node *currentNode, *ancestor, *rightSibling, *child;
     std::list<double>::iterator ancestorKey;
@@ -645,11 +645,11 @@ unsigned BStarTree::addFromFile(std::string filepath)
 	return addedCount;
 }
 
-unsigned BStarTree::deleteFromFile(std::string filepath)
+unsigned BStarTree::eraseFromFile(std::string filepath)
 {
 	std::istream file;
 	double number;
-	unsigned deletedCount = 0;
+	unsigned erasedCount = 0;
 	
 	file.open(filepath);
 	
@@ -659,14 +659,14 @@ unsigned BStarTree::deleteFromFile(std::string filepath)
 	}
 	
 	while(file >> number){
-		if(delete(number)){ //checks if it deletes an element
-			++deletedCount;
+		if(erase(number)){ //checks if it erases an element
+			++erasedCount;
 		}
 	}
 
 	file.close();
 	
-	return deletedCount;
+	return erasedCount;
 }
 
 /*

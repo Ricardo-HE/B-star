@@ -40,7 +40,7 @@ public:
         @param val The element to deleten from the tree.
         @return True if the element existed previously in the tree and got deleted, false otherwise.
     */
-    bool delete(double val);
+    bool erase(double val);
 
     /**
         @param Method to find an element in the tree.
