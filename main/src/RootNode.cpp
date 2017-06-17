@@ -41,7 +41,8 @@ bool RootNode::isOverloaded()
     return overloaded;
 }
 
-bool RootNode::isFull(){
+bool RootNode::isFull()
+{
     bool full = false;
 
     const unsigned MAX_SIZE = 2 * floor( (2*order - 2) / 3 );
@@ -52,7 +53,18 @@ bool RootNode::isFull(){
     return full;
 }
 
-bool NormalNode::isAtMinimum()
+bool RootNode::isUnderloaded()
+{
+    bool atMinimum = false;
+    
+    const unsigned MIN_SIZE = 1;
+    if (keysList.size() < MIN_SIZE) {
+        atMinimum = true;
+    }
+
+    return atMinimum;
+}
+bool RootNode::isAtMinimum()
 {
     bool atMinimum = false;
     
@@ -62,10 +74,6 @@ bool NormalNode::isAtMinimum()
     }
 
     return atMinimum;
-}
-bool isEmpty()
-{
-    return keysList.empty();
 }
 
 void RootNode::print()

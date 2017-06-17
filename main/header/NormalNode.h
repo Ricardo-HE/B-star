@@ -23,6 +23,8 @@ public:												// by NormalNode
 	bool addItem(double iItem);					// Inserts an item to a NormalNode
     bool isOverloaded();
 	bool isFull();
+	bool isUnderloaded();
+	bool isAtMinimum();
 	void setAncestor(Node* newAncestor){ancestor = newAncestor;}
 
 };

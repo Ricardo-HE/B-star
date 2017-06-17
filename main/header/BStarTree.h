@@ -91,8 +91,8 @@ private:
 
     bool rotateLeft(Node* node);
     bool rotateRight(Node* node);
-    bool BStarTree::rotateLeftDelete(Node* node);
-    bool BStarTree::rotateRightDelete(Node* node);
+    bool rotateLeftDelete(Node* node);
+    bool rotateRightDelete(Node* node);
 
     void splitRoot();
     void splitLeft(Node* node);

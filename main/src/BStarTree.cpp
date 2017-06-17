@@ -218,7 +218,7 @@ bool BStarTree::areRightSiblingsFull(Node* node) const
     return nodeIsFull;
 }
 
-bool areLeftSiblingsAtMinimum(Node* node) const
+bool BStarTree::areLeftSiblingsAtMinimum(Node* node) const
 {
     Node* ancestor = node->getAncestor();
     bool nodeIsAtMinimum = true;
@@ -234,7 +234,7 @@ bool areLeftSiblingsAtMinimum(Node* node) const
 
    return nodeIsAtMinimum;
 }
-bool areRightSiblingsAtMinimum(Node* node) const
+bool BStarTree::areRightSiblingsAtMinimum(Node* node) const
 {
     Node* ancestor = node->getAncestor();
     bool nodeIsAtMinimum = true;
