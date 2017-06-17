@@ -38,7 +38,7 @@ int main()
 }
 */
     std::cout << "Adding from a file: " << std::endl;
-    unsigned numberOfElements = tree.addFromFile("file.txt");
+    unsigned numberOfElements = tree.addFromFile("files/file.txt");
     std::cout << numberOfElements << " where added " << std::endl;
     std::cout << "Printing:" << std::endl;
     tree.print();

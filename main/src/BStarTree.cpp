@@ -670,23 +670,48 @@ unsigned BStarTree::eraseFromFile(std::string filepath)
 	return erasedCount;
 }
 
-/*
-void BStarTree::operationFromFile(std::string filename, auto operation)
+void BStarTree::generateFile(int size)
 {
-	std::istream file;
-	double number;
+    std::ofstream oFile;
 
-	file.open(filename);
+    oFile.open("../files/file.txt");
+    if(!oFile.is_open()){
+        std::cerr << "Couldn't read file with path " << "../files/file.txt" << std::endl;
+    }
 
-	if(file.is_open()){
-		while(file >> number){
-			this->operation(number);
-		}
+    for(int i = 0; i < size; ++i){
+        oFile << rand() % 2000;
+    }
 
-		file.close();
-	}
+    oFile.close();
 }
-*/
+
+void BStarTree::testAddAndDelete(std::string filepath, int elementsToLeave)
+{
+    std::ifstream iaddFile;
+    double number;
+
+    std::vector<double> elements(30);
+    iaddFile.open(filepath);
+    if(!iaddFile.is_open()){
+        std::cerr << "Couldn't read file with path: " << filepath << std::endl;
+        return;
+    }
+
+    while(iaddFile >> number){
+        elements.push_back(number);
+        add(number);
+    }
+
+    iaddFile.close();
+
+    std::random_shuffle(elements.begin(), elements.end()); //shuffles the vector
+    int elementsToErase = elements.size() - elementsToLeave;
+    for(int i = 0; i < elementsToErase; ++i){
+        erase(elements[i]);
+    }
+}
+
 bool compareKeyNodes(Node* nodeA, Node* nodeB)
 {
 	return *nodeA->keys().begin() < *nodeB->keys().begin();

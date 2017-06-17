@@ -14,19 +14,19 @@
 class BStarTree {
 
 public:
-    
+
     /**
         @brief Constructor of the BStarTree.
         @param order The order of the b-tree. This controls the maximum numbers of keys and
                 children for each node. Minimum is 3.
     */
     BStarTree (int order): mOrder(order < 3 ? 3 : order), root(new RootNode(mOrder, true)) {}
-    
+
     /**
         @brief Destructor of the BStarTree. Deallocates the memory
     */
     ~BStarTree();
-    
+
     /**
         @brief Method to add an element to the tree.
         @pre The element must not be already in the tree.
@@ -34,7 +34,7 @@ public:
         @return True if the element didn't exist previously in the tree and got added, false otherwise.
     */
     bool add(double val);
-    
+
     /**
         @brief Method to erase an element to the tree.
         @pre The element must exist in the tree.
@@ -58,7 +58,7 @@ public:
         @return The number of elements added to the tree from the file.
     */
     unsigned addFromFile(std::string filepath);
-    
+
     /**
         @brief Method to erase elements listed in a file.
         @pre The file must only contain elements to add to the tree and they must be separated by whitespace
@@ -72,7 +72,11 @@ public:
         @brief Method to print, by levels, the nodes of the tree.
     */
     void print();
-    
+
+    void generateFile(int size);
+
+    void testAddAndDelete(std::string filepath, int elementsToLeave );
+
 private:
     const int mOrder; //order of the tree
     Node* root;
@@ -87,7 +91,7 @@ private:
 
     bool areLeftSiblingsFull(Node* node) const;
     bool areRightSiblingsFull(Node* node) const;
-    
+
     bool areLeftSiblingsAtMinimum(Node* node) const;
     bool areRightSiblingsAtMinimum(Node* node) const;
 
