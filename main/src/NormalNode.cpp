@@ -57,7 +57,7 @@ bool NormalNode::isUnderloaded()
 {
     bool underloaded = false;
     
-    const unsigned MIN_SIZE = std::ceil( (2*m-1 / 3) ) - 1;
+    const unsigned MIN_SIZE = std::ceil( (2*order-1 / 3) ) - 1;
     if (keysList.size() <  MIN_SIZE) {
         underloaded = true;
     }
@@ -69,7 +69,7 @@ bool NormalNode::isAtMinimum()
 {
         bool atMinimum = false;
     
-    const unsigned MIN_SIZE = std::ceil( (2*m-1 / 3) ) - 1;
+    const unsigned MIN_SIZE = std::ceil( (2*order-1 / 3) ) - 1;
     if (keysList.size() ==  MIN_SIZE) {
         atMinimum = true;
     }
