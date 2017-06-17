@@ -36,10 +36,10 @@ public:
     bool add(double val);
     
     /**
-        @brief Method to delete an element to the tree.
+        @brief Method to erase an element to the tree.
         @pre The element must exist in the tree.
-        @param val The element to deleten from the tree.
-        @return True if the element existed previously in the tree and got deleted, false otherwise.
+        @param val The element to erasen from the tree.
+        @return True if the element existed previously in the tree and got erased, false otherwise.
     */
     bool erase(double val);
 
@@ -60,13 +60,13 @@ public:
     unsigned addFromFile(std::string filepath);
     
     /**
-        @brief Method to delete elements listed in a file.
+        @brief Method to erase elements listed in a file.
         @pre The file must only contain elements to add to the tree and they must be separated by whitespace
                 characters.
         @param filepath String with the filepath of the file with the elements to add.
         @return The number of elements added to the tree from the file.
     */
-    unsigned deleteFromFile(std::string filepath);
+    unsigned eraseFromFile(std::string filepath);
 
     /**
         @brief Method to print, by levels, the nodes of the tree.
@@ -78,7 +78,7 @@ private:
     Node* root;
 
     Node* findPlace(double val);
-    Node* findPlaceDelete(double val);
+    Node* findPlaceErase(double val);
 
     bool searchSpace(Node* nodeAdd);
     bool isLeftmost(Node* node) const;
@@ -92,8 +92,8 @@ private:
 
     bool rotateLeft(Node* node);
     bool rotateRight(Node* node);
-    bool rotateLeftDelete(Node* node);
-    bool rotateRightDelete(Node* node);
+    bool rotateLeftErase(Node* node);
+    bool rotateRightErase(Node* node);
 
     void splitRoot();
     void splitLeft(Node* node);
