@@ -621,6 +621,8 @@ void BStarTree::print()
         });
     }
 }
+//check this later
+/*
 unsigned BStarTree::addFromFile(std::string filepath)
 {
 	std::istream file;
@@ -668,7 +670,7 @@ unsigned BStarTree::eraseFromFile(std::string filepath)
 	
 	return erasedCount;
 }
-
+*/
 /*
 void BStarTree::operationFromFile(std::string filename, auto operation)
 {
