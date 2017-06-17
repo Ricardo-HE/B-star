@@ -3,10 +3,6 @@
 
 #include "../header/BStarTree.h"
 
-/**
-*Prueba de que funciono codeanywhere
-*/
-
 int main()
 {
 	std::cout << "Main test file for testing the tree. This file will most likely change along with the project." << std::endl;
@@ -14,6 +10,7 @@ int main()
     const unsigned MAX = 200;
     const unsigned SIZE = 20;
 	BStarTree tree(5);
+	
 /*
     for(unsigned i = 0; i <= MAX; i += 10){
         tree.add(i);
