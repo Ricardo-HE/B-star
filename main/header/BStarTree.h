@@ -2,6 +2,7 @@
 #define BSTARTREE_H
 
 #include <iostream>
+#include <fstream>
 #include <cmath>
 #include <algorithm>
 #include <queue>
