@@ -46,7 +46,7 @@ public:
 	virtual bool isFull() = 0;
 	
 	virtual bool isUnderloaded() = 0;
-	virtual bool isEmpty() = 0; //this should just be a call to empty() of the container of keys
+	virtual bool isAtMinimum() = 0;
 
 	//************************Access Functions**********************************
 	/**
