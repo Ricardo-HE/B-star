@@ -1,6 +1,21 @@
 #include "../header/BStarTree.h"
 #include <stack>
 
+ BStarTree::~BStarTree()
+ {
+	 Node* currentNode;
+    std::queue<Node*> nodeQueue;
+
+    nodeQueue.push(root);
+
+    while (!nodeQueue.empty()) {
+        currentNode = nodeQueue.front();
+        nodeQueue.pop();
+
+        delete currentNode;
+	}
+ }
+
 bool BStarTree::add(double val)
 {
     bool added;
@@ -28,6 +43,27 @@ bool BStarTree::add(double val)
     added = true;
 
     return added;
+}
+
+bool BStarTree::delete(double val)
+{
+    bool deleted;
+    Node* nodeDelete = nullptr;  //Node where it will add the number if the number
+                                //doesn't exist in the tree.
+    //do findPlaceDelete
+	nodeDelete = findPlaceDelete(val);
+    if (nodeDelete == nullptr) {
+        return false;
+    }
+    nodeDelete->keys().remove(val);
+    if (nodeDelete->isUnderloaded()) {
+		if(!searchSpaceDelete(nodeDelete)){
+			
+		}
+    }
+    deleted = true;
+
+    return deleted;
 }
 
 bool BStarTree::find(double val)
@@ -72,6 +108,40 @@ Node* BStarTree::findPlace(double val)
     return currentNode;
 }
 
+// can probably be more optimized
+Node* BStarTree::findPlaceDelete(double val)
+{
+	Node* currentNode = root;
+    std::list<Node*>::iterator child;
+
+    while(!currentNode->children().empty()){
+        child = currentNode->children().begin();
+        for(auto key = currentNode->keys().begin();
+                key != currentNode->keys().end();
+                ++key){
+            if(*key == val){ //this is what we want when erasing
+                return currentNode;
+            }else if(*key < val){
+                ++child;
+            }
+        }
+        if(!currentNode->children().empty()){
+            currentNode = *child;
+        }
+    }
+
+    auto firstKey = currentNode->keys().begin();
+    auto endKey = currentNode->keys().end();
+
+    //search if the value to add is in the leaf node. If it is, then it is returned,
+	//if not, then it wasn't found in the tree.
+    if (std::find(firstKey, endKey, val) != endKey) {
+        return currentNode;
+    }
+
+    return nullptr; //the value wasn't found so nullptr signals this
+}
+
 bool BStarTree::searchSpace(Node* node)
 {
     Node* nodeCopy;
@@ -91,6 +161,30 @@ bool BStarTree::searchSpace(Node* node)
     }
 
     return foundSpace;
+}
+
+bool BStarTree::searchSpaceDelete(Node* node)
+{
+	// FILL THIS WITH DELICIOUS CODE
+	Node* nodeCopy;
+    bool foundSpace;
+
+    foundSpace = true;
+    nodeCopy = node;
+
+    if (this->areLeftSiblingsAtMinimum(nodeCopy)){
+        if (this->areRightSiblingsAtMinimum(nodeCopy)) {
+            foundSpace = false;
+        }else{
+            this->rotateRightDelete(nodeCopy);
+        }
+    }else{
+        this->rotateLeftDelete(nodeCopy);
+    }
+
+    return foundSpace;
+	
+	return true;
 }
 
 bool BStarTree::areLeftSiblingsFull(Node* node) const
@@ -122,6 +216,37 @@ bool BStarTree::areRightSiblingsFull(Node* node) const
     }
 
     return nodeIsFull;
+}
+
+bool areLeftSiblingsAtMinimum(Node* node) const
+{
+    Node* ancestor = node->getAncestor();
+    bool nodeIsAtMinimum = true;
+
+    //this checks all the nodes before the received one to see if at least one of them is
+    //not full
+    for(auto leftSibling = ancestor->children().begin(); *leftSibling != node;  ++leftSibling){
+         if ( !(*leftSibling)->isAtMinimum() ) {
+            nodeIsAtMinimum = false;
+            break;
+        }
+    }
+
+   return nodeIsAtMinimum;
+}
+bool areRightSiblingsAtMinimum(Node* node) const
+{
+    Node* ancestor = node->getAncestor();
+    bool nodeIsAtMinimum = true;
+
+    for(auto rightSibling = ancestor->children().rbegin(); *rightSibling != node; ++rightSibling){
+         if ( !(*rightSibling)->isAtMinimum() ) {
+            nodeIsAtMinimum = false;
+            break;
+        }
+    }
+
+    return nodeIsAtMinimum;
 }
 
 bool BStarTree::isLeftmost(Node* node) const
@@ -209,7 +334,7 @@ bool BStarTree::rotateLeft(Node* node)
 
 bool BStarTree::rotateRight(Node* node)
 {
-    Node *currentNode, *ancestor, *rightSibling, *child;
+	Node *currentNode, *ancestor, *rightSibling, *child;
     std::list<double>::iterator ancestorKey;
     std::list<Node*>::iterator nodeIt;
 
@@ -239,7 +364,77 @@ bool BStarTree::rotateRight(Node* node)
     } while(!isRightmost(currentNode) && currentNode->isOverloaded());
 
     return true;
+	
 }
+
+bool BStarTree::rotateLeftDelete(Node* node)
+{
+	Node *currentNode, *ancestor, *leftSibling, *child;
+    std::list<double>::iterator ancestorKey;
+    std::list<Node*>::iterator nodeIt;
+
+    currentNode = node;
+    do {
+        ancestor = currentNode->getAncestor();
+        ancestorKey = ancestor->keys().begin();
+        for(nodeIt = next(ancestor->children().begin()); *nodeIt != currentNode; ++nodeIt){
+            ++ancestorKey;
+        }
+        leftSibling = *prev(nodeIt);
+
+        //key rotation
+		currentNode->keys().push_front(*ancestorKey);
+		*ancestorKey = leftSibling->keys().back();
+		leftSibling->keys().pop_back();
+
+        //child rotation
+        if(!leftSibling->children().empty()){
+            child = leftSibling->children().back();
+            leftSibling->children().pop_back();
+            dynamic_cast<NormalNode*>(child)->setAncestor(currentNode);
+            currentNode->children().push_front(child);
+        }
+
+        currentNode = leftSibling;
+    } while(!isLeftmost(currentNode) && currentNode->isUnderloaded());
+
+    return true;
+}
+
+bool BStarTree::rotateRightDelete(Node* node)
+{
+    Node *currentNode, *ancestor, *rightSibling, *child;
+    std::list<double>::iterator ancestorKey;
+    std::list<Node*>::iterator nodeIt;
+
+    currentNode = node;
+    do {
+        ancestor = currentNode->getAncestor();
+        ancestorKey = ancestor->keys().begin();
+        for(nodeIt = ancestor->children().begin(); *nodeIt != currentNode; ++nodeIt){
+            ++ancestorKey;
+        }
+        rightSibling = *next(nodeIt);
+
+        //key rotation
+		currentNode->keys().push_back(*ancestorKey);
+		*ancestorKey = rightSibling->keys().front();
+		rightSibling->keys().pop_front();
+
+        //child rotation
+        if(!rightSibling->children().empty()){
+            child = rightSibling->children().front();
+            rightSibling->children().pop_front();
+            dynamic_cast<NormalNode*>(child)->setAncestor(currentNode);
+            currentNode->children().push_back(child);
+        }
+
+        currentNode = rightSibling;
+    } while(!isRightmost(currentNode) && currentNode->isUnderloaded());
+
+    return true;
+}
+
 void BStarTree::splitRoot(){
     Node *child1, *child2;
 
@@ -425,9 +620,72 @@ void BStarTree::print()
             nodeQueue.push(child);
         });
     }
+}
+unsigned BStarTree::addFromFile(std::string filepath)
+{
+	std::istream file;
+	double number;
+	unsigned addedCount = 0;
+	
+	file.open(filepath);
+	
+	if(!file.is_open()){
+		std::cerr << "couldn't open the file with path: " << filepath << std::endl;std;
+		return 0;
+	}
+	
+	while(file >> number){
+		if(add(number)){ //checks if it adds an element
+			++addedCount;
+		}
+	}
 
+	file.close();
+	
+	return addedCount;
 }
 
+unsigned BStarTree::deleteFromFile(std::string filepath)
+{
+	std::istream file;
+	double number;
+	unsigned deletedCount = 0;
+	
+	file.open(filepath);
+	
+	if(!file.is_open()){
+		std::cerr << "couldn't open the file with path: " << filepath << std::endl;std;
+		return 0;
+	}
+	
+	while(file >> number){
+		if(delete(number)){ //checks if it deletes an element
+			++deletedCount;
+		}
+	}
+
+	file.close();
+	
+	return deletedCount;
+}
+
+/*
+void BStarTree::operationFromFile(std::string filename, auto operation)
+{
+	std::istream file;
+	double number;
+	
+	file.open(filename);
+	
+	if(file.is_open()){
+		while(file >> number){
+			this->operation(number);
+		}
+		
+		file.close();
+	}
+}
+*/
 bool compareKeyNodes(Node* nodeA, Node* nodeB)
 {
 	return *nodeA->keys().begin() < *nodeB->keys().begin();

@@ -44,6 +44,9 @@ public:
 	virtual bool isOverloaded() = 0;
 
 	virtual bool isFull() = 0;
+	
+	virtual bool isUnderloaded() = 0;
+	virtual bool isEmpty() = 0; //this should just be a call to empty() of the container of keys
 
 	//************************Access Functions**********************************
 	/**

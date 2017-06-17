@@ -52,6 +52,22 @@ bool RootNode::isFull(){
     return full;
 }
 
+bool NormalNode::isAtMinimum()
+{
+    bool atMinimum = false;
+    
+    const unsigned MIN_SIZE = 1;
+    if (keysList.size() == MIN_SIZE) {
+        atMinimum = true;
+    }
+
+    return atMinimum;
+}
+bool isEmpty()
+{
+    return keysList.empty();
+}
+
 void RootNode::print()
 {
 
