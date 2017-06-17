@@ -81,6 +81,7 @@ private:
     Node* findPlaceErase(double val);
 
     bool searchSpace(Node* nodeAdd);
+    bool searchSpaceErase(Node* nodeAdd);
     bool isLeftmost(Node* node) const;
     bool isRightmost(Node* node) const;
 
