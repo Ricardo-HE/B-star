@@ -10,7 +10,7 @@ int main()
     const unsigned MAX = 200;
     const unsigned SIZE = 20;
 	BStarTree tree(5);
-	
+
 /*
     for(unsigned i = 0; i <= MAX; i += 10){
         tree.add(i);
@@ -25,6 +25,7 @@ int main()
         tree.print();
     }
 */
+/*
     srand(time(NULL));
 
     int number;
@@ -35,6 +36,12 @@ int main()
         std::cout <<"Pause" << std::endl;
         std::cin.ignore();
 }
+*/
+    std::cout << "Adding from a file: " << std::endl;
+    unsigned numberOfElements = tree.addFromFile("file.txt");
+    std::cout << numberOfElements << " where added " << std::endl;
+    std::cout << "Printing:" << std::endl;
+    tree.print();
 
-	return 0;
+    return 0;
 }

@@ -58,7 +58,7 @@ bool BStarTree::erase(double val)
     nodeErase->keys().remove(val);
     if (nodeErase->isUnderloaded()) {
 		if(!searchSpaceErase(nodeErase)){
-			
+
 		}
     }
     erased = true;
@@ -183,7 +183,7 @@ bool BStarTree::searchSpaceErase(Node* node)
     }
 
     return foundSpace;
-	
+
 	return true;
 }
 
@@ -364,7 +364,7 @@ bool BStarTree::rotateRight(Node* node)
     } while(!isRightmost(currentNode) && currentNode->isOverloaded());
 
     return true;
-	
+
 }
 
 bool BStarTree::rotateLeftErase(Node* node)
@@ -621,21 +621,20 @@ void BStarTree::print()
         });
     }
 }
-//check this later
-/*
+
 unsigned BStarTree::addFromFile(std::string filepath)
 {
-	std::istream file;
+	std::ifstream file;
 	double number;
 	unsigned addedCount = 0;
-	
+
 	file.open(filepath);
-	
+
 	if(!file.is_open()){
-		std::cerr << "couldn't open the file with path: " << filepath << std::endl;std;
+		std::cerr << "couldn't open the file with path: " << filepath << std::endl;
 		return 0;
 	}
-	
+
 	while(file >> number){
 		if(add(number)){ //checks if it adds an element
 			++addedCount;
@@ -643,23 +642,23 @@ unsigned BStarTree::addFromFile(std::string filepath)
 	}
 
 	file.close();
-	
+
 	return addedCount;
 }
 
 unsigned BStarTree::eraseFromFile(std::string filepath)
 {
-	std::istream file;
+	std::ifstream file;
 	double number;
 	unsigned erasedCount = 0;
-	
+
 	file.open(filepath);
-	
+
 	if(!file.is_open()){
-		std::cerr << "couldn't open the file with path: " << filepath << std::endl;std;
+		std::cerr << "couldn't open the file with path: " << filepath << std::endl;
 		return 0;
 	}
-	
+
 	while(file >> number){
 		if(erase(number)){ //checks if it erases an element
 			++erasedCount;
@@ -667,23 +666,23 @@ unsigned BStarTree::eraseFromFile(std::string filepath)
 	}
 
 	file.close();
-	
+
 	return erasedCount;
 }
-*/
+
 /*
 void BStarTree::operationFromFile(std::string filename, auto operation)
 {
 	std::istream file;
 	double number;
-	
+
 	file.open(filename);
-	
+
 	if(file.is_open()){
 		while(file >> number){
 			this->operation(number);
 		}
-		
+
 		file.close();
 	}
 }
