@@ -1,9 +1,12 @@
 #include "../header/RootNode.h"
 
-RootNode::RootNode(int order, bool rootflag, Node* ancestor): Node(order, rootflag, ancestor)
+RootNode::RootNode(int order, bool rootflag, Node* ancestor, unsigned id, unsigned height): Node(order, rootflag, ancestor)
 {
     //keysList = std::list<double>(); //creates an empty list
     //childList = std::list<Node*>(); //creates an empty list
+    this->id = id;
+    this->height = height;
+    std::cout << "Received height: " << height << " for the root node " << std::endl;
 }
 
 bool RootNode::addItem(double elem)
@@ -56,7 +59,7 @@ bool RootNode::isFull()
 bool RootNode::isUnderloaded()
 {
     bool atMinimum = false;
-    
+
     const unsigned MIN_SIZE = 1;
     if (keysList.size() < MIN_SIZE) {
         atMinimum = true;
@@ -67,7 +70,7 @@ bool RootNode::isUnderloaded()
 bool RootNode::isAtMinimum()
 {
     bool atMinimum = false;
-    
+
     const unsigned MIN_SIZE = 1;
     if (keysList.size() == MIN_SIZE) {
         atMinimum = true;

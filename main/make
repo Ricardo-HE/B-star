@@ -38,6 +38,7 @@ bool BStarTree::add(double val)
 
 void BStarTree::handleOverload(Node* overloadedNode)
 {
+    std::cout << "Handling the overload of a node" << std::endl;
     if (!overloadedNode->IsRoot()) {
         if (!this->searchSpace(overloadedNode)) {
             if (!this->isLeftmost(overloadedNode)) {
@@ -151,6 +152,7 @@ Node* BStarTree::findPlaceErase(double val)
 
 bool BStarTree::searchSpace(Node* node)
 {
+    std::cout << "Start of search space: " << std::endl;
     Node* nodeCopy;
     bool foundSpace;
 
@@ -167,6 +169,7 @@ bool BStarTree::searchSpace(Node* node)
         this->rotateLeft(nodeCopy);
     }
 
+    std::cout << "End of search space" << std::endl;
     return foundSpace;
 }
 
@@ -315,12 +318,8 @@ bool BStarTree::rotateLeft(Node* node)
     do {
         ancestor = currentNode->getAncestor();
         ancestorKey = ancestor->keys().begin();
-        for(nodeIt = next(ancestor->children().begin());
-                *nodeIt != currentNode;
-                ++nodeIt){
-            if(ancestorKey != --ancestor->keys().end()){
-                ++ancestorKey;
-            }
+        for(nodeIt = next(ancestor->children().begin()); *nodeIt != currentNode; ++nodeIt){
+            ++ancestorKey;
         }
         leftSibling = *prev(nodeIt);
 
@@ -338,14 +337,25 @@ bool BStarTree::rotateLeft(Node* node)
         }
 
         currentNode = leftSibling;
+        std::cout << "Left sibling made into current node: " << std::endl;
+        currentNode->print();
     } while(!isLeftmost(currentNode) && currentNode->isOverloaded());
 
-     return true;
+    if(isLeftmost(currentNode)){
+        std::cout << "The last printed node is NOT a leftmost one" << std::endl;
+    }
+
+    if(!currentNode->isOverloaded()){
+        std::cout << "Last printed node is NOT overloaded" << std::endl;
+    }
+    std::cout << "No more rotations. end of function" << std::endl;
+
+    return true;
 }
 
 bool BStarTree::rotateRight(Node* node)
 {
-    Node *currentNode, *ancestor, *rightSibling, *child;
+	Node *currentNode, *ancestor, *rightSibling, *child;
     std::list<double>::iterator ancestorKey;
     std::list<Node*>::iterator nodeIt;
 
@@ -449,8 +459,8 @@ bool BStarTree::rotateRightErase(Node* node)
 void BStarTree::splitRoot(){
     Node *child1, *child2;
 
-    child1 = new NormalNode(mOrder, false, root, id++, 2);
-    child2 = new NormalNode(mOrder, false, root, id++, 2);
+    child1 = new NormalNode(mOrder, false, root);
+    child2 = new NormalNode(mOrder, false, root);
 
     auto putKeys = [&](unsigned limit, Node*& lNode){
         for (std::size_t i = 0; i < limit; i++) {
@@ -458,6 +468,7 @@ void BStarTree::splitRoot(){
             root->keys().pop_front();
         }
     };
+
 
     unsigned limitRoot = std::floor((2*mOrder - 2)/3) /*root->keys().size()/2*/;
     putKeys(limitRoot, child1);
@@ -475,7 +486,6 @@ void BStarTree::splitRoot(){
         if(!root->children().empty()){
             for (std::size_t i = 0; i < limit; i++) {
                 lNode->children().push_back( root->children().front() );
-                dynamic_cast<NormalNode*>(lNode->children().back())->setAncestor(lNode);
                 root->children().pop_front();
             }
         }
@@ -496,6 +506,7 @@ void BStarTree::splitRoot(){
 
 void BStarTree::splitLeft(Node* node)
 {
+    std::cout << "Starting to split with the left node: " << std::endl;
     Node *leftSibling, *ancestor;
     double ancestorKeyCopy;
     std::list<double>::iterator ancestorKey;
@@ -519,7 +530,8 @@ void BStarTree::splitLeft(Node* node)
     auxList.merge(node->keys());
 
     Node *newNode; //new node that goes in the middle of the current node and its left sibling
-    newNode = new NormalNode(mOrder, false, ancestor, id++, ancestor->getHeight() + 1);
+
+    newNode = new NormalNode(mOrder, false, ancestor);
 
     ancestor->children().push_back(newNode);
 
@@ -585,7 +597,8 @@ void BStarTree::splitRight(Node* node)
     auxList.merge(rightSibling->keys());
 
     Node *newNode; //new node that goes in the middle of the current node and its right sibling
-    newNode = new NormalNode(mOrder, false, ancestor, id++, ancestor->getHeight() + 1);
+
+    newNode = new NormalNode(mOrder, false, ancestor);
 
     ancestor->children().push_back(newNode);
 
@@ -627,7 +640,6 @@ void BStarTree::print()
 {
     Node* currentNode;
     std::queue<Node*> nodeQueue;
-    unsigned oldHeight = 0;
 
     nodeQueue.push(root);
 
@@ -635,26 +647,14 @@ void BStarTree::print()
         currentNode = nodeQueue.front();
         nodeQueue.pop();
 
-            if(currentNode->getHeight() > oldHeight){
-                std::cout << "Printing the nodes with height: " << ++oldHeight << std::endl;
-            }
-
-        std::cout << "Node's id, height and number of children: " << std::endl;
-        std::cout << currentNode->getId() << " | " << currentNode->getHeight() << " | ";
-        std::cout << currentNode->children().size() << std::endl;
-        std::cout << "Id of the acestor: " ;
-        if(currentNode != root){
-            std::cout << currentNode->getAncestor()->getId();
-        }
-        std::cout << std::endl;
+        std::cout << "Current node's children: " << currentNode->children().size() << std::endl;
         currentNode->print();
 
-        for(auto it = currentNode->children().begin();
-                it != currentNode->children().end();
-                ++it){
-        //for(Node* child : currentNode->children()){
-            nodeQueue.push(*it);
-        }
+        std::for_each(currentNode->children().begin(),
+                      currentNode->children().end(),
+                      [&nodeQueue](auto child){
+            nodeQueue.push(child);
+        });
     }
 }
 
@@ -710,9 +710,9 @@ void BStarTree::generateFile(int size)
 {
     std::ofstream oFile;
 
-    oFile.open("files/file.txt");
+    oFile.open("../files/file.txt");
     if(!oFile.is_open()){
-        std::cerr << "Couldn't read file with path " << "files/file.txt" << std::endl;
+        std::cerr << "Couldn't read file with path " << "../files/file.txt" << std::endl;
     }
 
     for(int i = 0; i < size; ++i){

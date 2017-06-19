@@ -13,7 +13,7 @@ public:												// by NormalNode
 
 	NormalNode(){}
 
-	NormalNode(int order, bool rootflag, Node* ancestor = nullptr);						// Overloaded constructor false = NormalNode
+	NormalNode(int order, bool rootflag, Node* ancestor = nullptr, unsigned id = 0, unsigned height = 0);						// Overloaded constructor false = NormalNode
 	~NormalNode(){}					                // destructor for a NormalNode
 
 	//Definitions of Node class pure virtual functions

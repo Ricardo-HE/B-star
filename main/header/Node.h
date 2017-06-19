@@ -14,7 +14,7 @@ public:
 	/**
 	* @brief Constructor with parameters to initialize the variables from the class.
 	*/
-	Node(int order, bool rootflag, Node* ancestor = nullptr):order(order), isRoot(rootflag), ancestor(ancestor){}
+    Node(int order, bool rootflag, Node* ancestor = nullptr):order(order), isRoot(rootflag), ancestor(ancestor){}
 
 	/**
 	*@brief Virtual destructor
@@ -44,11 +44,16 @@ public:
 	virtual bool isOverloaded() = 0;
 
 	virtual bool isFull() = 0;
-	
+
 	virtual bool isUnderloaded() = 0;
 	virtual bool isAtMinimum() = 0;
 
 	//************************Access Functions**********************************
+
+    unsigned getId() const { return id; }
+
+    unsigned getHeight() const { return height; }
+
 	/**
 	*@brief Get the order of the node.
 	*@return The order of the node.
@@ -102,10 +107,12 @@ public:
     auto rend() { return keysList.rend(); }
 
 protected:
+    unsigned id; //id to identify nodes
+    unsigned height; //height in the tree. The root is 0 and each children is ancestor+1
     int order;                      // Order of this node
     std::list<double> keysList;     // Pointer for allocating dynamic memory store
     std::list<Node*> childList;
-    bool  isRoot;			        // Tracks if root or not.
+    bool  isRoot;                   // Tracks if root or not.
     Node* ancestor;
 
 };

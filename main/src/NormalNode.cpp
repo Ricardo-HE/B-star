@@ -1,10 +1,12 @@
 //NormalNode.cpp
 #include "../header/NormalNode.h"
 
-NormalNode::NormalNode(int order, bool rootflag, Node* ancestor): Node(order, rootflag, ancestor)
+NormalNode::NormalNode(int order, bool rootflag, Node* ancestor, unsigned id, unsigned height): Node(order, rootflag, ancestor)
 {
     //this might become handy later
     //const unsigned normalNodeOrder = ceil( (2*order-1) / 3 );
+    this->id = id;
+    this->height = height;
 }
 
 bool NormalNode::addItem(double elem)
@@ -56,7 +58,7 @@ bool NormalNode::isFull(){
 bool NormalNode::isUnderloaded()
 {
     bool underloaded = false;
-    
+
     const unsigned MIN_SIZE = std::ceil( (2*order-1 / 3) ) - 1;
     if (keysList.size() <  MIN_SIZE) {
         underloaded = true;
@@ -68,7 +70,7 @@ bool NormalNode::isUnderloaded()
 bool NormalNode::isAtMinimum()
 {
         bool atMinimum = false;
-    
+
     const unsigned MIN_SIZE = std::ceil( (2*order-1 / 3) ) - 1;
     if (keysList.size() ==  MIN_SIZE) {
         atMinimum = true;

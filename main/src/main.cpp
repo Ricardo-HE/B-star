@@ -9,7 +9,7 @@ int main()
 
     const unsigned MAX = 200;
     const unsigned SIZE = 20;
-	BStarTree tree(5);
+	BStarTree tree(3);
 
 /*
     for(unsigned i = 0; i <= MAX; i += 10){
@@ -25,23 +25,34 @@ int main()
         tree.print();
     }
 */
-/*
+
     srand(time(NULL));
+    int cap;
+    std::cout << "Capacity: ";
+    std::cin >> cap;
+
+    if(cap < 0) cap = 0;
 
     int number;
-    for(unsigned i = 0; i <= SIZE; ++i){
-        tree.add(number = rand() % 100);
-        std::cout << "Printing after adding: " << number << std::endl;
+    for(unsigned i = 1; i <= (unsigned)cap; ++i){
+        //tree.add(number = rand() % 100);
+        tree.add(i);
+        //std::cout << "Printing after adding: " << number << std::endl;
+        std::cout << "Printing after adding: " << i << std::endl;
         tree.print();
-        std::cout <<"Pause" << std::endl;
-        std::cin.ignore();
-}
-*/
+        if(i == 52){
+            std::cout <<"Pause" << std::endl;
+            std::cin.ignore();
+            std::cin.ignore();
+        }
+    }
+
+/*
     std::cout << "Adding from a file: " << std::endl;
     unsigned numberOfElements = tree.addFromFile("files/file.txt");
     std::cout << numberOfElements << " where added " << std::endl;
     std::cout << "Printing:" << std::endl;
     tree.print();
-
+*/
     return 0;
 }

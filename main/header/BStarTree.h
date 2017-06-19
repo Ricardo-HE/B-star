@@ -20,7 +20,9 @@ public:
         @param order The order of the b-tree. This controls the maximum numbers of keys and
                 children for each node. Minimum is 3.
     */
-    BStarTree (int order): mOrder(order < 3 ? 3 : order), root(new RootNode(mOrder, true)) {}
+    BStarTree (int order): mOrder(order < 3 ? 3 : order), id(1), root(new RootNode(mOrder, true, nullptr, id, 1)) {
+        ++id;
+    }
 
     /**
         @brief Destructor of the BStarTree. Deallocates the memory
@@ -79,7 +81,10 @@ public:
 
 private:
     const int mOrder; //order of the tree
+    unsigned id; //id of the next element of the tree.
     Node* root;
+
+    void handleOverload(Node* overloadedNode);
 
     Node* findPlace(double val);
     Node* findPlaceErase(double val);
