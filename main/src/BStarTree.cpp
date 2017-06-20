@@ -89,9 +89,10 @@ Node* BStarTree::findPlace(double val)
 
     while(!currentNode->children().empty()){
         child = currentNode->children().begin();
-        for(auto key = currentNode->keys().begin();
+        /*for(auto key = currentNode->keys().begin();
                 key != currentNode->keys().end();
-                ++key){
+                ++key){*/
+        for(auto key : currentNode->keys()){
             if(*key == val){ //exceptional case, the value already is in the tree
                 return nullptr;
             }else if(*key < val){
@@ -118,14 +119,15 @@ Node* BStarTree::findPlace(double val)
 // can probably be more optimized
 Node* BStarTree::findPlaceErase(double val)
 {
-	Node* currentNode = root;
+    Node* currentNode = root;
     std::list<Node*>::iterator child;
 
     while(!currentNode->children().empty()){
         child = currentNode->children().begin();
-        for(auto key = currentNode->keys().begin();
+        /*for(auto key = currentNode->keys().begin();
                 key != currentNode->keys().end();
-                ++key){
+                ++key){*/
+        for(auto key : currentNode->keys()){
             if(*key == val){ //this is what we want when erasing
                 return currentNode;
             }else if(*key < val){
@@ -380,7 +382,7 @@ bool BStarTree::rotateRight(Node* node)
 
 bool BStarTree::rotateLeftErase(Node* node)
 {
-	Node *currentNode, *ancestor, *leftSibling, *child;
+    Node *currentNode, *ancestor, *leftSibling, *child;
     std::list<double>::iterator ancestorKey;
     std::list<Node*>::iterator nodeIt;
 
@@ -394,9 +396,9 @@ bool BStarTree::rotateLeftErase(Node* node)
         leftSibling = *prev(nodeIt);
 
         //key rotation
-		currentNode->keys().push_front(*ancestorKey);
-		*ancestorKey = leftSibling->keys().back();
-		leftSibling->keys().pop_back();
+        currentNode->keys().push_front(*ancestorKey);
+        *ancestorKey = leftSibling->keys().back();
+        leftSibling->keys().pop_back();
 
         //child rotation
         if(!leftSibling->children().empty()){
@@ -428,9 +430,9 @@ bool BStarTree::rotateRightErase(Node* node)
         rightSibling = *next(nodeIt);
 
         //key rotation
-		currentNode->keys().push_back(*ancestorKey);
-		*ancestorKey = rightSibling->keys().front();
-		rightSibling->keys().pop_front();
+        currentNode->keys().push_back(*ancestorKey);
+        *ancestorKey = rightSibling->keys().front();
+        rightSibling->keys().pop_front();
 
         //child rotation
         if(!rightSibling->children().empty()){
@@ -525,7 +527,8 @@ void BStarTree::splitLeft(Node* node)
 
     auto putKeys = [&auxList](unsigned limit, Node*& lNode){
         for (std::size_t i = 0; i < limit; i++) {
-            lNode->keys().push_back( auxList.front() ); auxList.pop_front();
+            lNode->keys().push_back( auxList.front() );
+            auxList.pop_front();
         }
     };
 
@@ -649,10 +652,7 @@ void BStarTree::print()
         std::cout << std::endl;
         currentNode->print();
 
-        for(auto it = currentNode->children().begin();
-                it != currentNode->children().end();
-                ++it){
-        //for(Node* child : currentNode->children()){
+        for(Node* child : currentNode->children()){
             nodeQueue.push(*it);
         }
     }
@@ -660,50 +660,50 @@ void BStarTree::print()
 
 unsigned BStarTree::addFromFile(std::string filepath)
 {
-	std::ifstream file;
-	double number;
-	unsigned addedCount = 0;
+    std::ifstream file;
+    double number;
+    unsigned addedCount = 0;
 
-	file.open(filepath);
+    file.open(filepath);
 
-	if(!file.is_open()){
-		std::cerr << "couldn't open the file with path: " << filepath << std::endl;
-		return 0;
-	}
+    if(!file.is_open()){
+        std::cerr << "couldn't open the file with path: " << filepath << std::endl;
+        return 0;
+    }
 
-	while(file >> number){
-		if(add(number)){ //checks if it adds an element
-			++addedCount;
-		}
-	}
+    while(file >> number){
+        if(add(number)){ //checks if it adds an element
+            ++addedCount;
+        }
+    }
 
-	file.close();
+    file.close();
 
-	return addedCount;
+    return addedCount;
 }
 
 unsigned BStarTree::eraseFromFile(std::string filepath)
 {
-	std::ifstream file;
-	double number;
-	unsigned erasedCount = 0;
+    std::ifstream file;
+    double number;
+    unsigned erasedCount = 0;
 
-	file.open(filepath);
+    file.open(filepath);
 
-	if(!file.is_open()){
-		std::cerr << "couldn't open the file with path: " << filepath << std::endl;
-		return 0;
-	}
+    if(!file.is_open()){
+        std::cerr << "couldn't open the file with path: " << filepath << std::endl;
+        return 0;
+    }
 
-	while(file >> number){
-		if(erase(number)){ //checks if it erases an element
-			++erasedCount;
-		}
-	}
+    while(file >> number){
+        if(erase(number)){ //checks if it erases an element
+            ++erasedCount;
+        }
+    }
 
-	file.close();
+    file.close();
 
-	return erasedCount;
+    return erasedCount;
 }
 
 void BStarTree::generateFile(int size)
@@ -750,5 +750,5 @@ void BStarTree::testAddAndDelete(std::string filepath, int elementsToLeave)
 
 bool compareKeyNodes(Node* nodeA, Node* nodeB)
 {
-	return *nodeA->keys().begin() < *nodeB->keys().begin();
+    return *nodeA->keys().begin() < *nodeB->keys().begin();
 }
