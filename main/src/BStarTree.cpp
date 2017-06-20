@@ -21,12 +21,19 @@ bool BStarTree::add(double val)
     bool added;
     Node* nodeAdd = nullptr;    //Node where it will add the number if the number
                                 //doesn't exist in the tree.
+    Node* currentNode;
+
     nodeAdd = findPlace(val);
     if (nodeAdd != nullptr) {
         nodeAdd->addItem(val);
-        if (nodeAdd->isOverloaded()) {
-            handleOverload(nodeAdd);
+        currentNode = nodeAdd;
+        while (currentNode != nullptr && currentNode->isOverloaded()) {
+            //if (nodeAdd->isOverloaded()) {
+                handleOverload(nodeAdd);
+                currentNode = currentNode->getAncestor();
+            //}
         }
+
 
         added = true;
     }else{
@@ -89,10 +96,10 @@ Node* BStarTree::findPlace(double val)
 
     while(!currentNode->children().empty()){
         child = currentNode->children().begin();
-        /*for(auto key = currentNode->keys().begin();
+        for(auto key = currentNode->keys().begin();
                 key != currentNode->keys().end();
-                ++key){*/
-        for(auto key : currentNode->keys()){
+                ++key){
+        //for(auto key : currentNode->keys()){
             if(*key == val){ //exceptional case, the value already is in the tree
                 return nullptr;
             }else if(*key < val){
@@ -124,10 +131,10 @@ Node* BStarTree::findPlaceErase(double val)
 
     while(!currentNode->children().empty()){
         child = currentNode->children().begin();
-        /*for(auto key = currentNode->keys().begin();
+        for(auto key = currentNode->keys().begin();
                 key != currentNode->keys().end();
-                ++key){*/
-        for(auto key : currentNode->keys()){
+                ++key){
+        //for(auto key : currentNode->keys()){
             if(*key == val){ //this is what we want when erasing
                 return currentNode;
             }else if(*key < val){
@@ -537,12 +544,15 @@ void BStarTree::splitLeft(Node* node)
         auxList.pop_front();
     };
 
+    //accommodate keys in the nodes
     unsigned limitOne = std::floor( (2*mOrder - 2)/3 );
     putKeys(limitOne, leftSibling);
+
     putKeyAncestor();
 
     unsigned limitTwo = std::floor( (2*mOrder - 1)/3 );
     putKeys(limitTwo, newNode);
+
     putKeyAncestor();
 
     unsigned limitThree = std::floor( 2*mOrder/3 );
@@ -551,12 +561,31 @@ void BStarTree::splitLeft(Node* node)
     ancestor->keys().sort();
     ancestor->children().sort( compareKeyNodes );
 
+    //accommodate children in the nodes.
+    std::list<Node*> auxListChildren(std::move(leftSibling->children()));
+    auxListChildren.merge(node->children());
+
+    auto putChildren = [&auxListChildren](unsigned limit, Node*& lNode){
+        if (!lNode->children().empty()) {
+            for (std::size_t i = 0; i < limit; i++) {
+                lNode->children().push_back( auxListChildren.front() );
+                auxListChildren.pop_front();
+                dynamic_cast<NormalNode*>(lNode->children().back())->setAncestor(lNode);
+            }
+        }
+    };
+
+    putChildren(limitOne+1, leftSibling);
+    putChildren(limitTwo+1, newNode);
+    putChildren(limitThree+1, node);
+
+
     //now it is necessary to check if the ancestor is overloaded and handle that
     //THIS IS RECURSIVE, REMEMBER TO CHANGE IT
-    while(ancestor != nullptr && ancestor->isOverloaded()){
+    /*while(ancestor != nullptr && ancestor->isOverloaded()){
         handleOverload(ancestor);
         ancestor = ancestor->getAncestor();
-    }
+    }*/
     //RECURSIVE, ALERT DANGER
 }
 
@@ -605,7 +634,7 @@ void BStarTree::splitRight(Node* node)
     };
 
     unsigned limitOne = std::floor( (2*mOrder - 2)/3 );
-    putKeys(limitOne, rightSibling);
+    putKeys(limitOne, node);
     putKeyAncestor();
 
     unsigned limitTwo = std::floor( (2*mOrder - 1)/3 );
@@ -613,16 +642,36 @@ void BStarTree::splitRight(Node* node)
     putKeyAncestor();
 
     unsigned limitThree = std::floor( 2*mOrder/3 );
-    putKeys(limitThree, node);
+    putKeys(limitThree, rightSibling);
 
     ancestor->keys().sort();
     ancestor->children().sort( compareKeyNodes );
+
+
+    //accommodate children in the nodes.
+    std::list<Node*> auxListChildren(std::move(node->children()));
+    auxListChildren.merge(rightSibling->children());
+
+    auto putChildren = [&auxListChildren](unsigned limit, Node*& lNode){
+        if (!lNode->children().empty()) {
+            for (std::size_t i = 0; i < limit; i++) {
+                lNode->children().push_back( auxListChildren.front() );
+                auxListChildren.pop_front();
+                dynamic_cast<NormalNode*>(lNode->children().back())->setAncestor(lNode);
+            }
+        }
+    };
+
+    putChildren(limitOne+1, node);
+    putChildren(limitTwo+1, newNode);
+    putChildren(limitThree+1, rightSibling);
+
     //now it is necessary to check if the ancestor is overloaded and handle that
     //THIS IS RECURSIVE, REMEMBER TO CHANGE IT
-    while(ancestor != nullptr && ancestor->isOverloaded()){
+    /*while(ancestor != nullptr && ancestor->isOverloaded()){
         handleOverload(ancestor);
         ancestor = ancestor->getAncestor();
-    }
+    }*/
     //RECURSIVE, ALERT DANGER
 }
 
@@ -653,7 +702,7 @@ void BStarTree::print()
         currentNode->print();
 
         for(Node* child : currentNode->children()){
-            nodeQueue.push(*it);
+            nodeQueue.push(child);
         }
     }
 }
