@@ -28,10 +28,8 @@ bool BStarTree::add(double val)
         nodeAdd->addItem(val);
         currentNode = nodeAdd;
         while (currentNode != nullptr && currentNode->isOverloaded()) {
-            //if (nodeAdd->isOverloaded()) {
                 handleOverload(currentNode);
                 currentNode = currentNode->getAncestor();
-            //}
         }
 
 
@@ -96,13 +94,13 @@ Node* BStarTree::findPlace(double val)
 
     while(!currentNode->children().empty()){
         child = currentNode->children().begin();
-        for(auto key = currentNode->keys().begin();
+        /*for(auto key = currentNode->keys().begin();
                 key != currentNode->keys().end();
-                ++key){
-        //for(auto key : currentNode->keys()){
-            if(*key == val){ //exceptional case, the value already is in the tree
+                ++key){*/
+        for(auto key : currentNode->keys()){
+            if(key == val){ //exceptional case, the value already is in the tree
                 return nullptr;
-            }else if(*key < val){
+            }else if(key < val){
                 ++child;
             }
         }
@@ -131,13 +129,13 @@ Node* BStarTree::findPlaceErase(double val)
 
     while(!currentNode->children().empty()){
         child = currentNode->children().begin();
-        for(auto key = currentNode->keys().begin();
+        /*for(auto key = currentNode->keys().begin();
                 key != currentNode->keys().end();
-                ++key){
-        //for(auto key : currentNode->keys()){
-            if(*key == val){ //this is what we want when erasing
+                ++key){*/
+        for(auto key : currentNode->keys()){
+            if(key == val){ //this is what we want when erasing
                 return currentNode;
-            }else if(*key < val){
+            }else if(key < val){
                 ++child;
             }
         }

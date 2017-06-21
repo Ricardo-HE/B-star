@@ -38,17 +38,15 @@ int main()
     for(unsigned i = 1; i <= (unsigned)cap; ++i){
         tree.add(number = rand() % 10000);
         //tree.add(i);
-        std::cout << "Printing after adding: " << number << std::endl;
+        //std::cout << "Printing after adding: " << number << std::endl;
         //std::cout << "Printing after adding: " << i << std::endl;
-        tree.print();
-        /*if(i == 52){
-            std::cout <<"Pause" << std::endl;
-            std::cin.ignore();
-            std::cin.ignore();
-        }*/
-        std::cout << "-------------------------------" << std::endl;
+        //tree.print();
+        //std::cout << "-------------------------------" << std::endl;
         //std::cin.ignore();
     }
+    std::cout << "Printing the tree: " << std::endl;
+    tree.print();
+
 
 /*
     std::cout << "Adding from a file: " << std::endl;
