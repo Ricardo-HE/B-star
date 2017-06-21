@@ -106,6 +106,8 @@ public:
     auto rbegin() { return keysList.rbegin(); }
     auto rend() { return keysList.rend(); }
 
+	bool isLeaf(){return this->children().empty();}
+
 protected:
     unsigned id; //id to identify nodes
     unsigned height; //height in the tree. The root is 0 and each children is ancestor+1

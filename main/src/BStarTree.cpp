@@ -62,20 +62,50 @@ bool BStarTree::erase(double val)
     bool erased;
     Node* nodeErase = nullptr;  //Node where it will add the number if the number
                                 //doesn't exist in the tree.
+    Node* currentNode;
     //do findPlaceerase
     nodeErase = findPlaceErase(val);
     if (nodeErase == nullptr) {
         return false;
     }
     nodeErase->keys().remove(val);
-    if (nodeErase->isUnderloaded()) {
-        if(!searchSpaceErase(nodeErase)){
 
-        }
+    currentNode = nodeErase;
+
+    if (!nodeErase->isLeaf()) {
+        currentNode = getGreaterMinor(nodeErase, val);
+        nodeErase->keys().push_back( currentNode->keys().back() );
+        nodeErase->keys().sort();
+        currentNode->keys().pop_back();
     }
+
+    //see how this could use the ancestor instead of the current node
+    while (currentNode != nullptr && currentNode->isUnderloaded()) {
+        handleUnderload(currentNode);
+        currentNode = currentNode->getAncestor();
+    }
+
     erased = true;
 
     return erased;
+}
+
+//Remind to delete some sibling if we need to delete the current node that is underloaded
+void BStarTree::handleUnderload(Node* underloadedNode)
+{
+    if (!underloadedNode->IsRoot()) {
+        if (!this->searchSpaceErase(underloadedNode)) {
+            if(this->isLeftmost(underloadedNode)){
+                mergeLeft(underloadedNode);
+            }else if(this->isRightmost()){
+                mergeRight(underloadedNode);
+            }else{ //not leftmost nor rightmost
+                merge(underloadedNode);
+            }
+        }
+    }else{
+        mergeRoot();
+    }
 }
 
 bool BStarTree::find(double val)
@@ -179,7 +209,6 @@ bool BStarTree::searchSpace(Node* node)
 
 bool BStarTree::searchSpaceErase(Node* node)
 {
-    // FILL THIS WITH DELICIOUS CODE
     Node* nodeCopy;
     bool foundSpace;
 
@@ -198,7 +227,6 @@ bool BStarTree::searchSpaceErase(Node* node)
 
     return foundSpace;
 
-    return true;
 }
 
 bool BStarTree::areLeftSiblingsFull(Node* node) const
@@ -501,6 +529,7 @@ void BStarTree::splitRoot(){
     root->children().push_back(child2);
 }
 
+
 void BStarTree::splitLeft(Node* node)
 {
     Node *leftSibling, *ancestor;
@@ -673,6 +702,97 @@ void BStarTree::splitRight(Node* node)
         ancestor = ancestor->getAncestor();
     }*/
     //RECURSIVE, ALERT DANGER
+}
+
+void BStarTree::mergeRoot()
+{
+
+}
+
+//Case where there are left and right siblings.
+//this can be used when mergin left and right
+void BStarTree::merge(Node* node)
+{
+    Node *ancestor, *leftSibling, *rightSibling;
+    double ancestorKeyCopy;
+    std::list<double>::iterator ancestorKey;
+    std::list<Node*>::iterator nodeIt;
+
+    ancestor = node->getAncestor();
+    ancestorKey = ancestor->keys().begin();
+    for(nodeIt = next(ancestor->children().begin()); *nodeIt != node; ++nodeIt){
+        ++ancestorKey;
+    }
+
+    ancestorKeyCopy = *ancestorKey;
+    ancestor->keys().erase(ancestorKey);
+
+    leftSibling = *prev(nodeIt);
+    rightSibling = *next(nodeIt);
+
+    std::list<double> auxList( std::move(leftSibling->keys()) );
+    auxList.push_back(*ancestorKey);
+    ancestor->keys().erase(ancestorKey);
+    auxList.merge(node->keys());
+    auxList.push_back(*++ancestorKey);
+    ancestor->keys().erase(ancestorKey);
+    auxList.merge(rightSibling->keys());
+
+    auto putKeys = [&auxList](unsigned limit, Node*& lNode){
+        for (std::size_t i = 0; i < limit; i++) {
+            lNode->keys().push_back( auxList.front() );
+            auxList.pop_front();
+        }
+    };
+
+    unsigned limitOne = auxList.size() / 2;
+    unsigned limitTwo = limitOne;
+    if(auxList.size() % 2 == 0){
+        limitOne -= 1;
+    }
+
+    putKeys(limitOne, leftSibling);
+    ancestor->keys().push_back( auxList.front() );
+    auxList.pop_front();
+    putKeys(limitTwo, node);
+
+    //move all childrens before removing the right sibling
+    ancestor->children().remove(rightSibling);
+}
+
+void BStarTree::mergeLeft(Node* node)
+{
+
+}
+
+void BStarTree::mergeRight(Node* node)
+{
+
+}
+
+Node* BStarTree::getGreaterMinor(Node *node, double val)
+{
+    if (node->isLeaf()) {
+        return nullptr;
+    }
+
+    std::list<double>::iterator ancestorKey;
+    std::list<Node*>::iterator childIt;
+
+    childIt = node->children().begin();
+
+    for (ancestorKey = node->keys().begin(); *ancestorKey < val; ancestorKey++) {
+        childIt++;
+    }
+
+    Node* greaterMinor;
+    greaterMinor = *childIt;
+    while (!greaterMinor->isLeaf()) {
+        greaterMinor = greaterMinor->children().back();
+    }
+
+    return greaterMinor;
+
 }
 
 void BStarTree::print()

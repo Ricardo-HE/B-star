@@ -85,6 +85,7 @@ private:
     Node* root;
 
     void handleOverload(Node* overloadedNode);
+    void handleUnderload(Node* underloadedNode);
 
     Node* findPlace(double val);
     Node* findPlaceErase(double val);
@@ -108,6 +109,12 @@ private:
     void splitRoot();
     void splitLeft(Node* node);
     void splitRight(Node* node);
+    void mergeRoot();
+    void merge(Node* node);
+    void mergeLeft(Node* node);
+    void mergeRight(Node* node);
+
+    Node* getGreaterMinor(Node *node, double val);
 
     Node* getLeftSibling(Node* node);
     Node* getRightSibling(Node* node);
