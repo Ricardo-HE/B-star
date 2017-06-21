@@ -29,7 +29,7 @@ bool BStarTree::add(double val)
         currentNode = nodeAdd;
         while (currentNode != nullptr && currentNode->isOverloaded()) {
             //if (nodeAdd->isOverloaded()) {
-                handleOverload(nodeAdd);
+                handleOverload(currentNode);
                 currentNode = currentNode->getAncestor();
             //}
         }
@@ -564,9 +564,10 @@ void BStarTree::splitLeft(Node* node)
     //accommodate children in the nodes.
     std::list<Node*> auxListChildren(std::move(leftSibling->children()));
     auxListChildren.merge(node->children());
+    auxListChildren.sort(compareKeyNodes);
 
     auto putChildren = [&auxListChildren](unsigned limit, Node*& lNode){
-        if (!lNode->children().empty()) {
+        if (!auxListChildren.empty()) {
             for (std::size_t i = 0; i < limit; i++) {
                 lNode->children().push_back( auxListChildren.front() );
                 auxListChildren.pop_front();
@@ -651,9 +652,10 @@ void BStarTree::splitRight(Node* node)
     //accommodate children in the nodes.
     std::list<Node*> auxListChildren(std::move(node->children()));
     auxListChildren.merge(rightSibling->children());
+    auxListChildren.sort(compareKeyNodes);
 
     auto putChildren = [&auxListChildren](unsigned limit, Node*& lNode){
-        if (!lNode->children().empty()) {
+        if (!auxListChildren.empty()) {
             for (std::size_t i = 0; i < limit; i++) {
                 lNode->children().push_back( auxListChildren.front() );
                 auxListChildren.pop_front();

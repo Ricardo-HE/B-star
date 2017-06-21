@@ -9,7 +9,7 @@ int main()
 
     const unsigned MAX = 200;
     const unsigned SIZE = 20;
-	BStarTree tree(3);
+	BStarTree tree(5);
 
 /*
     for(unsigned i = 0; i <= MAX; i += 10){
@@ -30,21 +30,24 @@ int main()
     int cap;
     std::cout << "Capacity: ";
     std::cin >> cap;
+    std::cin.ignore();
 
     if(cap < 0) cap = 0;
 
     int number;
     for(unsigned i = 1; i <= (unsigned)cap; ++i){
-        //tree.add(number = rand() % 100);
-        tree.add(i);
-        //std::cout << "Printing after adding: " << number << std::endl;
-        std::cout << "Printing after adding: " << i << std::endl;
+        tree.add(number = rand() % 10000);
+        //tree.add(i);
+        std::cout << "Printing after adding: " << number << std::endl;
+        //std::cout << "Printing after adding: " << i << std::endl;
         tree.print();
-        if(i == 52){
+        /*if(i == 52){
             std::cout <<"Pause" << std::endl;
             std::cin.ignore();
             std::cin.ignore();
-        }
+        }*/
+        std::cout << "-------------------------------" << std::endl;
+        //std::cin.ignore();
     }
 
 /*
