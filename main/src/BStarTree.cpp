@@ -79,10 +79,11 @@ bool BStarTree::erase(double val)
         currentNode->keys().pop_back();
     }
 
-    //see how this could use the ancestor instead of the current node
+    Node* ancestor;
     while (currentNode != nullptr && currentNode->isUnderloaded()) {
+        ancestor = currentNode->getAncestor();
         handleUnderload(currentNode);
-        currentNode = currentNode->getAncestor();
+        currentNode = ancestor;
     }
 
     erased = true;
