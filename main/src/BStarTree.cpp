@@ -91,7 +91,6 @@ bool BStarTree::erase(double val)
     return erased;
 }
 
-//Remind to delete some sibling if we need to delete the current node that is underloaded
 void BStarTree::handleUnderload(Node* underloadedNode)
 {
     if (!underloadedNode->IsRoot()) {
@@ -160,9 +159,6 @@ Node* BStarTree::findPlaceErase(double val)
 
     while(!currentNode->children().empty()){
         child = currentNode->children().begin();
-        /*for(auto key = currentNode->keys().begin();
-                key != currentNode->keys().end();
-                ++key){*/
         for(auto key : currentNode->keys()){
             if(key == val){ //this is what we want when erasing
                 return currentNode;
@@ -444,7 +440,7 @@ void BStarTree::splitRoot(){
         }
 
     };
-    //////////////////////////////////////////////////
+
     unsigned limitForChild1 = child1->keys().size() + 1;
     unsigned limitForChild2 = child2->keys().size() + 1;
 
@@ -533,20 +529,8 @@ void BStarTree::splitLeft(Node* node)
     putChildren(limitOne+1, leftSibling);
     putChildren(limitTwo+1, newNode);
     putChildren(limitThree+1, node);
-
-
-    //now it is necessary to check if the ancestor is overloaded and handle that
-    //THIS IS RECURSIVE, REMEMBER TO CHANGE IT
-    /*while(ancestor != nullptr && ancestor->isOverloaded()){
-        handleOverload(ancestor);
-        ancestor = ancestor->getAncestor();
-    }*/
-    //RECURSIVE, ALERT DANGER
 }
 
-/*
-this split with the right sibling.
-*/
 void BStarTree::splitRight(Node* node)
 {
     Node *rightSibling, *ancestor;
@@ -602,7 +586,6 @@ void BStarTree::splitRight(Node* node)
     ancestor->keys().sort();
     ancestor->children().sort( compareKeyNodes );
 
-
     //accommodate children in the nodes.
     std::list<Node*> auxListChildren(std::move(node->children()));
     auxListChildren.merge(rightSibling->children());
@@ -621,14 +604,6 @@ void BStarTree::splitRight(Node* node)
     putChildren(limitOne+1, node);
     putChildren(limitTwo+1, newNode);
     putChildren(limitThree+1, rightSibling);
-
-    //now it is necessary to check if the ancestor is overloaded and handle that
-    //THIS IS RECURSIVE, REMEMBER TO CHANGE IT
-    /*while(ancestor != nullptr && ancestor->isOverloaded()){
-        handleOverload(ancestor);
-        ancestor = ancestor->getAncestor();
-    }*/
-    //RECURSIVE, ALERT DANGER
 }
 
 void BStarTree::mergeRoot()
