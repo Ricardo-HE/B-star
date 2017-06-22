@@ -102,11 +102,57 @@ private:
     bool areLeftSiblingsAtMinimum(Node* node) const;
     bool areRightSiblingsAtMinimum(Node* node) const;
 
+
+    /**
+     * @brief Method to rotate a single time to the left, taking a key from the node
+     *          putting it in its ancestor and moving the key of the ancestor to the
+     *          left sibling of the node.
+     * @pre The received node must not be the leftmost child of the ancestor.
+     * @param node Node to take a key from and rotate it to the left.
+     * @return An iterator pointing to the received node.
+     */
     std::list<Node*>::iterator rotateLeft(Node* node);
+
+    /**
+     * @brief Method to rotate a single time to the right, taking a key from the node
+     *          putting it in its ancestor and moving the key of the ancestor to the
+     *          right sibling of the node.
+     * @pre The received node must not be the rightmost child of the ancestor.
+     * @param node Node to take a key from and rotate it to the right.
+     * @return An iterator pointing to the received node.
+     */
     std::list<Node*>::iterator rotateRight(Node* node);
+
+    /**
+     * @brief Method to rotate to the left as long as a node is overloaded.
+     * @pre The received node must not be the leftmost child of the acestor.
+     * @param node Node to start the rotations to the left. This one should be overloaded.
+     * @return --
+     */
     bool rotateLeftAdd(Node* node);
+
+    /**
+     * @brief Method to rotate to the right as long as a node is overloaded.
+     * @pre The received node must not be the rightmost child of the acestor.
+     * @param node Node to start the rotations to the right. This one should be overloaded.
+     * @return --
+     */
     bool rotateRightAdd(Node* node);
+
+    /**
+     * @brief Method to rotate to the right as long as a node is underloaded.
+     * @pre The received node must not be the leftmost child of the acestor.
+     * @param node Node to start the rotations to the right. This one should be underloaded.
+     * @return --
+     */
     bool rotateLeftErase(Node* node);
+
+    /**
+     * @brief Method to rotate to the left as long as a node is underloaded.
+     * @pre The received node must not be the rightmost child of the acestor.
+     * @param node Node to start the rotations to the left. This one should be overloaded.
+     * @return --
+     */
     bool rotateRightErase(Node* node);
 
     void splitRoot();
