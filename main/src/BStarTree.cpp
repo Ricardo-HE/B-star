@@ -351,12 +351,8 @@ bool BStarTree::rotateLeft(Node* node)
     do {
         ancestor = currentNode->getAncestor();
         ancestorKey = ancestor->keys().begin();
-        for(nodeIt = next(ancestor->children().begin());
-                *nodeIt != currentNode;
-                ++nodeIt){
-            if(ancestorKey != --ancestor->keys().end()){
-                ++ancestorKey;
-            }
+        for(nodeIt = next(ancestor->children().begin()); *nodeIt != currentNode; ++nodeIt){
+            ++ancestorKey;
         }
         leftSibling = *prev(nodeIt);
 
