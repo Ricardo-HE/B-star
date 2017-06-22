@@ -98,7 +98,7 @@ void BStarTree::handleUnderload(Node* underloadedNode)
         if (!this->searchSpaceErase(underloadedNode)) {
             if(this->isLeftmost(underloadedNode)){
                 mergeLeft(underloadedNode);
-            }else if(this->isRightmost()){
+            }else if(this->isRightmost(underloadedNode)){
                 mergeRight(underloadedNode);
             }else{ //not leftmost nor rightmost
                 merge(underloadedNode);
@@ -715,7 +715,6 @@ void BStarTree::mergeRoot()
 void BStarTree::merge(Node* node)
 {
     Node *ancestor, *leftSibling, *rightSibling;
-    double ancestorKeyCopy;
     std::list<double>::iterator ancestorKey;
     std::list<Node*>::iterator nodeIt;
 
@@ -725,7 +724,6 @@ void BStarTree::merge(Node* node)
         ++ancestorKey;
     }
 
-    ancestorKeyCopy = *ancestorKey;
     ancestor->keys().erase(ancestorKey);
 
     leftSibling = *prev(nodeIt);
@@ -758,6 +756,20 @@ void BStarTree::merge(Node* node)
     putKeys(limitTwo, node);
 
     //move all childrens before removing the right sibling
+    std::list<Node*> auxListChildren( std::move(leftSibling->children()) );
+    auxListChildren.merge(node->children());
+    auxListChildren.merge(rightSibling->children());
+
+    auto putChildren = [&auxListChildren](unsigned limit, Node*& lNode){
+        for (std::size_t i = 0; i < limit; i++) {
+            lNode->children().push_back( auxListChildren.front() );
+            auxListChildren.pop_front();
+        }
+    };
+
+    putChildren(limitOne+1, leftSibling);
+    putChildren(limitTwo+1, node);
+
     ancestor->children().remove(rightSibling);
 }
 
