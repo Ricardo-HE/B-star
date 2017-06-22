@@ -185,20 +185,17 @@ Node* BStarTree::findPlaceErase(double val)
 
 bool BStarTree::searchSpace(Node* node)
 {
-    Node* nodeCopy;
     bool foundSpace;
-
     foundSpace = true;
-    nodeCopy = node;
 
-    if (this->areLeftSiblingsFull(nodeCopy)){
-        if (this->areRightSiblingsFull(nodeCopy)) {
+    if (this->areLeftSiblingsFull(node)){
+        if (this->areRightSiblingsFull(node)) {
             foundSpace = false;
         }else{
-            this->rotateRight(nodeCopy, &Node::isOverloaded);
+            this->rotateRight(node, &Node::isOverloaded);
         }
     }else{
-        this->rotateLeft(nodeCopy, &Node::isOverloaded);
+        this->rotateLeft(node, &Node::isOverloaded);
     }
 
     return foundSpace;
@@ -206,20 +203,17 @@ bool BStarTree::searchSpace(Node* node)
 
 bool BStarTree::searchSpaceErase(Node* node)
 {
-    Node* nodeCopy;
     bool foundSpace;
-
     foundSpace = true;
-    nodeCopy = node;
 
-    if (this->areLeftSiblingsAtMinimum(nodeCopy)){
-        if (this->areRightSiblingsAtMinimum(nodeCopy)) {
+    if (this->areLeftSiblingsAtMinimum(node)){
+        if (this->areRightSiblingsAtMinimum(node)) {
             foundSpace = false;
         }else{
-            this->rotateRight(nodeCopy, &Node::isUnderloaded);
+            this->rotateRight(node, &Node::isUnderloaded);
         }
     }else{
-        this->rotateLeft(nodeCopy, &Node::isUnderloaded);
+        this->rotateLeft(node, &Node::isUnderloaded);
     }
 
     return foundSpace;
