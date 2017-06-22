@@ -6,6 +6,7 @@
 #include <cmath>
 #include <algorithm>
 #include <queue>
+#include <functional>
 
 #include "Node.h"
 #include "RootNode.h"
@@ -101,10 +102,8 @@ private:
     bool areLeftSiblingsAtMinimum(Node* node) const;
     bool areRightSiblingsAtMinimum(Node* node) const;
 
-    bool rotateLeft(Node* node);
-    bool rotateRight(Node* node);
-    bool rotateLeftErase(Node* node);
-    bool rotateRightErase(Node* node);
+    bool rotateLeft(Node* node, std::function<bool(Node*)> stopCondition);
+    bool rotateRight(Node* node, std::function<bool(Node*)> stopCondition);
 
     void splitRoot();
     void splitLeft(Node* node);
