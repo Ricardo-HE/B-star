@@ -192,10 +192,10 @@ bool BStarTree::searchSpace(Node* node)
         if (this->areRightSiblingsFull(node)) {
             foundSpace = false;
         }else{
-            this->rotateRight(node, &Node::isOverloaded);
+            this->rotateRightAdd(node);
         }
     }else{
-        this->rotateLeft(node, &Node::isOverloaded);
+        this->rotateLeftAdd(node);
     }
 
     return foundSpace;
@@ -210,10 +210,10 @@ bool BStarTree::searchSpaceErase(Node* node)
         if (this->areRightSiblingsAtMinimum(node)) {
             foundSpace = false;
         }else{
-            this->rotateRight(node, &Node::isUnderloaded);
+            this->rotateRightErase(node);
         }
     }else{
-        this->rotateLeft(node, &Node::isUnderloaded);
+        this->rotateLeftErase(node);
     }
 
     return foundSpace;
@@ -291,13 +291,22 @@ bool BStarTree::isRightmost(Node* node) const
 {
     return *node->getAncestor()->children().rbegin() ==  node ? true : false;
 }
-Node* BStarTree::getLeftSibling(Node* node)
+
+std::list<Node*>::iterator BStarTree::getIterator(Node* node)
 {
-    Node* ancestor, *sibling;
+    auto it = node->getAncestor()->children().begin();
+    while(*it != node){
+        ++it;
+    }
+
+    return it;
+}
+
+std::list<Node*>::iterator BStarTree::getLeftSiblingIt(Node* node)
+{
+    Node* ancestor;
 
     ancestor = node->getAncestor();
-
-    sibling = nullptr;
 
     auto it = ancestor->children().begin();
     while(*it != node){
@@ -305,19 +314,17 @@ Node* BStarTree::getLeftSibling(Node* node)
     }
 
     if (it != ancestor->children().begin()) {
-        sibling = *prev(it);
+        return prev(it);
+    }else{
+        return ancestor->children().begin();
     }
-
-    return sibling;
 }
 
-Node* BStarTree::getRightSibling(Node* node)
+std::list<Node*>::iterator BStarTree::getRightSiblingIt(Node* node)
 {
-    Node* ancestor, *sibling;
+    Node* ancestor;
 
     ancestor = node->getAncestor();
-
-    sibling = nullptr;
 
     auto it = ancestor->children().begin();
     while(*it != node){
@@ -325,76 +332,123 @@ Node* BStarTree::getRightSibling(Node* node)
     }
 
     if (it != prev(ancestor->children().end())) {
-        sibling = *next(it);
+        return next(it);
+    }else{
+        return prev(ancestor->children().end());
     }
-
-    return sibling;
 }
 
-bool BStarTree::rotateLeft(Node* node, std::function<bool(Node*)> stopCondition)
+Node* BStarTree::getLeftSibling(Node* node)
 {
-    Node *currentNode, *ancestor, *leftSibling, *child;
+    return *getLeftSiblingIt(node);
+}
+
+Node* BStarTree::getRightSibling(Node* node)
+{
+    return *getRightSiblingIt(node);
+}
+
+std::list<Node*>::iterator BStarTree::rotateLeft(Node* node)
+{
+    Node *ancestor, *leftSibling, *child;
     std::list<double>::iterator ancestorKey;
     std::list<Node*>::iterator nodeIt;
 
+    ancestor = node->getAncestor();
+    ancestorKey = ancestor->keys().begin();
+    for(nodeIt = next(ancestor->children().begin()); *nodeIt != node; ++nodeIt){
+        ++ancestorKey;
+    }
+    leftSibling = *prev(nodeIt);
+
+    //key rotation
+    leftSibling->keys().push_back(*ancestorKey);
+    *ancestorKey = node->keys().front();
+    node->keys().pop_front();
+
+    //child rotation
+    if(!node->children().empty()){
+        child = node->children().front();
+        node->children().pop_front();
+        dynamic_cast<NormalNode*>(child)->setAncestor(leftSibling);
+        leftSibling->children().push_back(child);
+    }
+
+    return nodeIt;
+}
+
+std::list<Node*>::iterator BStarTree::rotateRight(Node* node)
+{
+    Node *ancestor, *rightSibling, *child;
+    std::list<double>::iterator ancestorKey;
+    std::list<Node*>::iterator nodeIt;
+
+    ancestor = node->getAncestor();
+    ancestorKey = ancestor->keys().begin();
+    for(nodeIt = ancestor->children().begin(); *nodeIt != node; ++nodeIt){
+        ++ancestorKey;
+    }
+    rightSibling = *next(nodeIt);
+
+    //key rotation
+    rightSibling->keys().push_front(*ancestorKey);
+    *ancestorKey = node->keys().back();
+    node->keys().pop_back();
+
+    //child rotation
+    if(!node->children().empty()){
+        child = node->children().back();
+        node->children().pop_back();
+        dynamic_cast<NormalNode*>(child)->setAncestor(rightSibling);
+        rightSibling->children().push_front(child);
+    }
+
+    return nodeIt;
+}
+
+bool BStarTree::rotateLeftAdd(Node* node)
+{
+    Node *currentNode;
+
     currentNode = node;
     do {
-        ancestor = currentNode->getAncestor();
-        ancestorKey = ancestor->keys().begin();
-        for(nodeIt = next(ancestor->children().begin()); *nodeIt != currentNode; ++nodeIt){
-            ++ancestorKey;
-        }
-        leftSibling = *prev(nodeIt);
-
-        //key rotation
-        leftSibling->keys().push_back(*ancestorKey);
-        *ancestorKey = currentNode->keys().front();
-        currentNode->keys().pop_front();
-
-        //child rotation
-        if(!currentNode->children().empty()){
-            child = currentNode->children().front();
-            currentNode->children().pop_front();
-            dynamic_cast<NormalNode*>(child)->setAncestor(leftSibling);
-            leftSibling->children().push_back(child);
-        }
-
-        currentNode = leftSibling;
-    } while(!isLeftmost(currentNode) && stopCondition(currentNode));
+        currentNode = *prev(rotateLeft(currentNode));
+    } while(!isLeftmost(currentNode) && currentNode->isOverloaded());
 
      return true;
 }
 
-bool BStarTree::rotateRight(Node* node, std::function<bool(Node*)> stopCondition)
+bool BStarTree::rotateRightAdd(Node* node)
 {
-    Node *currentNode, *ancestor, *rightSibling, *child;
-    std::list<double>::iterator ancestorKey;
-    std::list<Node*>::iterator nodeIt;
-
+    Node *currentNode;
     currentNode = node;
     do {
-        ancestor = currentNode->getAncestor();
-        ancestorKey = ancestor->keys().begin();
-        for(nodeIt = ancestor->children().begin(); *nodeIt != currentNode; ++nodeIt){
-            ++ancestorKey;
-        }
-        rightSibling = *next(nodeIt);
+        currentNode = *next(rotateRight(currentNode));
+    } while(!isRightmost(currentNode) && currentNode->isOverloaded());
 
-        //key rotation
-        rightSibling->keys().push_front(*ancestorKey);
-        *ancestorKey = currentNode->keys().back();
-        currentNode->keys().pop_back();
+    return true;
+}
 
-        //child rotation
-        if(!currentNode->children().empty()){
-            child = currentNode->children().back();
-            currentNode->children().pop_back();
-            dynamic_cast<NormalNode*>(child)->setAncestor(rightSibling);
-            rightSibling->children().push_front(child);
-        }
+bool BStarTree::rotateLeftErase(Node* node)
+{
+    std::list<Node*>::iterator currentNode = getIterator(node);
 
-        currentNode = rightSibling;
-    } while(!isRightmost(currentNode) && stopCondition(currentNode));
+    do {
+        currentNode = prev(currentNode);
+        rotateRight(*currentNode);
+    } while(!isLeftmost(*currentNode) && (*currentNode)->isUnderloaded());
+
+     return true;
+}
+
+bool BStarTree::rotateRightErase(Node* node)
+{
+    std::list<Node*>::iterator currentNode = getIterator(node);
+
+    do {
+        currentNode = next(currentNode);
+        rotateLeft(*currentNode);
+    } while(!isRightmost(*currentNode) && (*currentNode)->isUnderloaded());
 
     return true;
 }

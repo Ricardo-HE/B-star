@@ -9,7 +9,11 @@ int main()
 
     //const unsigned MAX = 200;
     //const unsigned SIZE = 20;
-    BStarTree tree(5);
+    int order;
+    std::cout << "Order of the tree: ";
+    std::cin >> order;
+
+    BStarTree tree(order);
 
 /*
     for(unsigned i = 0; i <= MAX; i += 10){
@@ -26,17 +30,22 @@ int main()
     }
 */
 
-    srand(time(NULL));
     int cap;
-    std::cout << "Capacity: ";
+    std::cout << "Number of elements to add to the tree: ";
     std::cin >> cap;
-    std::cin.ignore();
 
     if(cap < 0) cap = 0;
 
+    int range;
+    std::cout << "Put in the tree numbers from 0 to: ";
+    std::cin >> range;
+
+    if(range < 1) range = 10;
+
+    srand(time(NULL));
     int number;
     for(unsigned i = 1; i <= (unsigned)cap; ++i){
-        tree.add(number = rand() % 10000);
+        tree.add(number = rand() % range);
         //tree.add(i);
         //std::cout << "Printing after adding: " << number << std::endl;
         //std::cout << "Printing after adding: " << i << std::endl;

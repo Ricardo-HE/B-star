@@ -102,8 +102,12 @@ private:
     bool areLeftSiblingsAtMinimum(Node* node) const;
     bool areRightSiblingsAtMinimum(Node* node) const;
 
-    bool rotateLeft(Node* node, std::function<bool(Node*)> stopCondition);
-    bool rotateRight(Node* node, std::function<bool(Node*)> stopCondition);
+    std::list<Node*>::iterator rotateLeft(Node* node);
+    std::list<Node*>::iterator rotateRight(Node* node);
+    bool rotateLeftAdd(Node* node);
+    bool rotateRightAdd(Node* node);
+    bool rotateLeftErase(Node* node);
+    bool rotateRightErase(Node* node);
 
     void splitRoot();
     void splitLeft(Node* node);
@@ -117,6 +121,10 @@ private:
 
     Node* getLeftSibling(Node* node);
     Node* getRightSibling(Node* node);
+
+    std::list<Node*>::iterator getIterator(Node* node);
+    std::list<Node*>::iterator getLeftSiblingIt(Node* node);
+    std::list<Node*>::iterator getRightSiblingIt(Node* node);
 };
 
 bool compareKeyNodes(Node* nodeA, Node* nodeB);
