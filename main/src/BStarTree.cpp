@@ -80,7 +80,7 @@ bool BStarTree::erase(double val)
     }
 
     Node* ancestor;
-    while (currentNode != nullptr && currentNode->isUnderloaded()) {
+    while (currentNode != root && currentNode->isUnderloaded()) {
         ancestor = currentNode->getAncestor();
         handleUnderload(currentNode);
         currentNode = ancestor;
@@ -93,7 +93,7 @@ bool BStarTree::erase(double val)
 
 void BStarTree::handleUnderload(Node* underloadedNode)
 {
-    if (!underloadedNode->IsRoot()) {
+    if (!underloadedNode->getAncestor()->IsRoot()) {
         if (!this->searchSpaceErase(underloadedNode)) {
             if(this->isLeftmost(underloadedNode)){
                 mergeLeft(underloadedNode);
@@ -104,7 +104,7 @@ void BStarTree::handleUnderload(Node* underloadedNode)
             }
         }
     }else{
-        mergeRoot();
+        mergeRootChildren(underloadedNode);
     }
 }
 
@@ -654,9 +654,8 @@ void BStarTree::splitRight(Node* node)
     putChildren(limitThree+1, rightSibling);
 }
 
-void BStarTree::mergeRoot()
+void BStarTree::mergeRootChildren(Node* rootChildren)
 {
-
 }
 
 //Case where there are left and right siblings.

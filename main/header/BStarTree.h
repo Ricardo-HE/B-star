@@ -157,7 +157,7 @@ private:
     void splitRoot();
     void splitLeft(Node* node);
     void splitRight(Node* node);
-    void mergeRoot();
+    void mergeRootChildren(Node* nodeChildren);
     void merge(Node* node);
     void mergeLeft(Node* node);
     void mergeRight(Node* node);
