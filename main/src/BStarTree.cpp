@@ -724,12 +724,14 @@ void BStarTree::merge(Node* node)
 
 void BStarTree::mergeLeft(Node* node)
 {
-
+    Node* rightSibling = getRightSibling(node);
+    merge(rightSibling);
 }
 
 void BStarTree::mergeRight(Node* node)
 {
-
+    Node* leftSibling = getLeftSibling(node);
+    merge(leftSibling);
 }
 
 Node* BStarTree::getGreaterMinor(Node *node, double val) const
