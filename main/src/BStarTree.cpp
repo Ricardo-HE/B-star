@@ -93,18 +93,13 @@ bool BStarTree::erase(double val)
 
 void BStarTree::handleUnderload(Node* underloadedNode)
 {
-    if (!underloadedNode->getAncestor()->IsRoot()) {
-        if (!this->searchSpaceErase(underloadedNode)) {
-            if(this->isLeftmost(underloadedNode)){
-                mergeLeft(underloadedNode);
-            }else if(this->isRightmost(underloadedNode)){
-                mergeRight(underloadedNode);
-            }else{ //not leftmost nor rightmost
-                merge(underloadedNode);
-            }
+    if(!searchSpaceErase(underloadedNode)){
+        if (!underloadedNode->getAncestor()->IsRoot()) {
+            merge(underloadedNode); //inside of this method it checks if the node is leftmost
+                                    //rightmost or none of those two
+        }else{
+            mergeRootChildren(underloadedNode);
         }
-    }else{
-        mergeRootChildren(underloadedNode);
     }
 }
 
@@ -656,6 +651,26 @@ void BStarTree::splitRight(Node* node)
 
 void BStarTree::mergeRootChildren(Node* rootChildren)
 {
+    if(root->keys().size() > 1){
+        merge(rootChildren);
+        }else{
+            //if the root only has one key, then it will have either
+        //two or none children. If the root has no children, then
+        // nothing else has to be done. If it has, then the code here
+        // must merge the root with its two children
+        //The calls to this method are made so it isn't ever called
+        //when the node has no children, so if it reaches this place,
+        //then it must have two children and has to merge with them.
+
+        for(double key : (*root->children().begin())->keys()){
+            root->keys().push_front(key);
+        }
+        root->children().pop_front();
+        for(double key : (*root->children().begin())->keys()){
+            root->keys().push_back(key);
+        }
+        root->children().pop_front();
+    }
 }
 
 //Case where there are left and right siblings.
@@ -674,8 +689,20 @@ void BStarTree::merge(Node* node)
 
     ancestor->keys().erase(ancestorKey);
 
-    leftSibling = *prev(nodeIt);
-    rightSibling = *next(nodeIt);
+    //this assigns the left sibling, node and right sibling depending on the node to
+    //merge being the leftmost, rightmost or not any node in particular
+    if(isLeftmost(node)){
+        leftSibling = *nodeIt;
+        node = *next(nodeIt);
+        rightSibling = *next(next(nodeIt));
+    }else if(isRightmost(node)){
+        leftSibling = *prev(prev(nodeIt));
+        node = *prev(nodeIt);
+        rightSibling = *nodeIt;
+    }else{
+        leftSibling = *prev(nodeIt);
+        rightSibling = *next(nodeIt);
+    }
 
     std::list<double> auxList( std::move(leftSibling->keys()) );
     auxList.push_back(*ancestorKey);
