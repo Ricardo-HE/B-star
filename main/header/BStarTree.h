@@ -6,7 +6,6 @@
 #include <cmath>
 #include <algorithm>
 #include <queue>
-#include <functional>
 
 #include "Node.h"
 #include "RootNode.h"
