@@ -9,17 +9,17 @@ public:
     /**
     * @brief Default constructor.
     */
-    Node(){}
+    Node() {}
 
     /**
     * @brief Constructor with parameters to initialize the variables from the class.
     */
-    Node(int order, bool rootflag, Node* ancestor = nullptr):order(order), isRoot(rootflag), ancestor(ancestor){}
+    Node(int order, bool rootflag, Node* ancestor = nullptr):order(order), isRoot(rootflag), ancestor(ancestor) {}
 
     /**
     *@brief Virtual destructor
     */
-    virtual ~Node(){}
+    virtual ~Node() {}
 
 
     //******************Pure virtual function***********************************
@@ -27,7 +27,7 @@ public:
     * @brief print the node's information such like the keys of the node, father's ID
     * and child's ID.
     */
-    virtual void print() = 0;
+    virtual void print() const = 0;
     /**
     * @brief Add a key to the Node's array list of keys.
     * @return True if it was added and false if it wasn't added to the array list.
@@ -37,16 +37,16 @@ public:
     * @brief Given an index number return the Node child of the list of child nodes.
     * @return The node child of the position given of the list of child.
     */
-    virtual Node* getChildNode(int iPos) = 0;
+    virtual Node* getChildNode(int iPos) const = 0;
 
-    virtual double getKey(int iPos) = 0;
+    virtual double getKey(int iPos) const = 0;
 
-    virtual bool isOverloaded() = 0;
+    virtual bool isOverloaded() const = 0;
 
-    virtual bool isFull() = 0;
+    virtual bool isFull() const = 0;
 
-    virtual bool isUnderloaded() = 0;
-    virtual bool isAtMinimum() = 0;
+    virtual bool isUnderloaded() const = 0;
+    virtual bool isAtMinimum() const = 0;
 
     //************************Access Functions**********************************
 
@@ -58,31 +58,31 @@ public:
     *@brief Get the order of the node.
     *@return The order of the node.
     */
-    unsigned getOrder(){ return order; }
+    unsigned getOrder() const { return order; }
     /**
     *@brief Get the current size of the list of keys in the node.
     *@ The current size of the list of keys in the node.
     */
-    std::size_t getNumKeys(){ return keysList.size(); }
+    std::size_t getNumKeys() const { return keysList.size(); }
     /**
     *@brief Get the list of keys from the node.
     *@return The list of keys from the node.
     */
-    std::list<double> &getKeysList(){ return keysList; }
+    std::list<double> &getKeysList() { return keysList; }
     /**
     *@brief Get the list of childs from the node.
     *@return The list of keys from the node.
     */
-    std::list<Node*> &getChildList(){ return childList; }
+    std::list<Node*> &getChildList() { return childList; }
     /**
     *@brief Says if the node is root or not.
     *@return True if the node is root, false if isn't.
     */
-    bool IsRoot(){ return isRoot; }
+    bool IsRoot() const { return isRoot; }
 
-    Node* getAncestor(){ return ancestor; }
+    Node* getAncestor() const { return ancestor; }
 
-    double& operator[](int index){
+    double& operator[](int index) {
         auto it = this->keysList.begin();
         std::advance(it, index);
 
@@ -106,7 +106,7 @@ public:
     auto rbegin() { return keysList.rbegin(); }
     auto rend() { return keysList.rend(); }
 
-    bool isLeaf(){return this->children().empty();}
+    bool isLeaf() {return this->children().empty();}
 
 protected:
     unsigned id; //id to identify nodes

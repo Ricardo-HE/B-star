@@ -16,7 +16,7 @@ bool RootNode::addItem(double elem)
     return true;
 }
 
-Node* RootNode::getChildNode(int iPos)
+Node* RootNode::getChildNode(int iPos) const
 {
     auto it = childList.begin();
     std::advance(it, iPos);
@@ -24,7 +24,7 @@ Node* RootNode::getChildNode(int iPos)
     return *it;
 }
 
-double RootNode::getKey(int iPos)
+double RootNode::getKey(int iPos) const
 {
     auto it = keysList.begin();
     std::advance(it, iPos);
@@ -32,7 +32,7 @@ double RootNode::getKey(int iPos)
     return *it;
 }
 
-bool RootNode::isOverloaded()
+bool RootNode::isOverloaded() const
 {
     bool overloaded = false;
     const unsigned MAX_SIZE = 2 * floor( (2*order - 2) / 3 );
@@ -44,7 +44,7 @@ bool RootNode::isOverloaded()
     return overloaded;
 }
 
-bool RootNode::isFull()
+bool RootNode::isFull() const
 {
     bool full = false;
 
@@ -56,7 +56,7 @@ bool RootNode::isFull()
     return full;
 }
 
-bool RootNode::isUnderloaded()
+bool RootNode::isUnderloaded() const
 {
     bool atMinimum = false;
 
@@ -67,7 +67,7 @@ bool RootNode::isUnderloaded()
 
     return atMinimum;
 }
-bool RootNode::isAtMinimum()
+bool RootNode::isAtMinimum() const
 {
     bool atMinimum = false;
 
@@ -79,7 +79,7 @@ bool RootNode::isAtMinimum()
     return atMinimum;
 }
 
-void RootNode::print()
+void RootNode::print() const
 {
 
     std::cout << "keys: ";

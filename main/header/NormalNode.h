@@ -17,14 +17,14 @@ public:                                             // by NormalNode
     ~NormalNode(){}                                 // destructor for a NormalNode
 
     //Definitions of Node class pure virtual functions
-    Node* getChildNode(int iPos);   // Returns ptr using iPos as an index
-    double getKey(int iPos);
-    void print();                                           // Print for a NormalNode
+    Node* getChildNode(int iPos) const;   // Returns ptr using iPos as an index
+    double getKey(int iPos) const;
+    void print() const;                         // Print for a NormalNode
     bool addItem(double iItem);                 // Inserts an item to a NormalNode
-    bool isOverloaded();
-    bool isFull();
-    bool isUnderloaded();
-    bool isAtMinimum();
+    bool isOverloaded() const;
+    bool isFull() const;
+    bool isUnderloaded() const;
+    bool isAtMinimum() const;
     void setAncestor(Node* newAncestor){ancestor = newAncestor;}
 
 };

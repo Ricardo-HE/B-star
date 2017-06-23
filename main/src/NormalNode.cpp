@@ -16,7 +16,7 @@ bool NormalNode::addItem(double elem)
     return true;
 }
 
-Node* NormalNode::getChildNode(int iPos)
+Node* NormalNode::getChildNode(int iPos) const
 {
     auto it = childList.begin();
     std::advance(it, iPos);
@@ -24,7 +24,7 @@ Node* NormalNode::getChildNode(int iPos)
     return *it;
 }
 
-double NormalNode::getKey(int iPos)
+double NormalNode::getKey(int iPos) const
 {
     auto it = keysList.begin();
     std::advance(it, iPos);
@@ -32,7 +32,7 @@ double NormalNode::getKey(int iPos)
     return *it;
 }
 
-bool NormalNode::isOverloaded()
+bool NormalNode::isOverloaded() const
 {
     bool overloaded = false;
     const unsigned MAX_SIZE = order - 1;
@@ -44,7 +44,8 @@ bool NormalNode::isOverloaded()
     return overloaded;
 }
 
-bool NormalNode::isFull(){
+bool NormalNode::isFull() const
+{
     bool full = false;
 
     const unsigned MAX_SIZE = order - 1;
@@ -55,7 +56,7 @@ bool NormalNode::isFull(){
     return full;
 }
 
-bool NormalNode::isUnderloaded()
+bool NormalNode::isUnderloaded() const
 {
     bool underloaded = false;
 
@@ -67,7 +68,7 @@ bool NormalNode::isUnderloaded()
     return underloaded;
 }
 
-bool NormalNode::isAtMinimum()
+bool NormalNode::isAtMinimum() const
 {
         bool atMinimum = false;
 
@@ -79,7 +80,7 @@ bool NormalNode::isAtMinimum()
     return atMinimum;
 }
 
-void NormalNode::print()
+void NormalNode::print() const
 {
     std::cout << "keys: ";
 

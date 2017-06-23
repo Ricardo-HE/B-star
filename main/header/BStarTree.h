@@ -51,7 +51,7 @@ public:
         @param val Element to look for in the tree.
         @return True if the element exists in the tree, false otherwise.
     */
-    bool find(double val);
+    bool find(double val) const;
 
     /**
         @brief Method to add elements listed in a file.
@@ -74,9 +74,9 @@ public:
     /**
         @brief Method to print, by levels, the nodes of the tree.
     */
-    void print();
+    void print() const;
 
-    void generateFile(int size);
+    void generateFile(int size) const;
 
     void testAddAndDelete(std::string filepath, int elementsToLeave );
 
@@ -88,8 +88,8 @@ private:
     void handleOverload(Node* overloadedNode);
     void handleUnderload(Node* underloadedNode);
 
-    Node* findPlace(double val);
-    Node* findPlaceErase(double val);
+    Node* findPlace(double val) const;
+    Node* findPlaceErase(double val) const;
 
     bool searchSpace(Node* nodeAdd);
     bool searchSpaceErase(Node* nodeAdd);
@@ -163,14 +163,14 @@ private:
     void mergeLeft(Node* node);
     void mergeRight(Node* node);
 
-    Node* getGreaterMinor(Node *node, double val);
+    Node* getGreaterMinor(Node *node, double val) const;
 
-    Node* getLeftSibling(Node* node);
-    Node* getRightSibling(Node* node);
+    Node* getLeftSibling(Node* node) const;
+    Node* getRightSibling(Node* node) const;
 
-    std::list<Node*>::iterator getIterator(Node* node);
-    std::list<Node*>::iterator getLeftSiblingIt(Node* node);
-    std::list<Node*>::iterator getRightSiblingIt(Node* node);
+    std::list<Node*>::iterator getIterator(Node* node) const;
+    std::list<Node*>::iterator getLeftSiblingIt(Node* node) const;
+    std::list<Node*>::iterator getRightSiblingIt(Node* node) const;
 };
 
 bool compareKeyNodes(Node* nodeA, Node* nodeB);

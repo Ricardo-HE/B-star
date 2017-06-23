@@ -108,7 +108,7 @@ void BStarTree::handleUnderload(Node* underloadedNode)
     }
 }
 
-bool BStarTree::find(double val)
+bool BStarTree::find(double val) const
 {
     //remember to check if there is a more optimal way to do this
     return findPlace(val) != nullptr ? true : false;
@@ -116,7 +116,7 @@ bool BStarTree::find(double val)
 
 //this search can be optimized because when searching a node there is no need to keep
 //searching for a value once the values of the node are bigger than the searched value.
-Node* BStarTree::findPlace(double val)
+Node* BStarTree::findPlace(double val) const
 {
     Node* currentNode = root;
     std::list<Node*>::iterator child;
@@ -152,7 +152,7 @@ Node* BStarTree::findPlace(double val)
 }
 
 // can probably be more optimized
-Node* BStarTree::findPlaceErase(double val)
+Node* BStarTree::findPlaceErase(double val) const
 {
     Node* currentNode = root;
     std::list<Node*>::iterator child;
@@ -292,7 +292,7 @@ bool BStarTree::isRightmost(Node* node) const
     return *node->getAncestor()->children().rbegin() ==  node ? true : false;
 }
 
-std::list<Node*>::iterator BStarTree::getIterator(Node* node)
+std::list<Node*>::iterator BStarTree::getIterator(Node* node) const
 {
     auto it = node->getAncestor()->children().begin();
     while(*it != node){
@@ -302,7 +302,7 @@ std::list<Node*>::iterator BStarTree::getIterator(Node* node)
     return it;
 }
 
-std::list<Node*>::iterator BStarTree::getLeftSiblingIt(Node* node)
+std::list<Node*>::iterator BStarTree::getLeftSiblingIt(Node* node) const
 {
     Node* ancestor;
 
@@ -320,7 +320,7 @@ std::list<Node*>::iterator BStarTree::getLeftSiblingIt(Node* node)
     }
 }
 
-std::list<Node*>::iterator BStarTree::getRightSiblingIt(Node* node)
+std::list<Node*>::iterator BStarTree::getRightSiblingIt(Node* node) const
 {
     Node* ancestor;
 
@@ -338,12 +338,12 @@ std::list<Node*>::iterator BStarTree::getRightSiblingIt(Node* node)
     }
 }
 
-Node* BStarTree::getLeftSibling(Node* node)
+Node* BStarTree::getLeftSibling(Node* node) const
 {
     return *getLeftSiblingIt(node);
 }
 
-Node* BStarTree::getRightSibling(Node* node)
+Node* BStarTree::getRightSibling(Node* node) const
 {
     return *getRightSiblingIt(node);
 }
@@ -732,7 +732,7 @@ void BStarTree::mergeRight(Node* node)
 
 }
 
-Node* BStarTree::getGreaterMinor(Node *node, double val)
+Node* BStarTree::getGreaterMinor(Node *node, double val) const
 {
     if (node->isLeaf()) {
         return nullptr;
@@ -757,7 +757,7 @@ Node* BStarTree::getGreaterMinor(Node *node, double val)
 
 }
 
-void BStarTree::print()
+void BStarTree::print() const
 {
     Node* currentNode;
     std::queue<Node*> nodeQueue;
@@ -837,7 +837,7 @@ unsigned BStarTree::eraseFromFile(std::string filepath)
     return erasedCount;
 }
 
-void BStarTree::generateFile(int size)
+void BStarTree::generateFile(int size) const
 {
     std::ofstream oFile;
 

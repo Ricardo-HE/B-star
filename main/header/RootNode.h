@@ -14,16 +14,16 @@ class RootNode : public Node                      // Node is the base class, all
 public:
     RootNode(){}
     RootNode(int order, bool rootflag, Node* ancestor = nullptr, unsigned id = 0, unsigned height = 0);  // Overloaded constructor
-    void print();                                 // Print for a RootNode
+    void print() const;                                 // Print for a RootNode
     ~RootNode(){}                 // destructor for a RootNode
     bool addItem(double iItem);                   // Inserts an item to a root node
 
-    Node* getChildNode(int iPos);   // Returns the ptr using iPos as index
-    double getKey(int iPos);
-    bool isOverloaded();
-    bool isFull();
-    bool isUnderloaded();
-    bool isAtMinimum();
+    Node* getChildNode(int iPos) const;   // Returns the ptr using iPos as index
+    double getKey(int iPos) const;
+    bool isOverloaded() const;
+    bool isFull() const;
+    bool isUnderloaded() const;
+    bool isAtMinimum() const;
 };
 
 #endif
