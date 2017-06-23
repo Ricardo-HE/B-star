@@ -665,11 +665,13 @@ void BStarTree::mergeRootChildren(Node* rootChildren)
         for(double key : (*root->children().begin())->keys()){
             root->keys().push_front(key);
         }
-        root->children().pop_front();
+        delete root->children().front(); //deletes memory used
+        root->children().pop_front(); //removes the deallocated memory from the container
         for(double key : (*root->children().begin())->keys()){
             root->keys().push_back(key);
         }
-        root->children().pop_front();
+        delete root->children().front(); //deletes memory used
+        root->children().pop_front(); //removes the deallocated memory from the container
     }
 }
 
@@ -745,6 +747,7 @@ void BStarTree::merge(Node* node)
     putChildren(limitOne+1, leftSibling);
     putChildren(limitTwo+1, node);
 
+    delete rightSibling; //erases the memory used by this node
     ancestor->children().remove(rightSibling);
 }
 
