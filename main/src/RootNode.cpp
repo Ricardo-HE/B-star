@@ -6,7 +6,6 @@ RootNode::RootNode(int order, bool rootflag, Node* ancestor, unsigned id, unsign
     //childList = std::list<Node*>(); //creates an empty list
     this->id = id;
     this->height = height;
-    std::cout << "Received height: " << height << " for the root node " << std::endl;
 }
 
 bool RootNode::addItem(double elem)
