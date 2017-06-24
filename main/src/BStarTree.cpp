@@ -695,25 +695,27 @@ void BStarTree::merge(Node* node)
         leftSibling = *nodeIt;
         node = *next(nodeIt);
         rightSibling = *next(next(nodeIt));
+
         ++ancestorKey;
     }else if(isRightmost(node)){
         leftSibling = *prev(prev(nodeIt));
         node = *prev(nodeIt);
         rightSibling = *nodeIt;
+
         --ancestorKey;
     }else{
         leftSibling = *prev(nodeIt);
         rightSibling = *next(nodeIt);
     }
 
-    auto ancestorKeyCopy = prev(ancestorKey);
-
     std::list<double> auxList( std::move(leftSibling->keys()) );
-    auxList.push_back(*ancestorKeyCopy);
-    ancestor->keys().erase(ancestorKeyCopy);
+    auxList.push_back(*prev(ancestorKey));
+    ancestor->keys().erase(ancestorKey);
+
     auxList.merge(node->keys());
     auxList.push_back(*ancestorKey);
     ancestor->keys().erase(ancestorKey);
+
     auxList.merge(rightSibling->keys());
 
     auto putKeys = [&auxList](unsigned limit, Node*& lNode){
