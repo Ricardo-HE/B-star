@@ -15,6 +15,35 @@ int main()
 
     BStarTree tree(order);
 
+    tree.add(10);
+    tree.add(20);
+    tree.add(30);
+    tree.add(40);
+    tree.add(50);
+    tree.add(60);
+    tree.add(70);
+    tree.add(80);
+    tree.add(90);
+    tree.add(100);
+    tree.print();
+    std::cout << "------------" << std::endl;
+    std::cout << "Borrando: 10" << std::endl <<std::endl;
+    tree.erase(10);
+    std::cout << "Borrando: 20" << std::endl <<std::endl;
+    tree.erase(20);
+    tree.print();
+    std::cout << "------------" << std::endl;
+    std::cout << "Borrando: 30" << std::endl <<std::endl;
+    tree.erase(30);
+    tree.print();
+    std::cout << "------------" << std::endl;
+    std::cout << "Borrando: 70" << std::endl <<std::endl;
+    tree.erase(70);
+    tree.print();
+    std::cout << "------------" << std::endl;
+    std::cin.ignore();
+    std::cin.ignore();
+
 /*
     for(unsigned i = 0; i <= MAX; i += 10){
         tree.add(i);
@@ -30,7 +59,7 @@ int main()
     }
 */
 
-    int cap;
+    /*int cap;
     std::cout << "Number of elements to add to the tree: ";
     std::cin >> cap;
 
@@ -54,7 +83,7 @@ int main()
         //std::cin.ignore();
     }
     std::cout << "Printing the tree: " << std::endl;
-    tree.print();
+    tree.print();*/
 
 
 /*

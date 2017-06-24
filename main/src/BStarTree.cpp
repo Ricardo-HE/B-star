@@ -253,8 +253,8 @@ bool BStarTree::areLeftSiblingsAtMinimum(Node* node) const
 
     //this checks all the nodes before the received one to see if at least one of them is
     //not full
-    for(auto leftSibling = ancestor->children().begin(); *leftSibling != node;  ++leftSibling){
-         if ( !(*leftSibling)->isAtMinimum() ) {
+    int i = 1;
+    for(auto leftSibling = ancestor->children().begin(); *leftSibling != node;  ++leftSibling, i++){         if ( !(*leftSibling)->isAtMinimum() ) {
             nodeIsAtMinimum = false;
             break;
         }
@@ -689,7 +689,7 @@ void BStarTree::merge(Node* node)
         ++ancestorKey;
     }
 
-    ancestor->keys().erase(ancestorKey);
+    //ancestor->keys().erase(ancestorKey);
 
     //this assigns the left sibling, node and right sibling depending on the node to
     //merge being the leftmost, rightmost or not any node in particular
@@ -701,16 +701,20 @@ void BStarTree::merge(Node* node)
         leftSibling = *prev(prev(nodeIt));
         node = *prev(nodeIt);
         rightSibling = *nodeIt;
+        --ancestorKey;
     }else{
         leftSibling = *prev(nodeIt);
         rightSibling = *next(nodeIt);
     }
 
+    auto ancestorKeyCopy = ancestorKey;
+    ++ancestorKey;
+
     std::list<double> auxList( std::move(leftSibling->keys()) );
-    auxList.push_back(*ancestorKey);
-    ancestor->keys().erase(ancestorKey);
+    auxList.push_back(*ancestorKeyCopy);
+    ancestor->keys().erase(ancestorKeyCopy);
     auxList.merge(node->keys());
-    auxList.push_back(*++ancestorKey);
+    auxList.push_back(*ancestorKey);
     ancestor->keys().erase(ancestorKey);
     auxList.merge(rightSibling->keys());
 
@@ -738,9 +742,11 @@ void BStarTree::merge(Node* node)
     auxListChildren.merge(rightSibling->children());
 
     auto putChildren = [&auxListChildren](unsigned limit, Node*& lNode){
-        for (std::size_t i = 0; i < limit; i++) {
-            lNode->children().push_back( auxListChildren.front() );
-            auxListChildren.pop_front();
+        if (!auxListChildren.empty()) {
+            for (std::size_t i = 0; i < limit; i++) {
+                lNode->children().push_back( auxListChildren.front() );
+                auxListChildren.pop_front();
+            }
         }
     };
 
