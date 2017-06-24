@@ -253,8 +253,8 @@ bool BStarTree::areLeftSiblingsAtMinimum(Node* node) const
 
     //this checks all the nodes before the received one to see if at least one of them is
     //not full
-    int i = 1;
-    for(auto leftSibling = ancestor->children().begin(); *leftSibling != node;  ++leftSibling, i++){         if ( !(*leftSibling)->isAtMinimum() ) {
+    for(auto leftSibling = ancestor->children().begin(); *leftSibling != node;  ++leftSibling){
+        if ( !(*leftSibling)->isAtMinimum() ) {
             nodeIsAtMinimum = false;
             break;
         }
@@ -689,14 +689,13 @@ void BStarTree::merge(Node* node)
         ++ancestorKey;
     }
 
-    //ancestor->keys().erase(ancestorKey);
-
     //this assigns the left sibling, node and right sibling depending on the node to
     //merge being the leftmost, rightmost or not any node in particular
     if(isLeftmost(node)){
         leftSibling = *nodeIt;
         node = *next(nodeIt);
         rightSibling = *next(next(nodeIt));
+        ++ancestorKey;
     }else if(isRightmost(node)){
         leftSibling = *prev(prev(nodeIt));
         node = *prev(nodeIt);
@@ -707,8 +706,7 @@ void BStarTree::merge(Node* node)
         rightSibling = *next(nodeIt);
     }
 
-    auto ancestorKeyCopy = ancestorKey;
-    ++ancestorKey;
+    auto ancestorKeyCopy = prev(ancestorKey);
 
     std::list<double> auxList( std::move(leftSibling->keys()) );
     auxList.push_back(*ancestorKeyCopy);
@@ -780,8 +778,11 @@ Node* BStarTree::getGreaterMinor(Node *node, double val) const
 
     childIt = node->children().begin();
 
-    for (ancestorKey = node->keys().begin(); *ancestorKey < val; ancestorKey++) {
-        childIt++;
+    if(!node->keys().empty()){  //the node might be empty because its only key might have
+                                //been erased
+        for (ancestorKey = node->keys().begin(); *ancestorKey < val; ++ancestorKey) {
+            ++childIt;
+        }
     }
 
     Node* greaterMinor;
