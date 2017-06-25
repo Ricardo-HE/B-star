@@ -841,7 +841,7 @@ void BStarTree::print() const
     }
 }
 
-unsigned BStarTree::addFromFile(std::string filepath)
+unsigned BStarTree::addFromFile(std::string filepath /*= files/add.txt*/)
 {
     std::ifstream file;
     double number;
@@ -865,7 +865,7 @@ unsigned BStarTree::addFromFile(std::string filepath)
     return addedCount;
 }
 
-unsigned BStarTree::eraseFromFile(std::string filepath)
+unsigned BStarTree::eraseFromFile(std::string filepath /*=files/erase.txt*/)
 {
     std::ifstream file;
     double number;
@@ -889,13 +889,13 @@ unsigned BStarTree::eraseFromFile(std::string filepath)
     return erasedCount;
 }
 
-void BStarTree::generateFile(int size) const
+void BStarTree::generateFile(std::string filepath /*= files/add.txt*/, int size /*= 10*/) const
 {
     std::ofstream oFile;
 
-    oFile.open("files/file.txt");
+    oFile.open(filepath);
     if(!oFile.is_open()){
-        std::cerr << "Couldn't read file with path " << "files/file.txt" << std::endl;
+        std::cerr << "Couldn't read file with path " << filepath << std::endl;
     }
 
     srand(time(NULL));
@@ -906,7 +906,7 @@ void BStarTree::generateFile(int size) const
     oFile.close();
 }
 
-void BStarTree::testAddAndDelete(std::string filepath, int elementsToLeave)
+void BStarTree::testAddAndDelete(std::string filepath /*= files/add.txt*/, int elementsToLeave /*= 0*/)
 {
     std::ifstream iaddFile;
     double number;

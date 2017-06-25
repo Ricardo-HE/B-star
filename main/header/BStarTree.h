@@ -56,28 +56,30 @@ public:
         @brief Method to add elements listed in a file.
         @pre The file must only contain elements to add to the tree and they must be separated by whitespace
                 characters.
-        @param filepath String with the filepath of the file with the elements to add.
+        @param filepath String with the filepath of the file with the elements to add. By
+                default is "files/add.txt"
         @return The number of elements added to the tree from the file.
     */
-    unsigned addFromFile(std::string filepath);
+    unsigned addFromFile(std::string filepath = "files/add.txt");
 
     /**
         @brief Method to erase elements listed in a file.
         @pre The file must only contain elements to add to the tree and they must be separated by whitespace
                 characters.
-        @param filepath String with the filepath of the file with the elements to add.
+        @param filepath String with the filepath of the file with the elements to erase. By
+                default is "files/erase.txt"
         @return The number of elements added to the tree from the file.
     */
-    unsigned eraseFromFile(std::string filepath);
+    unsigned eraseFromFile(std::string filepath = "files/erase.txt");
 
     /**
         @brief Method to print, by levels, the nodes of the tree.
     */
     void print() const;
 
-    void generateFile(int size) const;
+    void generateFile(std::string filepath = "files/add.txt", int size = 10) const;
 
-    void testAddAndDelete(std::string filepath, int elementsToLeave );
+    void testAddAndDelete(std::string filepath = "files/add.txt", int elementsToLeave = 0);
 
 private:
     const int mOrder; //order of the tree
