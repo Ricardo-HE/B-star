@@ -17,7 +17,7 @@ int main()
     srand(time(NULL));
     //int number;
 
-    int aux[30];
+    //int aux[30];
     /*aux[0] =722;
     aux[1] =444;
     aux[2] =355;
@@ -46,6 +46,7 @@ int main()
     aux[25] =880;
     aux[26] =979;*/
 
+    /*
     for (size_t i = 0; i < 27; i++) {
         tree.add(aux[i] = rand() % 10000);
         std::cout << "adding: " << aux[i];
@@ -62,23 +63,24 @@ int main()
         std::cin.ignore();
         std::cout << "------------------------------" << '\n';
     }
+    */
 
-    /*int cap;
+    int cap;
     std::cout << "Number of elements to add: ";
     std::cin >> cap;
 
     if(cap < 0) cap = 0;
-    tree.generateFile(cap);
+    tree.generateFile("files/add.txt", cap);
 
     int remain;
     std::cout << "Number of elements to remain in the tree: ";
     std::cin >> remain;
     std::cin.ignore();
-    tree.testAddAndDelete("files/file.txt", remain);
+    tree.testAddAndDelete("files/add.txt", remain);
 
     std::cout << "Printing the tree" << std::endl;
     tree.print();
-*/
+
     std::cout << "Pause" << std::endl;
     std::cin.ignore();
     std::cin.ignore();

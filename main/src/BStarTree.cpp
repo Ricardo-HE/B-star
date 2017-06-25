@@ -665,24 +665,29 @@ void BStarTree::mergeRootChildren(Node* rootChildren)
         //when the node has no children, so if it reaches this place,
         //then it must have two children and has to merge with them.
 
-        for(double key : (*root->children().begin())->keys()){
-            root->keys().push_front(key);
-        }
+        auto deleteRootChildren = [this](){
+            for(double key : (*root->children().begin())->keys()){
+                    root->keys().push_front(key);
+            }
 
-        for(Node *child: (*root->children().begin())->children()){
-            root->children().push_front(child);
-        }
-        delete root->children().front(); //deletes memory used
-        root->children().pop_front(); //removes the deallocated memory from the container
+            for(Node* node : root->children().front()->children()){
+                dynamic_cast<NormalNode*>(node)->setAncestor(root);
+            }
+            //adds all the children of the first children of the root to the end of the list of
+            //children of the root
+            root->children().splice(root->children().end(), root->children().front()->children(),
+                            root->children().front()->children().begin(),
+                            root->children().front()->children().end());
 
-        for(double key : (*root->children().begin())->keys()){
-            root->keys().push_back(key);
-        }
-        for(Node *child: (*root->children().begin())->children()){
-            root->children().push_front(child);
-        }
-        delete root->children().front(); //deletes memory used
-        root->children().pop_front(); //removes the deallocated memory from the container
+            for(Node *child: (*root->children().begin())->children()){
+                root->children().push_front(child);
+            }
+            delete root->children().front(); //deletes memory used
+            root->children().pop_front(); //removes the deallocated memory from the container
+        };
+
+        deleteRootChildren();
+        deleteRootChildren();
     }
 }
 
@@ -949,7 +954,7 @@ void BStarTree::testAddAndDelete(std::string filepath /*= files/add.txt*/, int e
         }else{
             std::cout << "NOT ERASED!!!!!!!!" << std::endl;
         }
-        std::cout << "Pause"; std::cin.ignore();
+        //std::cout << "Pause"; std::cin.ignore();
     }
 
     std::cout << "Number of delitions: " << j << std::endl;
