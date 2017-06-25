@@ -68,15 +68,17 @@ bool BStarTree::erase(double val)
     if (nodeErase == nullptr) {
         return false;
     }
-    nodeErase->keys().remove(val);
 
     currentNode = nodeErase;
 
     if (!nodeErase->isLeaf()) {
         currentNode = getGreaterMinor(nodeErase, val);
+        nodeErase->keys().remove(val);
         nodeErase->keys().push_back( currentNode->keys().back() );
         nodeErase->keys().sort();
         currentNode->keys().pop_back();
+    }else{
+        nodeErase->keys().remove(val);
     }
 
     Node* ancestor;
@@ -448,7 +450,8 @@ bool BStarTree::rotateRightErase(Node* node)
     return true;
 }
 
-void BStarTree::splitRoot(){
+void BStarTree::splitRoot()
+{
     Node *child1, *child2;
 
     child1 = new NormalNode(mOrder, false, root, id++, 2);
@@ -685,7 +688,7 @@ void BStarTree::merge(Node* node)
 
     ancestor = node->getAncestor();
     ancestorKey = ancestor->keys().begin();
-    for(nodeIt = next(ancestor->children().begin()); *nodeIt != node; ++nodeIt){
+    for(nodeIt = ancestor->children().begin(); *nodeIt != node; ++nodeIt){
         ++ancestorKey;
     }
 
@@ -710,7 +713,7 @@ void BStarTree::merge(Node* node)
 
     std::list<double> auxList( std::move(leftSibling->keys()) );
     auxList.push_back(*prev(ancestorKey));
-    ancestor->keys().erase(ancestorKey);
+    ancestor->keys().erase(prev(ancestorKey));
 
     auxList.merge(node->keys());
     auxList.push_back(*ancestorKey);
@@ -746,6 +749,7 @@ void BStarTree::merge(Node* node)
             for (std::size_t i = 0; i < limit; i++) {
                 lNode->children().push_back( auxListChildren.front() );
                 auxListChildren.pop_front();
+                dynamic_cast<NormalNode*>(lNode->children().back())->setAncestor(lNode);
             }
         }
     };
@@ -886,8 +890,9 @@ void BStarTree::generateFile(int size) const
         std::cerr << "Couldn't read file with path " << "files/file.txt" << std::endl;
     }
 
+    srand(time(NULL));
     for(int i = 0; i < size; ++i){
-        oFile << rand() % 2000;
+        oFile << rand() % 2000 << '\n';
     }
 
     oFile.close();
@@ -898,7 +903,9 @@ void BStarTree::testAddAndDelete(std::string filepath, int elementsToLeave)
     std::ifstream iaddFile;
     double number;
 
-    std::vector<double> elements(30);
+    int j = 0;
+
+    std::vector<double> elements;
     iaddFile.open(filepath);
     if(!iaddFile.is_open()){
         std::cerr << "Couldn't read file with path: " << filepath << std::endl;
@@ -906,16 +913,27 @@ void BStarTree::testAddAndDelete(std::string filepath, int elementsToLeave)
     }
 
     while(iaddFile >> number){
-        elements.push_back(number);
-        add(number);
+        if(add(number)){
+            elements.push_back(number);
+            ++j;
+        }
     }
+
+    std::cout << "Number of additions: " << j << std::endl;
+    j = 0;
 
     iaddFile.close();
 
     std::random_shuffle(elements.begin(), elements.end()); //shuffles the vector
+
     int elementsToErase = elements.size() - elementsToLeave;
     for(int i = 0; i < elementsToErase; ++i){
-        erase(elements[i]);
+        std::cout << "Erasing: " << elements[i] << std::endl;
+        if(erase(elements[i])){
+            ++j;
+        }else{
+            std::cout << "The element wasnt erased" << std::endl;
+        }
     }
 }
 
