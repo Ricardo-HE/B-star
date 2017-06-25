@@ -954,7 +954,8 @@ void BStarTree::testAddAndDelete(int elementsToLeave /*= 0*/, std::string filepa
         }else{
             std::cout << "NOT ERASED!!!!!!!!" << std::endl;
         }
-        //std::cout << "Pause"; std::cin.ignore();
+        std::cout << "-------------------------------------" << std::endl;
+        std::cout << "Pause"; std::cin.ignore();
     }
 
     std::cout << "Number of delitions: " << j << std::endl;
