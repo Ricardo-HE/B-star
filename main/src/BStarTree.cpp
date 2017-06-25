@@ -656,8 +656,8 @@ void BStarTree::mergeRootChildren(Node* rootChildren)
 {
     if(root->keys().size() > 1){
         merge(rootChildren);
-        }else{
-            //if the root only has one key, then it will have either
+    }else{
+        //if the root only has one key, then it will have either
         //two or none children. If the root has no children, then
         // nothing else has to be done. If it has, then the code here
         // must merge the root with its two children
@@ -668,10 +668,18 @@ void BStarTree::mergeRootChildren(Node* rootChildren)
         for(double key : (*root->children().begin())->keys()){
             root->keys().push_front(key);
         }
+
+        for(Node *child: (*root->children().begin())->children()){
+            root->children().push_front(child);
+        }
         delete root->children().front(); //deletes memory used
         root->children().pop_front(); //removes the deallocated memory from the container
+
         for(double key : (*root->children().begin())->keys()){
             root->keys().push_back(key);
+        }
+        for(Node *child: (*root->children().begin())->children()){
+            root->children().push_front(child);
         }
         delete root->children().front(); //deletes memory used
         root->children().pop_front(); //removes the deallocated memory from the container
