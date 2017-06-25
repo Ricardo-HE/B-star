@@ -77,9 +77,9 @@ public:
     */
     void print() const;
 
-    void generateFile(std::string filepath = "files/add.txt", int size = 10) const;
+    void generateFile(int size = 10, std::string filepath = "files/add.txt") const;
 
-    void testAddAndDelete(std::string filepath = "files/add.txt", int elementsToLeave = 0);
+    void testAddAndDelete(int elementsToLeave = 0, std::string filepath = "files/add.txt");
 
 private:
     const int mOrder; //order of the tree

@@ -70,13 +70,13 @@ int main()
     std::cin >> cap;
 
     if(cap < 0) cap = 0;
-    tree.generateFile("files/add.txt", cap);
+    tree.generateFile(cap);
 
     int remain;
     std::cout << "Number of elements to remain in the tree: ";
     std::cin >> remain;
     std::cin.ignore();
-    tree.testAddAndDelete("files/add.txt", remain);
+    tree.testAddAndDelete(remain);
 
     std::cout << "Printing the tree" << std::endl;
     tree.print();

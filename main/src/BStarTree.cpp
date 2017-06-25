@@ -894,7 +894,7 @@ unsigned BStarTree::eraseFromFile(std::string filepath /*=files/erase.txt*/)
     return erasedCount;
 }
 
-void BStarTree::generateFile(std::string filepath /*= files/add.txt*/, int size /*= 10*/) const
+void BStarTree::generateFile(int size /*= 10*/, std::string filepath /*= files/add.txt*/) const
 {
     std::ofstream oFile;
 
@@ -911,7 +911,7 @@ void BStarTree::generateFile(std::string filepath /*= files/add.txt*/, int size 
     oFile.close();
 }
 
-void BStarTree::testAddAndDelete(std::string filepath /*= files/add.txt*/, int elementsToLeave /*= 0*/)
+void BStarTree::testAddAndDelete(int elementsToLeave /*= 0*/, std::string filepath /*= files/add.txt*/)
 {
     std::ifstream iaddFile;
     double number;
