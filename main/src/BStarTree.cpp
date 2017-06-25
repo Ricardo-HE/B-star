@@ -108,7 +108,7 @@ void BStarTree::handleUnderload(Node* underloadedNode)
 bool BStarTree::find(double val) const
 {
     //remember to check if there is a more optimal way to do this
-    return findPlace(val) != nullptr ? true : false;
+    return findPlace(val) == nullptr ? true : false;
 }
 
 //this search can be optimized because when searching a node there is no need to keep
@@ -119,7 +119,7 @@ Node* BStarTree::findPlace(double val) const
     std::list<Node*>::iterator child;
 
 
-    while(!currentNode->children().empty()){
+    while(!currentNode->isLeaf()){
         child = currentNode->children().begin();
         /*for(auto key = currentNode->keys().begin();
                 key != currentNode->keys().end();
@@ -131,7 +131,7 @@ Node* BStarTree::findPlace(double val) const
                 ++child;
             }
         }
-        if(!currentNode->children().empty()){
+        if(!currentNode->isLeaf()){
             currentNode = *child;
         }
     }
@@ -154,7 +154,7 @@ Node* BStarTree::findPlaceErase(double val) const
     Node* currentNode = root;
     std::list<Node*>::iterator child;
 
-    while(!currentNode->children().empty()){
+    while(!currentNode->isLeaf()){
         child = currentNode->children().begin();
         for(auto key : currentNode->keys()){
             if(key == val){ //this is what we want when erasing
@@ -559,7 +559,7 @@ void BStarTree::splitLeft(Node* node)
 
     //accommodate children in the nodes.
     std::list<Node*> auxListChildren(std::move(leftSibling->children()));
-    auxListChildren.merge(node->children());
+    auxListChildren.merge(node->children(), compareKeyNodes);
     auxListChildren.sort(compareKeyNodes);
 
     auto putChildren = [&auxListChildren](unsigned limit, Node*& lNode){
@@ -634,7 +634,7 @@ void BStarTree::splitRight(Node* node)
 
     //accommodate children in the nodes.
     std::list<Node*> auxListChildren(std::move(node->children()));
-    auxListChildren.merge(rightSibling->children());
+    auxListChildren.merge(rightSibling->children(), compareKeyNodes);
     auxListChildren.sort(compareKeyNodes);
 
     auto putChildren = [&auxListChildren](unsigned limit, Node*& lNode){
@@ -741,8 +741,8 @@ void BStarTree::merge(Node* node)
 
     //move all childrens before removing the right sibling
     std::list<Node*> auxListChildren( std::move(leftSibling->children()) );
-    auxListChildren.merge(node->children());
-    auxListChildren.merge(rightSibling->children());
+    auxListChildren.merge(node->children(), compareKeyNodes);
+    auxListChildren.merge(rightSibling->children(), compareKeyNodes);
 
     auto putChildren = [&auxListChildren](unsigned limit, Node*& lNode){
         if (!auxListChildren.empty()) {
@@ -929,12 +929,22 @@ void BStarTree::testAddAndDelete(std::string filepath, int elementsToLeave)
     int elementsToErase = elements.size() - elementsToLeave;
     for(int i = 0; i < elementsToErase; ++i){
         std::cout << "Erasing: " << elements[i] << std::endl;
+        if(find(elements[i])){
+            std::cout << "The element exists in the tree..." << std::endl;
+        }else{
+            std::cout << "The element DOESNT exists in the tree" << std::endl;
+        }
+        std::cout << "Printing before erasing an element: " << std::endl;
+        print();
         if(erase(elements[i])){
             ++j;
         }else{
-            std::cout << "The element wasnt erased" << std::endl;
+            std::cout << "NOT ERASED!!!!!!!!" << std::endl;
         }
+        std::cout << "Pause"; std::cin.ignore();
     }
+
+    std::cout << "Number of delitions: " << j << std::endl;
 }
 
 bool compareKeyNodes(Node* nodeA, Node* nodeB)
