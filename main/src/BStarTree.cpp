@@ -296,50 +296,14 @@ std::list<Node*>::iterator BStarTree::getIterator(Node* node) const
     return it;
 }
 
-std::list<Node*>::iterator BStarTree::getLeftSiblingIt(Node* node) const
-{
-    Node* ancestor;
-
-    ancestor = node->getAncestor();
-
-    auto it = ancestor->children().begin();
-    while(*it != node){
-        ++it;
-    }
-
-    if (it != ancestor->children().begin()) {
-        return prev(it);
-    }else{
-        return ancestor->children().begin();
-    }
-}
-
-std::list<Node*>::iterator BStarTree::getRightSiblingIt(Node* node) const
-{
-    Node* ancestor;
-
-    ancestor = node->getAncestor();
-
-    auto it = ancestor->children().begin();
-    while(*it != node){
-        ++it;
-    }
-
-    if (it != prev(ancestor->children().end())) {
-        return next(it);
-    }else{
-        return prev(ancestor->children().end());
-    }
-}
-
 Node* BStarTree::getLeftSibling(Node* node) const
 {
-    return *getLeftSiblingIt(node);
+    return *prev(getIterator(node));
 }
 
 Node* BStarTree::getRightSibling(Node* node) const
 {
-    return *getRightSiblingIt(node);
+    return *next(getIterator(node));
 }
 
 std::list<Node*>::iterator BStarTree::rotateLeft(Node* node)
@@ -769,18 +733,6 @@ void BStarTree::merge(Node* node)
 
     delete rightSibling; //erases the memory used by this node
     ancestor->children().remove(rightSibling);
-}
-
-void BStarTree::mergeLeft(Node* node)
-{
-    Node* rightSibling = getRightSibling(node);
-    merge(rightSibling);
-}
-
-void BStarTree::mergeRight(Node* node)
-{
-    Node* leftSibling = getLeftSibling(node);
-    merge(leftSibling);
 }
 
 Node* BStarTree::getGreaterMinor(Node *node, double val) const

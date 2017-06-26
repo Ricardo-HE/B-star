@@ -77,8 +77,22 @@ public:
     */
     void print() const;
 
+    /**
+     * @brief Generates a file with as many numbers as the received size, 10 by default and
+     *          with the received filepath, by default "files/add.txt". The numbers are
+     *          randomly generated from 0 to 9999.
+     * @param size How many numbers to generate in the file.
+     * @param filepath What is the filepath of the file to put the numbers in.
+     */
     void generateFile(int size = 10, std::string filepath = "files/add.txt") const;
 
+    /**
+     * @brief Reads all the elements from the received file, adds them to the tree and then
+     *          erases until leaving elementsToLeave in the tree.
+     * @param elementsToLeave Number of elements to leave in the tree. By default 0.
+     * @param filepath Filepath of the file where the elements to read are at. By default is
+     *          "files/add.txt"
+     */
     void testAddAndDelete(int elementsToLeave = 0, std::string filepath = "files/add.txt");
 
 private:
@@ -86,23 +100,91 @@ private:
     unsigned id; //id of the next element of the tree.
     Node* root;
 
+    /**
+     * @brief When a node is overloaded, this handles it by either rotating or splitting.
+     * @param overloadedNode Node which is overloaded.
+     */
     void handleOverload(Node* overloadedNode);
+
+    /**
+     * @brief When a node is underloaded, this handles it by either rotating or splitting.
+     * @param underloadedNode Node which is overloaded.
+     */
     void handleUnderload(Node* underloadedNode);
 
+    /**
+     * @brief Gets the node where a new key should be inserted in.
+     * @param val New key to insert in the tree.
+     * @return Node where the new key should go or null if the key is already in the tree.
+     */
     Node* findPlace(double val) const;
+
+    /**
+     * @brief Gets the node where there is the key to delete.
+     * @param val Key to delete from the tree.
+     * @return Node where the key is or null if the key is not already in the tree.
+     */
     Node* findPlaceErase(double val) const;
 
-    bool searchSpace(Node* nodeAdd);
-    bool searchSpaceErase(Node* nodeAdd);
+    /**
+     * @brief Checks if the siblings have free space and if they do, this rotates until no
+     *          node is overloaded.
+     * @param node Node which is overloaded and needs to find where to unload one of its keys.
+     * @return True if some sibling had space and this rotated, leaving no node overloaded,
+     *          false otherwise.
+     */
+    bool searchSpace(Node* node);
+
+    /**
+     * @brief Checks if the siblings don't have the minimum and if they do, this rotates until
+     * no node is underloaded.
+     * @param node Node which is overloaded and needs to find where to unload one of its keys.
+     * @return True if some sibling had space and this rotated, leaving no node underloaded,
+     *          false otherwise.
+     */
+    bool searchSpaceErase(Node* node);
+
+    /**
+     * @brief Checks if the node is the leftmost children of its ancestor.
+     * @param node Node to check if its the leftmost.
+     * @return True if the node is the leftmost children, false otherwise.
+     */
     bool isLeftmost(Node* node) const;
+
+    /**
+     * @brief Checks if the node is the rightmost children of its ancestor.
+     * @param node Node to check if its the rightmost.
+     * @return True if the node is the rightmost children, false otherwise.
+     */
     bool isRightmost(Node* node) const;
 
+    /**
+     * @brief Checks if all the left siblings of the node are full.
+     * @param node Node whose left siblings are going to be checked.
+     * @return True if all the left siblings are full, false otherwise.
+     */
     bool areLeftSiblingsFull(Node* node) const;
+
+    /**
+     * @brief Checks if all the right siblings of the node are full.
+     * @param node Node whose right siblings are going to be checked.
+     * @return True if all the right siblings are full, false otherwise.
+     */
     bool areRightSiblingsFull(Node* node) const;
 
+    /**
+     * @brief Checks if all the left siblings of the node are at their minimum.
+     * @param node Node whose left siblings are going to be checked.
+     * @return True if all the left siblings are at their minimum, false otherwise.
+     */
     bool areLeftSiblingsAtMinimum(Node* node) const;
-    bool areRightSiblingsAtMinimum(Node* node) const;
 
+    /**
+     * @brief Checks if all the right siblings of the node are at their minimum.
+     * @param node Node whose right siblings are going to be checked.
+     * @return True if all the right siblings are at their minimum, false otherwise.
+     */
+    bool areRightSiblingsAtMinimum(Node* node) const;
 
     /**
      * @brief Method to rotate a single time to the left, taking a key from the node
@@ -156,24 +238,75 @@ private:
      */
     bool rotateRightErase(Node* node);
 
+    /**
+     * @brief Splits the root node, giving it a new children.
+     */
     void splitRoot();
-    void splitLeft(Node* node);
-    void splitRight(Node* node);
-    void mergeRootChildren(Node* nodeChildren);
-    void merge(Node* node);
-    void mergeLeft(Node* node);
-    void mergeRight(Node* node);
 
+    /**
+     * @brief Splits the node with its left node to divide their keys and make a third node.
+     * @param node Node to split along with its left sibling.
+     */
+    void splitLeft(Node* node);
+
+    /**
+     * @brief Splits the node with its right node to divide their keys and make a third node.
+     * @param node Node to split along with its right sibling.
+     */
+    void splitRight(Node* node);
+
+    /**
+     * @brief Method to merge a root node children with its siblings, or when there are only
+     *          two, with its single sibling.
+     * @param nodeChildren Children of the root to merge.
+     */
+    void mergeRootChildren(Node* nodeChildren);
+
+    /**
+     * @brief Merges a node along with its left and right siblings. In the case of the leftmost,
+     *          it merges with its two right siblings and with the rightmost with its two left
+     *          siblings.
+     * @param node Node to merge with its two siblings.
+     */
+    void merge(Node* node);
+
+    /**
+     * @brief Gets the node which has the greater key of the left children of the key.
+     * @param node Node to start looking for the children with the greater key.
+     * @param val Key to know from what left sibling start the search.
+     * @return The node with the greates key of the left siblings of the key or the received
+     *          node.
+     */
     Node* getGreaterMinor(Node *node, double val) const;
 
+    /**
+     * @brief Gets the left sibling of the node.
+     * @param node Node whose left sibling you want to get.
+     * @return The left sibling of the node.
+     */
     Node* getLeftSibling(Node* node) const;
+
+    /**
+     * @brief Gets the right sibling of the node.
+     * @param node Node whose right sibling you want to get.
+     * @return The right sibling of the node.
+     */
     Node* getRightSibling(Node* node) const;
 
+    /**
+     * @brief Gets the an iterator of the node. This won't work for the root node.
+     * @param node Get an iterator pointing to this node.
+     * @return Iterator pointing to the received node or undefined in the case of the root.
+     */
     std::list<Node*>::iterator getIterator(Node* node) const;
-    std::list<Node*>::iterator getLeftSiblingIt(Node* node) const;
-    std::list<Node*>::iterator getRightSiblingIt(Node* node) const;
 };
 
+/**
+ * @brief Compares two nodes to see if the first one is smaller than the second one.
+ * @param nodeA Node to check if it is the smaller one.
+ * @param nodeB Node to check against nodeA if it is the bigger one.
+ * @return True if nodeA is smaller than nodeB.
+ */
 bool compareKeyNodes(Node* nodeA, Node* nodeB);
 
 #endif //BSTARTREE_H
