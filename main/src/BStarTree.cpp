@@ -470,9 +470,7 @@ void BStarTree::splitRoot()
     putKeys(limitRoot, child2);
 
     root->keys().push_front(auxKey);
-    //////////////////////////////////////////s///////////////////
-    //Review this lamnda
-    ////////////////////////////////////////////
+
     auto putChildren = [&](unsigned limit, Node*& lNode){
         if(!root->children().empty()){
             for (std::size_t i = 0; i < limit; i++) {
@@ -938,22 +936,9 @@ void BStarTree::testAddAndDelete(int elementsToLeave /*= 0*/, std::string filepa
 
     int elementsToErase = elements.size() - elementsToLeave;
     for(int i = 0; i < elementsToErase; ++i){
-        std::cout << "Erasing: " << elements[i] << std::endl;
-        if(find(elements[i])){
-            std::cout << "The element exists in the tree..." << std::endl;
-        }else{
-            std::cout << "The element DOESNT exists in the tree" << std::endl;
-        }
-        std::cout << "Printing before erasing an element: " << std::endl;
-        print();
         if(erase(elements[i])){
             ++k;
-        }else{
-            std::cout << "NOT ERASED!!!!!!!!" << std::endl;
         }
-        std::cout << "Number of erasures: " << k << std::endl;
-        std::cout << "-------------------------------------" << std::endl;
-        std::cout << "Pause"; std::cin.ignore();
     }
 
     std::cout << "Number of additions: " << j << std::endl;
