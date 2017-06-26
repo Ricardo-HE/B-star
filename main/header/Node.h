@@ -9,13 +9,17 @@
 class Node
 {
 public:
+    /**
+     * @brief Constructor without paramters.
+     */
+    Node(){}
 
     /**
     * @brief Constructor with parameters to initialize the variables from the class.
-    * @param tree Constant reference to the tree where the node is going to be.
+    * @param tree Constant pointer to the tree where the node is going to be.
     * @ancestor This tells the node what node is its ancestor.
     */
-    Node(BStarTree const & tree, Node* ancestor = nullptr):tree(tree), ancestor(ancestor) {}
+    Node(BStarTree const * tree, Node* ancestor = nullptr):tree(tree), ancestor(ancestor) {}
 
     /**
     *@brief Virtual destructor
@@ -119,7 +123,7 @@ public:
 protected:
     unsigned id; //id to identify nodes
     unsigned height; //height in the tree. The root is 0 and each children is ancestor+1
-    BStarTree const & tree; //reference to the tree
+    BStarTree const * tree; //pointer to the tree
     std::list<double> keysList;     // Pointer for allocating dynamic memory store
     std::list<Node*> childList;
     Node* ancestor;

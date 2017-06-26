@@ -4,7 +4,7 @@
 #include "../header/RootNode.h"
 
 BStarTree::BStarTree (int order): ORDER(order < 3 ? 3 : order), id(1),
-                        root(new RootNode(*this, nullptr, id, 1))
+                        root(new RootNode(this, nullptr, id, 1))
 {
     ++id;
 
@@ -407,8 +407,8 @@ void BStarTree::splitRoot()
 {
     Node *child1, *child2;
 
-    child1 = new NormalNode(*this, root, id++, 2);
-    child2 = new NormalNode(*this, root, id++, 2);
+    child1 = new NormalNode(this, root, id++, 2);
+    child2 = new NormalNode(this, root, id++, 2);
 
     auto putKeys = [&](unsigned limit, Node*& lNode){
         for (std::size_t i = 0; i < limit; i++) {
@@ -473,7 +473,7 @@ void BStarTree::splitLeft(Node* node)
     auxList.merge(node->keys());
 
     Node *newNode; //new node that goes in the middle of the current node and its left sibling
-    newNode = new NormalNode(*this, ancestor, id++, ancestor->getHeight() + 1);
+    newNode = new NormalNode(this, ancestor, id++, ancestor->getHeight() + 1);
 
     auto putKeys = [&auxList](unsigned limit, Node*& lNode){
         for (std::size_t i = 0; i < limit; i++) {
@@ -547,7 +547,7 @@ void BStarTree::splitRight(Node* node)
     auxList.merge(rightSibling->keys());
 
     Node *newNode; //new node that goes in the middle of the current node and its right sibling
-    newNode = new NormalNode(*this, ancestor, id++, ancestor->getHeight() + 1);
+    newNode = new NormalNode(this, ancestor, id++, ancestor->getHeight() + 1);
 
     auto putKeys = [&auxList](unsigned limit, Node*& lNode){
         for (std::size_t i = 0; i < limit; i++) {

@@ -15,10 +15,10 @@ public:
 
     /**
     * @brief Constructor with parameters to initialize the variables from the class.
-    * @param tree Constant reference to the tree where the node is going to be.
+    * @param tree Constant pointer to the tree where the node is going to be.
     * @ancestor This tells the node what node is its ancestor.
     */
-    RootNode(BStarTree const & tree, Node* ancestor = nullptr, unsigned id = 0, unsigned height = 0);
+    RootNode(BStarTree const * tree, Node* ancestor = nullptr, unsigned id = 0, unsigned height = 0);
     /**
      * @brief Default destructor of the class.
      */
