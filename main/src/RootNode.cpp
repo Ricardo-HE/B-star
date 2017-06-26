@@ -10,44 +10,20 @@ RootNode::RootNode(BStarTree const * tree, Node* ancestor, unsigned id, unsigned
 
 bool RootNode::isOverloaded() const
 {
-    bool overloaded = false;
-
-    if(keysList.size() > tree->maxKeysRNode()){
-        overloaded = true;
-    }
-
-    return overloaded;
+    return keysList.size() > tree->maxKeysRNode() ? true : false;
 }
 
 bool RootNode::isFull() const
 {
-    bool full = false;
-
-    if (keysList.size() == tree->maxKeysRNode()) {
-        full = true;
-    }
-
-    return full;
+    return keysList.size() == tree->maxKeysRNode() ? true : false;
 }
 
 bool RootNode::isUnderloaded() const
 {
-    bool atMinimum = false;
-
-    if (keysList.size() < tree->minKeysRNode()) {
-        atMinimum = true;
-    }
-
-    return atMinimum;
+    return keysList.size() < tree->minKeysRNode() ? true : false;
 }
+
 bool RootNode::isAtMinimum() const
 {
-    bool atMinimum = false;
-
-    if (keysList.size() == tree->minKeysRNode()) {
-        atMinimum = true;
-    }
-
-    return atMinimum;
+    return keysList.size() == tree->minKeysRNode() ? true : false;
 }
-

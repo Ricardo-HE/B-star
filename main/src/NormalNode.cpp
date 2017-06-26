@@ -10,45 +10,21 @@ NormalNode::NormalNode(BStarTree const * tree, Node* ancestor, unsigned id, unsi
 
 bool NormalNode::isOverloaded() const
 {
-    bool overloaded = false;
-
-    if(keysList.size() > tree->maxKeysNNode()){
-        overloaded = true;
-    }
-
-    return overloaded;
+    return keysList.size() > tree->maxKeysNNode() ? true : false;
 }
 
 bool NormalNode::isFull() const
 {
-    bool full = false;
-
-    if (keysList.size() == tree->maxKeysNNode()){
-        full = true;
-    }
-
-    return full;
+    return keysList.size() == tree->maxKeysNNode() ? true : false;
 }
 
 bool NormalNode::isUnderloaded() const
 {
-    bool underloaded = false;
-
-    if (keysList.size() < tree->minKeysNNode()) {
-        underloaded = true;
-    }
-
-    return underloaded;
+    return keysList.size() < tree->minKeysNNode() ? true : false;
 }
 
 bool NormalNode::isAtMinimum() const
 {
-    bool atMinimum = false;
-
-    if (keysList.size() == tree->minKeysNNode()) {
-        atMinimum = true;
-    }
-
-    return atMinimum;
+    return keysList.size() == tree->minKeysNNode() ? true : false;
 }
 
