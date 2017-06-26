@@ -1,6 +1,6 @@
 #include "../header/RootNode.h"
 
-RootNode::RootNode(int order, Node* ancestor, unsigned id, unsigned height): Node(order, ancestor)
+RootNode::RootNode(BStarTree const & tree, Node* ancestor, unsigned id, unsigned height): Node(tree, ancestor)
 {
     //keysList = std::list<double>(); //creates an empty list
     //childList = std::list<Node*>(); //creates an empty list
@@ -11,9 +11,8 @@ RootNode::RootNode(int order, Node* ancestor, unsigned id, unsigned height): Nod
 bool RootNode::isOverloaded() const
 {
     bool overloaded = false;
-    const unsigned MAX_SIZE = 2 * floor( (2*order - 2) / 3 );
 
-    if(keysList.size() > MAX_SIZE){
+    if(keysList.size() > tree.maxKeysRNode()){
         overloaded = true;
     }
 
@@ -24,8 +23,7 @@ bool RootNode::isFull() const
 {
     bool full = false;
 
-    const unsigned MAX_SIZE = 2 * floor( (2*order - 2) / 3 );
-    if (keysList.size() ==  MAX_SIZE) {
+    if (keysList.size() == tree.maxKeysRNode()) {
         full = true;
     }
 
@@ -36,8 +34,7 @@ bool RootNode::isUnderloaded() const
 {
     bool atMinimum = false;
 
-    const unsigned MIN_SIZE = 1;
-    if (keysList.size() < MIN_SIZE) {
+    if (keysList.size() < tree.minKeysRNode()) {
         atMinimum = true;
     }
 
@@ -47,8 +44,7 @@ bool RootNode::isAtMinimum() const
 {
     bool atMinimum = false;
 
-    const unsigned MIN_SIZE = 1;
-    if (keysList.size() == MIN_SIZE) {
+    if (keysList.size() == tree.minKeysRNode()) {
         atMinimum = true;
     }
 

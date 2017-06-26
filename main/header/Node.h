@@ -4,23 +4,18 @@
 #include <iostream>
 #include <list>
 
-class RootNode; //declaration of use
+#include "BStarTree.h"
 
 class Node
 {
 public:
-    /**
-    * @brief Constructor without parameters.
-    */
-    Node() {}
 
     /**
     * @brief Constructor with parameters to initialize the variables from the class.
-    * @param order Order of the tree. This number indicates the maximum number of keys for a node
-    *           befire needing to split.
+    * @param tree Constant reference to the tree where the node is going to be.
     * @ancestor This tells the node what node is its ancestor.
     */
-    Node(int order, Node* ancestor = nullptr):order(order), ancestor(ancestor) {}
+    Node(BStarTree const & tree, Node* ancestor = nullptr):tree(tree), ancestor(ancestor) {}
 
     /**
     *@brief Virtual destructor
@@ -92,11 +87,6 @@ public:
     unsigned getHeight() const { return height; }
 
     /**
-    *@brief Get the order of the node.
-    *@return The order of the node.
-    */
-    unsigned getOrder() const { return order; }
-    /**
     *@brief Get the current size of the list of keys in the node.
     *@ The current size of the list of keys in the node.
     */
@@ -129,7 +119,7 @@ public:
 protected:
     unsigned id; //id to identify nodes
     unsigned height; //height in the tree. The root is 0 and each children is ancestor+1
-    int order;                      // Order of this node
+    BStarTree const & tree; //reference to the tree
     std::list<double> keysList;     // Pointer for allocating dynamic memory store
     std::list<Node*> childList;
     Node* ancestor;

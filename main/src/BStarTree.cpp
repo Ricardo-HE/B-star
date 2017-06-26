@@ -1,5 +1,21 @@
 #include "../header/BStarTree.h"
-#include <stack>
+#include "../header/Node.h"
+#include "../header/NormalNode.h"
+#include "../header/RootNode.h"
+
+BStarTree::BStarTree (int order): ORDER(order < 3 ? 3 : order), id(1),
+                        root(new RootNode(*this, nullptr, id, 1))
+{
+    ++id;
+
+    maxKeysNormalNode = ORDER - 1;
+    maxKeysRootNode = 2 * floor( (2*ORDER - 2) / 3 );
+    minKeysNormalNode = std::ceil( (2*ORDER-1) / 3 ) - 1;
+    minKeysRootNode = 1;
+    keysSplitChild1 = std::floor( (2*ORDER - 2)/3 );
+    keysSplitChild2 = std::floor( (2*ORDER - 1)/3 );
+    keysSplitChild3 = std::floor( 2*ORDER/3 );
+}
 
 BStarTree::~BStarTree()
 {
@@ -391,8 +407,8 @@ void BStarTree::splitRoot()
 {
     Node *child1, *child2;
 
-    child1 = new NormalNode(mOrder, root, id++, 2);
-    child2 = new NormalNode(mOrder, root, id++, 2);
+    child1 = new NormalNode(*this, root, id++, 2);
+    child2 = new NormalNode(*this, root, id++, 2);
 
     auto putKeys = [&](unsigned limit, Node*& lNode){
         for (std::size_t i = 0; i < limit; i++) {
@@ -401,7 +417,7 @@ void BStarTree::splitRoot()
         }
     };
 
-    unsigned limitRoot = std::floor((2*mOrder - 2)/3);
+    unsigned limitRoot = maxKeysRootNode /2;
     putKeys(limitRoot, child1);
 
     double auxKey = root->keys().front();
@@ -457,7 +473,7 @@ void BStarTree::splitLeft(Node* node)
     auxList.merge(node->keys());
 
     Node *newNode; //new node that goes in the middle of the current node and its left sibling
-    newNode = new NormalNode(mOrder, ancestor, id++, ancestor->getHeight() + 1);
+    newNode = new NormalNode(*this, ancestor, id++, ancestor->getHeight() + 1);
 
     auto putKeys = [&auxList](unsigned limit, Node*& lNode){
         for (std::size_t i = 0; i < limit; i++) {
@@ -472,17 +488,17 @@ void BStarTree::splitLeft(Node* node)
     };
 
     //accommodate keys in the nodes
-    unsigned limitOne = std::floor( (2*mOrder - 2)/3 );
+    unsigned limitOne = std::floor( (2*ORDER - 2)/3 );
     putKeys(limitOne, leftSibling);
 
     putKeyAncestor();
 
-    unsigned limitTwo = std::floor( (2*mOrder - 1)/3 );
+    unsigned limitTwo = std::floor( (2*ORDER - 1)/3 );
     putKeys(limitTwo, newNode);
 
     putKeyAncestor();
 
-    unsigned limitThree = std::floor( 2*mOrder/3 );
+    unsigned limitThree = std::floor( 2*ORDER/3 );
     putKeys(limitThree, node);
 
     //accommodate children in the nodes.
@@ -531,7 +547,7 @@ void BStarTree::splitRight(Node* node)
     auxList.merge(rightSibling->keys());
 
     Node *newNode; //new node that goes in the middle of the current node and its right sibling
-    newNode = new NormalNode(mOrder, ancestor, id++, ancestor->getHeight() + 1);
+    newNode = new NormalNode(*this, ancestor, id++, ancestor->getHeight() + 1);
 
     auto putKeys = [&auxList](unsigned limit, Node*& lNode){
         for (std::size_t i = 0; i < limit; i++) {
@@ -545,15 +561,15 @@ void BStarTree::splitRight(Node* node)
         auxList.pop_front();
     };
 
-    unsigned limitOne = std::floor( (2*mOrder - 2)/3 );
+    unsigned limitOne = keysSplitChild1;
     putKeys(limitOne, node);
     putKeyAncestor();
 
-    unsigned limitTwo = std::floor( (2*mOrder - 1)/3 );
+    unsigned limitTwo = keysSplitChild2;
     putKeys(limitTwo, newNode);
     putKeyAncestor();
 
-    unsigned limitThree = std::floor( 2*mOrder/3 );
+    unsigned limitThree = keysSplitChild3;
     putKeys(limitThree, rightSibling);
 
     //accommodate children in the nodes.

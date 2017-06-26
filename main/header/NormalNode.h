@@ -11,18 +11,13 @@ class NormalNode : public Node                      // Node is the base class, a
 {                                                   // protected members of Node can be accessed
 public:                                             // by NormalNode
 
-    /**
-     * @brief Constructor without parameters.
-     */
-    NormalNode(){}
 
     /**
     * @brief Constructor with parameters to initialize the variables from the class.
-    * @param order Order of the tree. This number indicates the maximum number of keys for a node
-    *           befire needing to split.
+    * @param tree Constant reference to the tree where the node is going to be.
     * @ancestor This tells the node what node is its ancestor.
     */
-    NormalNode(int order, Node* ancestor = nullptr, unsigned id = 0, unsigned height = 0);                       // Overloaded constructor false = NormalNode
+    NormalNode(BStarTree const & tree, Node* ancestor = nullptr, unsigned id = 0, unsigned height = 0);
 
     /**
      * @brief Default destructor.

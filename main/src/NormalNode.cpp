@@ -1,6 +1,6 @@
 #include "../header/NormalNode.h"
 
-NormalNode::NormalNode(int order, Node* ancestor, unsigned id, unsigned height): Node(order, ancestor)
+NormalNode::NormalNode(BStarTree const & tree, Node* ancestor, unsigned id, unsigned height): Node(tree, ancestor)
 {
     //this might become handy later
     //const unsigned normalNodeOrder = ceil( (2*order-1) / 3 );
@@ -11,9 +11,8 @@ NormalNode::NormalNode(int order, Node* ancestor, unsigned id, unsigned height):
 bool NormalNode::isOverloaded() const
 {
     bool overloaded = false;
-    const unsigned MAX_SIZE = order - 1;
 
-    if(keysList.size() > MAX_SIZE){
+    if(keysList.size() > tree.maxKeysNNode()){
         overloaded = true;
     }
 
@@ -24,8 +23,7 @@ bool NormalNode::isFull() const
 {
     bool full = false;
 
-    const unsigned MAX_SIZE = order - 1;
-    if (keysList.size() ==  MAX_SIZE) {
+    if (keysList.size() == tree.maxKeysNNode()){
         full = true;
     }
 
@@ -36,8 +34,7 @@ bool NormalNode::isUnderloaded() const
 {
     bool underloaded = false;
 
-    const unsigned MIN_SIZE = std::ceil( (2*order-1) / 3 ) - 1;
-    if (keysList.size() <  MIN_SIZE) {
+    if (keysList.size() < tree.minKeysNNode()) {
         underloaded = true;
     }
 
@@ -48,8 +45,7 @@ bool NormalNode::isAtMinimum() const
 {
     bool atMinimum = false;
 
-    const unsigned MIN_SIZE = std::ceil( (2*order-1)/3 ) - 1;
-    if (keysList.size() ==  MIN_SIZE) {
+    if (keysList.size() == tree.minKeysNNode()) {
         atMinimum = true;
     }
 

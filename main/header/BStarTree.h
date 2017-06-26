@@ -5,11 +5,10 @@
 #include <fstream>
 #include <cmath>
 #include <algorithm>
+#include <list>
 #include <queue>
 
-#include "Node.h"
-#include "RootNode.h"
-#include "NormalNode.h"
+class Node;
 
 class BStarTree {
 
@@ -20,9 +19,7 @@ public:
         @param order The order of the b-tree. This controls the maximum numbers of keys and
                 children for each node. Minimum is 3.
     */
-    BStarTree (int order): mOrder(order < 3 ? 3 : order), id(1), root(new RootNode(mOrder, nullptr, id, 1)) {
-        ++id;
-    }
+    BStarTree (int order);
 
     /**
         @brief Destructor of the BStarTree. Deallocates the memory
@@ -95,10 +92,61 @@ public:
      */
     void testAddAndDelete(int elementsToLeave = 0, std::string filepath = "files/add.txt");
 
+    //methods to get the constants for the nodes
+    /**
+     * @brief Gets the maximum number of keys for a normal node
+     * @return Maximum number of keys for a normal node.
+     */
+    unsigned maxKeysNNode() const { return maxKeysNormalNode; }
+
+    /**
+     * @brief Gets the maximum number of keys for a root node
+     * @return Maximum number of keys for a root node.
+     */
+    unsigned maxKeysRNode() const { return maxKeysRootNode; }
+
+    /**
+     * @brief Gets the minimum number of keys for a normal node
+     * @return Minimum number of keys for a normal node.
+     */
+    unsigned minKeysNNode() const { return minKeysNormalNode; }
+
+    /**
+     * @brief Gets the minimum number of keys for a root node
+     * @return Minimum number of keys for a root node.
+     */
+    unsigned minKeysRNode() const { return minKeysRootNode; }
+
+    /**
+     * @brief Gets the number of keys for the first children when splitting.
+     * @return The number of keys for the first children when splitting.
+     */
+    unsigned getKeysSplitChild1() const { return keysSplitChild1; }
+
+    /**
+     * @brief Gets the number of keys for the second children when splitting.
+     * @return The number of keys for the second children when splitting.
+     */
+    unsigned getKeysSplitChild2() const { return keysSplitChild2; }
+
+    /**
+     * @brief Gets the number of keys for the third children when splitting.
+     * @return The number of keys for the third children when splitting.
+     */
+    unsigned getKeysSplitChild3() const { return keysSplitChild3; }
+
 private:
-    const int mOrder; //order of the tree
+    const int ORDER; //order of the tree
     unsigned id; //id of the next element of the tree.
     Node* root;
+    unsigned maxKeysNormalNode;
+    unsigned maxKeysRootNode;
+    unsigned minKeysNormalNode;
+    unsigned minKeysRootNode;
+    unsigned keysSplitChild1;
+    unsigned keysSplitChild2;
+    unsigned keysSplitChild3;
+
 
     /**
      * @brief When a node is overloaded, this handles it by either rotating or splitting.
