@@ -1,8 +1,8 @@
 #include "../header/BStarTree.h"
 #include <stack>
 
- BStarTree::~BStarTree()
- {
+BStarTree::~BStarTree()
+{
     Node* currentNode;
     std::queue<Node*> nodeQueue;
 
@@ -14,7 +14,7 @@
 
         delete currentNode;
     }
- }
+}
 
 bool BStarTree::add(double val)
 {
@@ -31,7 +31,6 @@ bool BStarTree::add(double val)
                 handleOverload(currentNode);
                 currentNode = currentNode->getAncestor();
         }
-
 
         added = true;
     }else{
@@ -63,7 +62,7 @@ bool BStarTree::erase(double val)
     Node* nodeErase = nullptr;  //Node where it will add the number if the number
                                 //doesn't exist in the tree.
     Node* currentNode;
-    //do findPlaceerase
+
     nodeErase = findPlaceErase(val);
     if (nodeErase == nullptr) {
         return false;
@@ -73,13 +72,10 @@ bool BStarTree::erase(double val)
 
     if (!nodeErase->isLeaf()) {
         currentNode = getGreaterMinor(nodeErase, val);
-        nodeErase->keys().remove(val);
-        nodeErase->keys().push_back( currentNode->keys().back() );
-        nodeErase->keys().sort();
+        nodeErase->addItem(currentNode->keys().back());
         currentNode->keys().pop_back();
-    }else{
-        nodeErase->keys().remove(val);
     }
+    nodeErase->keys().remove(val);
 
     Node* ancestor;
     while (currentNode != root && currentNode->isUnderloaded()) {
@@ -425,7 +421,7 @@ void BStarTree::splitRoot()
         }
     };
 
-    unsigned limitRoot = std::floor((2*mOrder - 2)/3) /*root->keys().size()/2*/;
+    unsigned limitRoot = std::floor((2*mOrder - 2)/3);
     putKeys(limitRoot, child1);
 
     double auxKey = root->keys().front();
@@ -449,10 +445,8 @@ void BStarTree::splitRoot()
     unsigned limitForChild1 = child1->keys().size() + 1;
     unsigned limitForChild2 = child2->keys().size() + 1;
 
-
     putChildren(limitForChild1, child1);
     putChildren(limitForChild2, child2);
-
 
     root->children().push_back(child1);
     root->children().push_back(child2);
@@ -485,8 +479,6 @@ void BStarTree::splitLeft(Node* node)
     Node *newNode; //new node that goes in the middle of the current node and its left sibling
     newNode = new NormalNode(mOrder, ancestor, id++, ancestor->getHeight() + 1);
 
-    ancestor->children().push_back(newNode);
-
     auto putKeys = [&auxList](unsigned limit, Node*& lNode){
         for (std::size_t i = 0; i < limit; i++) {
             lNode->keys().push_back( auxList.front() );
@@ -495,7 +487,7 @@ void BStarTree::splitLeft(Node* node)
     };
 
     auto putKeyAncestor = [&ancestor, &auxList](){
-        ancestor->keys().push_back( auxList.front() );
+        ancestor->addItem( auxList.front() );
         auxList.pop_front();
     };
 
@@ -513,13 +505,9 @@ void BStarTree::splitLeft(Node* node)
     unsigned limitThree = std::floor( 2*mOrder/3 );
     putKeys(limitThree, node);
 
-    ancestor->keys().sort();
-    ancestor->children().sort( compareKeyNodes );
-
     //accommodate children in the nodes.
     std::list<Node*> auxListChildren(std::move(leftSibling->children()));
     auxListChildren.merge(node->children(), compareKeyNodes);
-    auxListChildren.sort(compareKeyNodes);
 
     auto putChildren = [&auxListChildren](unsigned limit, Node*& lNode){
         if (!auxListChildren.empty()) {
@@ -534,6 +522,8 @@ void BStarTree::splitLeft(Node* node)
     putChildren(limitOne+1, leftSibling);
     putChildren(limitTwo+1, newNode);
     putChildren(limitThree+1, node);
+
+    ancestor->addChild(newNode);
 }
 
 void BStarTree::splitRight(Node* node)
@@ -563,8 +553,6 @@ void BStarTree::splitRight(Node* node)
     Node *newNode; //new node that goes in the middle of the current node and its right sibling
     newNode = new NormalNode(mOrder, ancestor, id++, ancestor->getHeight() + 1);
 
-    ancestor->children().push_back(newNode);
-
     auto putKeys = [&auxList](unsigned limit, Node*& lNode){
         for (std::size_t i = 0; i < limit; i++) {
             lNode->keys().push_back( auxList.front() );
@@ -573,7 +561,7 @@ void BStarTree::splitRight(Node* node)
     };
 
     auto putKeyAncestor = [&ancestor, &auxList](){
-        ancestor->keys().push_back( auxList.front() );
+        ancestor->addItem( auxList.front() );
         auxList.pop_front();
     };
 
@@ -588,13 +576,9 @@ void BStarTree::splitRight(Node* node)
     unsigned limitThree = std::floor( 2*mOrder/3 );
     putKeys(limitThree, rightSibling);
 
-    ancestor->keys().sort();
-    ancestor->children().sort( compareKeyNodes );
-
     //accommodate children in the nodes.
     std::list<Node*> auxListChildren(std::move(node->children()));
     auxListChildren.merge(rightSibling->children(), compareKeyNodes);
-    auxListChildren.sort(compareKeyNodes);
 
     auto putChildren = [&auxListChildren](unsigned limit, Node*& lNode){
         if (!auxListChildren.empty()) {
@@ -609,6 +593,8 @@ void BStarTree::splitRight(Node* node)
     putChildren(limitOne+1, node);
     putChildren(limitTwo+1, newNode);
     putChildren(limitThree+1, rightSibling);
+
+    ancestor->addChild(newNode);
 }
 
 void BStarTree::mergeRootChildren(Node* rootChildren)
@@ -625,9 +611,6 @@ void BStarTree::mergeRootChildren(Node* rootChildren)
         //then it must have two children and has to merge with them.
 
         auto deleteRootChildren = [this](){
-            /*for(double key : (*root->children().begin())->keys()){
-                    root->keys().push_front(key);
-            }*/
             root->keys().merge( root->children().front()->keys() );
 
             for(Node* node : root->children().front()->children()){
@@ -708,8 +691,7 @@ void BStarTree::merge(Node* node)
     }
 
     putKeys(limitOne, leftSibling);
-    ancestor->keys().push_back( auxList.front() );
-    ancestor->keys().sort();
+    ancestor->addItem( auxList.front());
     auxList.pop_front();
     putKeys(limitTwo, node);
 
@@ -746,11 +728,8 @@ Node* BStarTree::getGreaterMinor(Node *node, double val) const
 
     childIt = node->children().begin();
 
-    if(!node->keys().empty()){  //the node might be empty because its only key might have
-                                //been erased
-        for (ancestorKey = node->keys().begin(); *ancestorKey < val; ++ancestorKey) {
-            ++childIt;
-        }
+    for (ancestorKey = node->keys().begin(); *ancestorKey < val; ++ancestorKey) {
+        ++childIt;
     }
 
     Node* greaterMinor;
@@ -760,7 +739,6 @@ Node* BStarTree::getGreaterMinor(Node *node, double val) const
     }
 
     return greaterMinor;
-
 }
 
 void BStarTree::print() const
@@ -852,18 +830,14 @@ void BStarTree::generateFile(int size /*= 10*/, std::string filepath /*= files/a
         std::cerr << "Couldn't read file with path " << filepath << std::endl;
     }
 
-    //an auxiliar list to check wheter a value already was generated so it generates another
-    std::list<double> myList(size);
-    double number;
+    //creates a vector to put numbers from 0 to 9999, shuffles them and take size number of
+    //elements from it so there are no repetitions.
+    std::vector<double> vec(10000); //creates a vector with capacity 10000
+    for(unsigned i = 0; i < 10000; ++i) vec[i] = i; //puts numbers from 0 to 9999 in vec
+    std::random_shuffle(vec.begin(), vec.end()); //shuffles the vector
 
-    srand(time(NULL));
     for(int i = 0; i < size; ++i){
-        do{
-            number = rand() % 9999;
-        }while( std::find(myList.begin(), myList.end(), number)  != myList.end() );
-        myList.push_back(number);
-
-        oFile << number  << '\n';
+        oFile << vec[i]  << '\n'; //put the first size random elements in the file
     }
 
     oFile.close();
