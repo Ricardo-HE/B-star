@@ -121,9 +121,6 @@ Node* BStarTree::findPlace(double val) const
 
     while(!currentNode->isLeaf()){
         child = currentNode->children().begin();
-        /*for(auto key = currentNode->keys().begin();
-                key != currentNode->keys().end();
-                ++key){*/
         for(auto key : currentNode->keys()){
             if(key == val){ //exceptional case, the value already is in the tree
                 return nullptr;
@@ -666,15 +663,16 @@ void BStarTree::mergeRootChildren(Node* rootChildren)
         //then it must have two children and has to merge with them.
 
         auto deleteRootChildren = [this](){
-            for(double key : (*root->children().begin())->keys()){
+            /*for(double key : (*root->children().begin())->keys()){
                     root->keys().push_front(key);
-            }
+            }*/
+            root->keys().merge( root->children().front()->keys() );
 
             for(Node* node : root->children().front()->children()){
                 dynamic_cast<NormalNode*>(node)->setAncestor(root);
             }
             //adds all the children of the first children of the root to the end of the list of
-            //children of the root
+            //children of the root.
             root->children().splice(root->children().end(), root->children().front()->children(),
                             root->children().front()->children().begin(),
                             root->children().front()->children().end());
@@ -749,6 +747,7 @@ void BStarTree::merge(Node* node)
 
     putKeys(limitOne, leftSibling);
     ancestor->keys().push_back( auxList.front() );
+    ancestor->keys().sort();
     auxList.pop_front();
     putKeys(limitTwo, node);
 
@@ -917,6 +916,7 @@ void BStarTree::testAddAndDelete(int elementsToLeave /*= 0*/, std::string filepa
     double number;
 
     int j = 0;
+    int k = 0;
 
     std::vector<double> elements;
     iaddFile.open(filepath);
@@ -931,9 +931,6 @@ void BStarTree::testAddAndDelete(int elementsToLeave /*= 0*/, std::string filepa
             ++j;
         }
     }
-
-    std::cout << "Number of additions: " << j << std::endl;
-    j = 0;
 
     iaddFile.close();
 
@@ -950,15 +947,17 @@ void BStarTree::testAddAndDelete(int elementsToLeave /*= 0*/, std::string filepa
         std::cout << "Printing before erasing an element: " << std::endl;
         print();
         if(erase(elements[i])){
-            ++j;
+            ++k;
         }else{
             std::cout << "NOT ERASED!!!!!!!!" << std::endl;
         }
+        std::cout << "Number of erasures: " << k << std::endl;
         std::cout << "-------------------------------------" << std::endl;
         std::cout << "Pause"; std::cin.ignore();
     }
 
-    std::cout << "Number of delitions: " << j << std::endl;
+    std::cout << "Number of additions: " << j << std::endl;
+    std::cout << "Number of delitions: " << k << std::endl;
 }
 
 bool compareKeyNodes(Node* nodeA, Node* nodeB)
