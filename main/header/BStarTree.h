@@ -113,11 +113,21 @@ private:
     void handleUnderload(Node* underloadedNode);
 
     /**
+     * @brief Finds wether or not a key exists in the tree, telling you if it does and with
+     *          what node it was decided if it existed or not.
+     * @param val Key to find if it exists in the tree.
+     * @param node This will be overwritten with the last node that was needed to know if
+     *          the key existed in the tree.
+     * @return True if the key was found, false if not.
+     */
+    bool find(double val, Node*& node) const;
+
+    /**
      * @brief Gets the node where a new key should be inserted in.
      * @param val New key to insert in the tree.
      * @return Node where the new key should go or null if the key is already in the tree.
      */
-    Node* findPlace(double val) const;
+    Node* findPlaceAdd(double val) const;
 
     /**
      * @brief Gets the node where there is the key to delete.

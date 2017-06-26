@@ -23,7 +23,7 @@ bool BStarTree::add(double val)
                                 //doesn't exist in the tree.
     Node* currentNode;
 
-    nodeAdd = findPlace(val);
+    nodeAdd = findPlaceAdd(val);
     if (nodeAdd != nullptr) {
         nodeAdd->addItem(val);
         currentNode = nodeAdd;
@@ -103,74 +103,54 @@ void BStarTree::handleUnderload(Node* underloadedNode)
 
 bool BStarTree::find(double val) const
 {
-    //remember to check if there is a more optimal way to do this
-    return findPlace(val) == nullptr ? true : false;
+    return findPlaceAdd(val) == nullptr ? true : false;
+}
+
+bool BStarTree::find(double val, Node*& node) const
+{
+    node = root;
+    std::list<Node*>::iterator child;
+
+    while(!node->isLeaf()){
+        child = node->children().begin();
+        for(auto key = node->keys().begin(); *key <= val && key != node->keys().end(); ++key){
+            if(*key == val) return true;
+            ++child;
+        }
+        if(!node->isLeaf()){
+            node = *child;
+        }
+    }
+
+    //search if the value to add is in the leaf node about to be returned
+    for(auto key = node->keys().begin(); *key <= val && key != node->keys().end(); ++key){
+        if(*key == val) return true;
+    }
+
+    return false;
 }
 
 //this search can be optimized because when searching a node there is no need to keep
 //searching for a value once the values of the node are bigger than the searched value.
-Node* BStarTree::findPlace(double val) const
+Node* BStarTree::findPlaceAdd(double val) const
 {
-    Node* currentNode = root;
-    std::list<Node*>::iterator child;
-
-
-    while(!currentNode->isLeaf()){
-        child = currentNode->children().begin();
-        for(auto key : currentNode->keys()){
-            if(key == val){ //exceptional case, the value already is in the tree
-                return nullptr;
-            }else if(key < val){
-                ++child;
-            }
-        }
-        if(!currentNode->isLeaf()){
-            currentNode = *child;
-        }
+    Node* node = nullptr;
+    if(!find(val, node)){
+        return node;
     }
 
-    auto firstKey = currentNode->keys().begin();
-    auto endKey = currentNode->keys().end();
-
-
-    //search if the value to add is in the leaf node about to be returned
-    if (std::find(firstKey, endKey, val) != endKey) {
-        return nullptr;
-    }
-
-    return currentNode;
+    return nullptr;
 }
 
 // can probably be more optimized
 Node* BStarTree::findPlaceErase(double val) const
 {
-    Node* currentNode = root;
-    std::list<Node*>::iterator child;
-
-    while(!currentNode->isLeaf()){
-        child = currentNode->children().begin();
-        for(auto key : currentNode->keys()){
-            if(key == val){ //this is what we want when erasing
-                return currentNode;
-            }else if(key < val){
-                ++child;
-            }
-        }
-        if(!currentNode->children().empty()){
-            currentNode = *child;
-        }
+    Node* node = nullptr;
+    if(find(val, node)){
+        return node;
     }
 
-    auto firstKey = currentNode->keys().begin();
-    auto endKey = currentNode->keys().end();
-
-    //search if the value to add is in the leaf node. If it is, then it is returned,
-    //if not, then it wasn't found in the tree.
-    if (std::find(firstKey, endKey, val) != endKey) {
-        return currentNode;
-    }
-
-    return nullptr; //the value wasn't found so nullptr signals this
+    return nullptr;
 }
 
 bool BStarTree::searchSpace(Node* node)
