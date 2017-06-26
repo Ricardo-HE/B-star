@@ -43,7 +43,7 @@ bool BStarTree::add(double val)
 
 void BStarTree::handleOverload(Node* overloadedNode)
 {
-    if (!overloadedNode->IsRoot()) {
+    if (!overloadedNode->isRoot()) {
         if (!this->searchSpace(overloadedNode)) {
             if (!this->isLeftmost(overloadedNode)) {
                 splitLeft(overloadedNode);    //This split every node with their left sibling
@@ -96,7 +96,7 @@ bool BStarTree::erase(double val)
 void BStarTree::handleUnderload(Node* underloadedNode)
 {
     if(!searchSpaceErase(underloadedNode)){
-        if (!underloadedNode->getAncestor()->IsRoot()) {
+        if (!underloadedNode->getAncestor()->isRoot()) {
             merge(underloadedNode); //inside of this method it checks if the node is leftmost
                                     //rightmost or none of those two
         }else{
@@ -415,8 +415,8 @@ void BStarTree::splitRoot()
 {
     Node *child1, *child2;
 
-    child1 = new NormalNode(mOrder, false, root, id++, 2);
-    child2 = new NormalNode(mOrder, false, root, id++, 2);
+    child1 = new NormalNode(mOrder, root, id++, 2);
+    child2 = new NormalNode(mOrder, root, id++, 2);
 
     auto putKeys = [&](unsigned limit, Node*& lNode){
         for (std::size_t i = 0; i < limit; i++) {
@@ -483,7 +483,7 @@ void BStarTree::splitLeft(Node* node)
     auxList.merge(node->keys());
 
     Node *newNode; //new node that goes in the middle of the current node and its left sibling
-    newNode = new NormalNode(mOrder, false, ancestor, id++, ancestor->getHeight() + 1);
+    newNode = new NormalNode(mOrder, ancestor, id++, ancestor->getHeight() + 1);
 
     ancestor->children().push_back(newNode);
 
@@ -561,7 +561,7 @@ void BStarTree::splitRight(Node* node)
     auxList.merge(rightSibling->keys());
 
     Node *newNode; //new node that goes in the middle of the current node and its right sibling
-    newNode = new NormalNode(mOrder, false, ancestor, id++, ancestor->getHeight() + 1);
+    newNode = new NormalNode(mOrder, ancestor, id++, ancestor->getHeight() + 1);
 
     ancestor->children().push_back(newNode);
 
@@ -906,7 +906,3 @@ void BStarTree::testAddAndDelete(int elementsToLeave /*= 0*/, std::string filepa
     std::cout << "Number of delitions: " << k << std::endl;
 }
 
-bool compareKeyNodes(Node* nodeA, Node* nodeB)
-{
-    return *nodeA->keys().begin() < *nodeB->keys().begin();
-}

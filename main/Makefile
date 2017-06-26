@@ -6,9 +6,9 @@ ODIR = obj
 SDIR = src
 OUTDIR = bin
 
-GENMOD = BStarTree NormalNode RootNode
+GENMOD = BStarTree NormalNode RootNode Node
 
-_DEPS = Node
+_DEPS = 
 DEPS = $(patsubst %, $(IDIR)/%.h, $(_DEPS) $(GENMOD))
 
 _OBJ = main

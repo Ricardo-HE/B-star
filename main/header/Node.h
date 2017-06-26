@@ -1,7 +1,10 @@
 #ifndef NODE_H
 #define NODE_H
 
+#include <iostream>
 #include <list>
+
+class RootNode; //declaration of use
 
 class Node
 {
@@ -15,10 +18,9 @@ public:
     * @brief Constructor with parameters to initialize the variables from the class.
     * @param order Order of the tree. This number indicates the maximum number of keys for a node
     *           befire needing to split.
-    * @rootFlag This indicates wheter a node is the root node or not.
     * @ancestor This tells the node what node is its ancestor.
     */
-    Node(int order, bool rootflag, Node* ancestor = nullptr):order(order), isRoot(rootflag), ancestor(ancestor) {}
+    Node(int order, Node* ancestor = nullptr):order(order), ancestor(ancestor) {}
 
     /**
     *@brief Virtual destructor
@@ -27,33 +29,6 @@ public:
 
 
     //******************Pure virtual function***********************************
-    /**
-    * @brief print the node's information such like the keys of the node, father's ID
-    * and child's ID.
-    */
-    virtual void print() const = 0;
-
-    /**
-    * @brief Add a key to the Node's array list of keys.
-    * @param item Element to add to the node.
-    * @return True if it was added and false if it wasn't added to the array list.
-    */
-    virtual bool addItem(double item) = 0;
-
-    /**
-    * @brief Given an index number return the Node child of the list of child nodes.
-    * @param iPos Position, 0-indexed, of the child in the node.
-    * @return The node child of the position given of the list of child.
-    */
-    virtual Node* getChildNode(int iPos) const = 0;
-
-    /**
-     * @brief Gets the key of the node in the received position.
-     * @param iPos Position, 0-indexed, of the key in the node.
-     * @return The key in the received position.
-     */
-    virtual double getKey(int iPos) const = 0;
-
     /**
      * @brief Tells you if the node has more keys than permited. This means it has to split.
      * @return True if the node is overloaded, false otherwise.
@@ -78,7 +53,31 @@ public:
      */
     virtual bool isAtMinimum() const = 0;
 
+    /**
+    *@brief Says if the node is root or not.
+    *@return True if the node is root, false if isn't.
+    */
+    virtual bool isRoot() const = 0;
+
     //************************Access Functions**********************************
+
+    /**
+    * @brief print the node's information such like the keys of the node, father's ID
+    * and child's ID.
+    */
+    void print() const;
+
+    /**
+    * @brief Add a key to the Node's array list of keys.
+    * @param item Element to add to the node.
+    */
+    void addItem(double item);
+
+    /**
+     * @brief Adds a child to the Node's list of children.
+     * @param child Child to add to the list.
+     */
+    void addChild(Node* child);
 
     /**
      * @brief Gets the Id of the node.
@@ -104,66 +103,22 @@ public:
     std::size_t getNumKeys() const { return keysList.size(); }
 
     /**
-    *@brief Get the list of keys from the node.
-    *@return The list of keys from the node.
-    */
-    std::list<double> &getKeysList() { return keysList; }
-
-    /**
-    *@brief Get the list of childs from the node.
-    *@return The list of keys from the node.
-    */
-    std::list<Node*> &getChildList() { return childList; }
-
-    /**
-    *@brief Says if the node is root or not.
-    *@return True if the node is root, false if isn't.
-    */
-    bool IsRoot() const { return isRoot; }
-
-    /**
      * @brief Tells you the ancestor of the node.
      * @return The ancestor of the node. It might be null.
      */
     Node* getAncestor() const { return ancestor; }
 
     /**
-     * @brief Overload of the non constant operator [] to get an key.
-     * @param index Position, 0-indexed, of the key to get.
-     * @return Key in the received position.
-     */
-    double& operator[](int index) {
-        auto it = this->keysList.begin();
-        std::advance(it, index);
-
-        return *it;
-    }
-
-    /**
-     * @brief Overload of the constant operator [] to get an key.
-     * @param index Position, 0-indexed, of the key to get.
-     * @return Key in the received position.
-     */
-    const double& operator[](int index) const{
-        auto it = this->keysList.begin();
-        std::advance(it, index);
-
-        return *it;
-    }
-
-    //Alternate ways to get the list of keys and children
-    /**
     *@brief Get the list of keys from the node.
     *@return The list of keys from the node.
     */
-
-    std::list<double>& keys() { return getKeysList(); }
+    std::list<double>& keys() { return keysList; }
 
     /**
     *@brief Get the list of childs from the node.
     *@return The list of keys from the node.
     */
-    std::list<Node*>& children() { return getChildList(); }
+    std::list<Node*>& children() { return childList; }
 
     /**
      * @brief Tells you whether the node is a leaf or not.
@@ -177,11 +132,16 @@ protected:
     int order;                      // Order of this node
     std::list<double> keysList;     // Pointer for allocating dynamic memory store
     std::list<Node*> childList;
-    bool  isRoot;                   // Tracks if root or not.
     Node* ancestor;
 
 };
 
-
+/**
+ * @brief Compares two nodes to see if the first one is smaller than the second one.
+ * @param nodeA Node to check if it is the smaller one.
+ * @param nodeB Node to check against nodeA if it is the bigger one.
+ * @return True if nodeA is smaller than nodeB.
+ */
+bool compareKeyNodes(Node* nodeA, Node* nodeB);
 
 #endif

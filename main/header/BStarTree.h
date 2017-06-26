@@ -20,7 +20,7 @@ public:
         @param order The order of the b-tree. This controls the maximum numbers of keys and
                 children for each node. Minimum is 3.
     */
-    BStarTree (int order): mOrder(order < 3 ? 3 : order), id(1), root(new RootNode(mOrder, true, nullptr, id, 1)) {
+    BStarTree (int order): mOrder(order < 3 ? 3 : order), id(1), root(new RootNode(mOrder, nullptr, id, 1)) {
         ++id;
     }
 
@@ -301,12 +301,5 @@ private:
     std::list<Node*>::iterator getIterator(Node* node) const;
 };
 
-/**
- * @brief Compares two nodes to see if the first one is smaller than the second one.
- * @param nodeA Node to check if it is the smaller one.
- * @param nodeB Node to check against nodeA if it is the bigger one.
- * @return True if nodeA is smaller than nodeB.
- */
-bool compareKeyNodes(Node* nodeA, Node* nodeB);
 
 #endif //BSTARTREE_H

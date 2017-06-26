@@ -1,35 +1,11 @@
-//NormalNode.cpp
 #include "../header/NormalNode.h"
 
-NormalNode::NormalNode(int order, bool rootflag, Node* ancestor, unsigned id, unsigned height): Node(order, rootflag, ancestor)
+NormalNode::NormalNode(int order, Node* ancestor, unsigned id, unsigned height): Node(order, ancestor)
 {
     //this might become handy later
     //const unsigned normalNodeOrder = ceil( (2*order-1) / 3 );
     this->id = id;
     this->height = height;
-}
-
-bool NormalNode::addItem(double elem)
-{
-    this->keysList.push_back(elem);
-    this->keysList.sort();
-    return true;
-}
-
-Node* NormalNode::getChildNode(int iPos) const
-{
-    auto it = childList.begin();
-    std::advance(it, iPos);
-
-    return *it;
-}
-
-double NormalNode::getKey(int iPos) const
-{
-    auto it = keysList.begin();
-    std::advance(it, iPos);
-
-    return *it;
 }
 
 bool NormalNode::isOverloaded() const
@@ -80,13 +56,3 @@ bool NormalNode::isAtMinimum() const
     return atMinimum;
 }
 
-void NormalNode::print() const
-{
-    std::cout << "keys: ";
-
-    std::for_each(keysList.begin(), keysList.end(), [](auto key){
-        std::cout << key << " ";
-    });
-
-    std::cout << '\n' << std::endl;
-}
