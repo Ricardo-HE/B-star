@@ -900,9 +900,18 @@ void BStarTree::generateFile(int size /*= 10*/, std::string filepath /*= files/a
         std::cerr << "Couldn't read file with path " << filepath << std::endl;
     }
 
+    //an auxiliar list to check wheter a value already was generated so it generates another
+    std::list<double> myList(size);
+    double number;
+
     srand(time(NULL));
     for(int i = 0; i < size; ++i){
-        oFile << rand() % 2000 << '\n';
+        do{
+            number = rand() % 9999;
+        }while( std::find(myList.begin(), myList.end(), number)  != myList.end() );
+        myList.push_back(number);
+
+        oFile << number  << '\n';
     }
 
     oFile.close();
