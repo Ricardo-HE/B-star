@@ -25,19 +25,16 @@ template <typename T>
 void Node<T>::print() const
 {
 
-    if(!keysList.empty()){
-        std::cout << "Id: " << this->id << " | ";
-        this->ancestor != nullptr ? std::cout << this->ancestor->id : std::cout << ' ';
-        std::cout << std::endl;
+    std::cout << "Id: " << this->id << " | ";
+    this->ancestor != nullptr ? std::cout << this->ancestor->id : std::cout << ' ';
+    std::cout << std::endl;
 
-        std::cout << "keys: ";
-        for(auto key : keysList){
-            std::cout << key << " - ";
-        }
-        std::cout << "\b\b \b"; //erases the last -
-
-        std::cout <<  "\n\n";
+    std::cout << "keys: ";
+    for(auto key : keysList){
+        std::cout << key << " ";
     }
+
+    std::cout <<  "\n\n";
 }
 
 template <typename T>
