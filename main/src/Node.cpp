@@ -26,6 +26,14 @@ void Node<T>::print() const
 {
 
     if(!keysList.empty()){
+        std::cout << "Id: " << this->id << std::endl;
+        if(this->ancestor != nullptr){
+            std::cout << "A id: " << this->ancestor->id;
+        }else{
+            std::cout << "A id: " << "-";
+        }
+        std::cout << std::endl;
+
         for(auto key : keysList){
             std::cout << key << " - ";
         }

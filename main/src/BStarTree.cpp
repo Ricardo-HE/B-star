@@ -773,7 +773,8 @@ void BStarTree<T>::print() const
 {
     Node<T>* currentNode;
     std::queue<Node<T>*> nodeQueue;
-    unsigned oldHeight = 0;
+    unsigned height = 0;
+    Node<T>* lastNode = root;
 
     nodeQueue.push(root);
 
@@ -781,9 +782,14 @@ void BStarTree<T>::print() const
         currentNode = nodeQueue.front();
         nodeQueue.pop();
 
-            if(currentNode->getHeight() > oldHeight){
-                std::cout << "Printing the nodes with height: " << ++oldHeight << std::endl;
+        if(currentNode == lastNode){
+            std::cout << "Printing the nodes with height: " << ++height << std::endl;
+            if(!lastNode->isLeaf()){
+                lastNode = currentNode->children().back();
+            }else{
+                lastNode = nullptr;
             }
+        }
 
         currentNode->print();
 
