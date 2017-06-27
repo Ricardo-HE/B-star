@@ -22,14 +22,14 @@ public:                                             // by NormalNode
     * @param tree Constant pointer to the tree where the node is going to be.
     * @ancestor This tells the node what node is its ancestor.
     */
-    NormalNode(BStarTree const * tree, Node<T>* ancestor = nullptr, unsigned id = 0, unsigned height = 0);
+    NormalNode(BStarTree<T> const * tree, Node<T>* ancestor = nullptr, unsigned id = 0, unsigned height = 0);
 
     /**
      * @brief Default destructor.
      */
     ~NormalNode(){}
 
-    void setAncestor(Node<T>* newAncestor) { ancestor = newAncestor; }
+    void setAncestor(Node<T>* newAncestor) { this->ancestor = newAncestor; }
 
     //Definitions of Node class pure virtual functions
     /**

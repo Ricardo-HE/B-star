@@ -1,6 +1,3 @@
-#include "../src/Node.cpp"
-#include "../src/NormalNode.cpp"
-#include "../src/RootNode.cpp"
 
 template <typename T>
 BStarTree<T>::BStarTree (int order): ORDER(order < 3 ? 3 : order), id(1),
@@ -533,7 +530,7 @@ void BStarTree<T>::splitLeft(Node<T>* node)
 
     //accommodate children in the nodes.
     std::list<Node<T>*> auxListChildren(std::move(leftSibling->children()));
-    auxListChildren.merge(node->children(), compareKeyNodes);
+    auxListChildren.merge(node->children());
 
     auto putChildren = [&auxListChildren](unsigned limit, Node<T>*& lNode){
         if (!auxListChildren.empty()) {
@@ -605,7 +602,7 @@ void BStarTree<T>::splitRight(Node<T>* node)
 
     //accommodate children in the nodes.
     std::list<Node<T>*> auxListChildren(std::move(node->children()));
-    auxListChildren.merge(rightSibling->children(), compareKeyNodes);
+    auxListChildren.merge(rightSibling->children());
 
     auto putChildren = [&auxListChildren](unsigned limit, Node<T>*& lNode){
         if (!auxListChildren.empty()) {
@@ -726,8 +723,8 @@ void BStarTree<T>::merge(Node<T>* node)
 
     //move all childrens before removing the right sibling
     std::list<Node<T>*> auxListChildren( std::move(leftSibling->children()) );
-    auxListChildren.merge(node->children(), compareKeyNodes);
-    auxListChildren.merge(rightSibling->children(), compareKeyNodes);
+    auxListChildren.merge(node->children());
+    auxListChildren.merge(rightSibling->children());
 
     auto putChildren = [&auxListChildren](unsigned limit, Node<T>*& lNode){
         if (!auxListChildren.empty()) {

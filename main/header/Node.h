@@ -20,7 +20,7 @@ public:
     * @param tree Constant pointer to the tree where the node is going to be.
     * @ancestor This tells the node what node is its ancestor.
     */
-    Node(BStarTree const * tree, Node<T>* ancestor = nullptr):tree(tree), ancestor(ancestor) {}
+    Node(BStarTree<T> const * tree, Node<T>* ancestor = nullptr):tree(tree), ancestor(ancestor) {}
 
     /**
     *@brief Virtual destructor
@@ -124,7 +124,7 @@ public:
 protected:
     unsigned id; //id to identify nodes
     unsigned height; //height in the tree. The root is 0 and each children is ancestor+1
-    BStarTree const * tree; //pointer to the tree
+    BStarTree<T> const * tree; //pointer to the tree
     std::list<T> keysList;     // Pointer for allocating dynamic memory store
     std::list<Node<T>*> childList;
     Node<T>* ancestor;

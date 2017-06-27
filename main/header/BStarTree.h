@@ -362,6 +362,9 @@ private:
     typename std::list<Node<T>*>::iterator getIterator(Node<T>* node) const;
 };
 
+#include "Node.h"
+#include "NormalNode.h"
+#include "RootNode.h"
 #include "../src/BStarTree.cpp"
 
 #endif //BSTARTREE_H

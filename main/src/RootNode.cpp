@@ -1,8 +1,8 @@
 
 template <typename T>
-RootNode<T>::RootNode(BStarTree const * tree, Node<T>* ancestor, unsigned id, unsigned height): Node(tree, ancestor)
+RootNode<T>::RootNode(BStarTree<T> const * tree, Node<T>* ancestor, unsigned id, unsigned height): Node<T>(tree, ancestor)
 {
-    //keysList = std::list<T>(); //creates an empty list
+    //this->keysList = std::list<T>(); //creates an empty list
     //childList = std::list<Node<T>*>(); //creates an empty list
     this->id = id;
     this->height = height;
@@ -11,23 +11,23 @@ RootNode<T>::RootNode(BStarTree const * tree, Node<T>* ancestor, unsigned id, un
 template <typename T>
 bool RootNode<T>::isOverloaded() const
 {
-    return keysList.size() > tree->maxKeysRNode() ? true : false;
+    return this->keysList.size() > this->tree->maxKeysRNode() ? true : false;
 }
 
 template <typename T>
 bool RootNode<T>::isFull() const
 {
-    return keysList.size() == tree->maxKeysRNode() ? true : false;
+    return this->keysList.size() == this->tree->maxKeysRNode() ? true : false;
 }
 
 template <typename T>
 bool RootNode<T>::isUnderloaded() const
 {
-    return keysList.size() < tree->minKeysRNode() ? true : false;
+    return this->keysList.size() < this->tree->minKeysRNode() ? true : false;
 }
 
 template <typename T>
 bool RootNode<T>::isAtMinimum() const
 {
-    return keysList.size() == tree->minKeysRNode() ? true : false;
+    return this->keysList.size() == this->tree->minKeysRNode() ? true : false;
 }
