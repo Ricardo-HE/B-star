@@ -98,14 +98,26 @@ public:
     Node<T>* getAncestor() const { return ancestor; }
 
     /**
+    *@brief Get the list of keys as constant from the node.
+    *@return The list of keys  as constant from the node.
+    */
+    std::list<T> const & keys() const { return keysList; }
+
+    /**
     *@brief Get the list of keys from the node.
     *@return The list of keys from the node.
     */
     std::list<T>& keys() { return keysList; }
 
     /**
-    *@brief Get the list of childs from the node.
-    *@return The list of keys from the node.
+    *@brief Get the list of children as constant from the node.
+    *@return The list of children as constant from the node.
+    */
+    std::list<Node<T>*> const & children() const { return childList; }
+
+    /**
+    *@brief Get the list of children from the node.
+    *@return The list of children from the node.
     */
     std::list<Node<T>*>& children() { return childList; }
 
