@@ -1,8 +1,8 @@
-#include "../header/Node.h"
 
-void Node::addItem(double elem)
+template <typename T>
+void Node<T>::addItem(T elem)
 {
-    std::list<double>::iterator key = keys().begin();
+    auto key = keys().begin();
     while(*key < elem && key != keys().end()){
         ++key;
     }
@@ -10,9 +10,10 @@ void Node::addItem(double elem)
     keys().insert(key, elem);
 }
 
-void Node::addChild(Node* child)
+template <typename T>
+void Node<T>::addChild(Node<T>* child)
 {
-    std::list<Node*>::iterator childIt = children().begin();
+    auto childIt = children().begin();
     while(compareKeyNodes(*childIt, child) && childIt != children().end()){
         ++childIt;
     }
@@ -20,7 +21,8 @@ void Node::addChild(Node* child)
     children().insert(childIt, child);
 }
 
-void Node::print() const
+template <typename T>
+void Node<T>::print() const
 {
 
     std::cout << "keys: ";
@@ -32,7 +34,8 @@ void Node::print() const
     std::cout <<  "\n\n";
 }
 
-bool compareKeyNodes(Node* nodeA, Node* nodeB)
+template <typename T>
+bool compareKeyNodes(Node<T>* nodeA, Node<T>* nodeB)
 {
     return *nodeA->keys().begin() < *nodeB->keys().begin();
 }

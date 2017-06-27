@@ -12,7 +12,7 @@ _DEPS =
 DEPS = $(patsubst %, $(IDIR)/%.h, $(_DEPS) $(GENMOD))
 
 _OBJ = main
-OBJ = $(patsubst %, $(ODIR)/%.o, $(_OBJ) $(GENMOD))
+OBJ = $(patsubst %, $(ODIR)/%.o, $(_OBJ) )   #$(GENMOD))
 
 $(ODIR)/%.o: $(SDIR)/%.cpp $(DEPS)
 	$(CXX) -c -o $@ $< $(CXXFLAGS)

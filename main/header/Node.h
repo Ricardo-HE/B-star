@@ -6,6 +6,7 @@
 
 #include "BStarTree.h"
 
+template <typename T>
 class Node
 {
 public:
@@ -19,7 +20,7 @@ public:
     * @param tree Constant pointer to the tree where the node is going to be.
     * @ancestor This tells the node what node is its ancestor.
     */
-    Node(BStarTree const * tree, Node* ancestor = nullptr):tree(tree), ancestor(ancestor) {}
+    Node(BStarTree const * tree, Node<T>* ancestor = nullptr):tree(tree), ancestor(ancestor) {}
 
     /**
     *@brief Virtual destructor
@@ -70,13 +71,13 @@ public:
     * @brief Add a key to the Node's array list of keys.
     * @param item Element to add to the node.
     */
-    void addItem(double item);
+    void addItem(T item);
 
     /**
      * @brief Adds a child to the Node's list of children.
      * @param child Child to add to the list.
      */
-    void addChild(Node* child);
+    void addChild(Node<T>* child);
 
     /**
      * @brief Gets the Id of the node.
@@ -100,19 +101,19 @@ public:
      * @brief Tells you the ancestor of the node.
      * @return The ancestor of the node. It might be null.
      */
-    Node* getAncestor() const { return ancestor; }
+    Node<T>* getAncestor() const { return ancestor; }
 
     /**
     *@brief Get the list of keys from the node.
     *@return The list of keys from the node.
     */
-    std::list<double>& keys() { return keysList; }
+    std::list<T>& keys() { return keysList; }
 
     /**
     *@brief Get the list of childs from the node.
     *@return The list of keys from the node.
     */
-    std::list<Node*>& children() { return childList; }
+    std::list<Node<T>*>& children() { return childList; }
 
     /**
      * @brief Tells you whether the node is a leaf or not.
@@ -124,9 +125,9 @@ protected:
     unsigned id; //id to identify nodes
     unsigned height; //height in the tree. The root is 0 and each children is ancestor+1
     BStarTree const * tree; //pointer to the tree
-    std::list<double> keysList;     // Pointer for allocating dynamic memory store
-    std::list<Node*> childList;
-    Node* ancestor;
+    std::list<T> keysList;     // Pointer for allocating dynamic memory store
+    std::list<Node<T>*> childList;
+    Node<T>* ancestor;
 
 };
 
@@ -136,6 +137,9 @@ protected:
  * @param nodeB Node to check against nodeA if it is the bigger one.
  * @return True if nodeA is smaller than nodeB.
  */
-bool compareKeyNodes(Node* nodeA, Node* nodeB);
+template <typename T>
+bool compareKeyNodes(Node<T>* nodeA, Node<T>* nodeB);
+
+#include "../src/Node.cpp"
 
 #endif

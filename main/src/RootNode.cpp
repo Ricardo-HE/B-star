@@ -1,29 +1,33 @@
-#include "../header/RootNode.h"
 
-RootNode::RootNode(BStarTree const * tree, Node* ancestor, unsigned id, unsigned height): Node(tree, ancestor)
+template <typename T>
+RootNode<T>::RootNode(BStarTree const * tree, Node<T>* ancestor, unsigned id, unsigned height): Node(tree, ancestor)
 {
-    //keysList = std::list<double>(); //creates an empty list
-    //childList = std::list<Node*>(); //creates an empty list
+    //keysList = std::list<T>(); //creates an empty list
+    //childList = std::list<Node<T>*>(); //creates an empty list
     this->id = id;
     this->height = height;
 }
 
-bool RootNode::isOverloaded() const
+template <typename T>
+bool RootNode<T>::isOverloaded() const
 {
     return keysList.size() > tree->maxKeysRNode() ? true : false;
 }
 
-bool RootNode::isFull() const
+template <typename T>
+bool RootNode<T>::isFull() const
 {
     return keysList.size() == tree->maxKeysRNode() ? true : false;
 }
 
-bool RootNode::isUnderloaded() const
+template <typename T>
+bool RootNode<T>::isUnderloaded() const
 {
     return keysList.size() < tree->minKeysRNode() ? true : false;
 }
 
-bool RootNode::isAtMinimum() const
+template <typename T>
+bool RootNode<T>::isAtMinimum() const
 {
     return keysList.size() == tree->minKeysRNode() ? true : false;
 }

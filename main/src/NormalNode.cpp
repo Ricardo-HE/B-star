@@ -1,6 +1,6 @@
-#include "../header/NormalNode.h"
 
-NormalNode::NormalNode(BStarTree const * tree, Node* ancestor, unsigned id, unsigned height): Node(tree, ancestor)
+template <typename T>
+NormalNode<T>::NormalNode(BStarTree const * tree, Node<T>* ancestor, unsigned id, unsigned height): Node(tree, ancestor)
 {
     //this might become handy later
     //const unsigned normalNodeOrder = ceil( (2*order-1) / 3 );
@@ -8,22 +8,26 @@ NormalNode::NormalNode(BStarTree const * tree, Node* ancestor, unsigned id, unsi
     this->height = height;
 }
 
-bool NormalNode::isOverloaded() const
+template <typename T>
+bool NormalNode<T>::isOverloaded() const
 {
     return keysList.size() > tree->maxKeysNNode() ? true : false;
 }
 
-bool NormalNode::isFull() const
+template <typename T>
+bool NormalNode<T>::isFull() const
 {
     return keysList.size() == tree->maxKeysNNode() ? true : false;
 }
 
-bool NormalNode::isUnderloaded() const
+template <typename T>
+bool NormalNode<T>::isUnderloaded() const
 {
     return keysList.size() < tree->minKeysNNode() ? true : false;
 }
 
-bool NormalNode::isAtMinimum() const
+template <typename T>
+bool NormalNode<T>::isAtMinimum() const
 {
     return keysList.size() == tree->minKeysNNode() ? true : false;
 }

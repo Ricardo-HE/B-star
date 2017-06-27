@@ -13,7 +13,7 @@ int main()
     std::cout << "Order of the tree: ";
     std::cin >> order;
 
-    BStarTree tree(order);
+    BStarTree<int> tree(order);
     srand(time(NULL));
     //int number;
 

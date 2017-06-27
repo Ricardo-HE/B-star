@@ -7,7 +7,8 @@
 #include "Node.h"
 #include "NormalNode.h"
 
-class RootNode : public Node                      // Node is the base class, all public and
+template <typename T>
+class RootNode : public Node<T>                      // Node is the base class, all public and
                                                   // protected members of Node can be accessed
                                                   // by RootNode
 {
@@ -18,7 +19,7 @@ public:
     * @param tree Constant pointer to the tree where the node is going to be.
     * @ancestor This tells the node what node is its ancestor.
     */
-    RootNode(BStarTree const * tree, Node* ancestor = nullptr, unsigned id = 0, unsigned height = 0);
+    RootNode(BStarTree const * tree, Node<T>* ancestor = nullptr, unsigned id = 0, unsigned height = 0);
     /**
      * @brief Default destructor of the class.
      */
@@ -55,5 +56,7 @@ public:
     */
     bool isRoot() const { return true; }
 };
+
+#include "../src/RootNode.cpp"
 
 #endif
