@@ -433,8 +433,8 @@ void BStarTree<T>::splitRoot()
 {
     Node<T> *child1, *child2;
 
-    child1 = new NormalNode<T>(this, root, id++, 2);
-    child2 = new NormalNode<T>(this, root, id++, 2);
+    child1 = new NormalNode<T>(this, root, id++);
+    child2 = new NormalNode<T>(this, root, id++);
 
     auto putKeys = [&](unsigned limit, Node<T>*& lNode){
         for (std::size_t i = 0; i < limit; i++) {
@@ -500,7 +500,7 @@ void BStarTree<T>::splitLeft(Node<T>* node)
     auxList.merge(node->keys());
 
     Node<T> *newNode; //new node that goes in the middle of the current node and its left sibling
-    newNode = new NormalNode<T>(this, ancestor, id++, ancestor->getHeight() + 1);
+    newNode = new NormalNode<T>(this, ancestor, id++);
 
     auto putKeys = [&auxList](unsigned limit, Node<T>*& lNode){
         for (std::size_t i = 0; i < limit; i++) {
@@ -575,7 +575,7 @@ void BStarTree<T>::splitRight(Node<T>* node)
     auxList.merge(rightSibling->keys());
 
     Node<T> *newNode; //new node that goes in the middle of the current node and its right sibling
-    newNode = new NormalNode<T>(this, ancestor, id++, ancestor->getHeight() + 1);
+    newNode = new NormalNode<T>(this, ancestor, id++);
 
     auto putKeys = [&auxList](unsigned limit, Node<T>*& lNode){
         for (std::size_t i = 0; i < limit; i++) {

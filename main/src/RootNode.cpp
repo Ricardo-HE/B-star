@@ -1,11 +1,8 @@
 
 template <typename T>
-RootNode<T>::RootNode(BStarTree<T> const * tree, Node<T>* ancestor, unsigned id, unsigned height): Node<T>(tree, ancestor)
+RootNode<T>::RootNode(BStarTree<T> const * tree, Node<T>* ancestor, unsigned id): Node<T>(tree, ancestor)
 {
-    //this->keysList = std::list<T>(); //creates an empty list
-    //childList = std::list<Node<T>*>(); //creates an empty list
     this->id = id;
-    this->height = height;
 }
 
 template <typename T>

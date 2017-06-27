@@ -19,7 +19,7 @@ public:
     * @param tree Constant pointer to the tree where the node is going to be.
     * @ancestor This tells the node what node is its ancestor.
     */
-    RootNode(BStarTree<T> const * tree, Node<T>* ancestor = nullptr, unsigned id = 0, unsigned height = 0);
+    RootNode(BStarTree<T> const * tree, Node<T>* ancestor = nullptr, unsigned id = 0);
     /**
      * @brief Default destructor of the class.
      */

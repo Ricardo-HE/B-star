@@ -1,11 +1,8 @@
 
 template <typename T>
-NormalNode<T>::NormalNode(BStarTree<T> const * tree, Node<T>* ancestor, unsigned id, unsigned height): Node<T>(tree, ancestor)
+NormalNode<T>::NormalNode(BStarTree<T> const * tree, Node<T>* ancestor, unsigned id): Node<T>(tree, ancestor)
 {
-    //this might become handy later
-    //const unsigned normalNodeOrder = ceil( (2*order-1) / 3 );
     this->id = id;
-    this->height = height;
 }
 
 template <typename T>

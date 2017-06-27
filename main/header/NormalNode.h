@@ -22,7 +22,7 @@ public:                                             // by NormalNode
     * @param tree Constant pointer to the tree where the node is going to be.
     * @ancestor This tells the node what node is its ancestor.
     */
-    NormalNode(BStarTree<T> const * tree, Node<T>* ancestor = nullptr, unsigned id = 0, unsigned height = 0);
+    NormalNode(BStarTree<T> const * tree, Node<T>* ancestor = nullptr, unsigned id = 0);
 
     /**
      * @brief Default destructor.

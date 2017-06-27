@@ -86,12 +86,6 @@ public:
     unsigned getId() const { return id; }
 
     /**
-     * @brief Gets the height of the node.
-     * @return The height of the node.
-     */
-    unsigned getHeight() const { return height; }
-
-    /**
     *@brief Get the current size of the list of keys in the node.
     *@ The current size of the list of keys in the node.
     */
@@ -123,7 +117,6 @@ public:
 
 protected:
     unsigned id; //id to identify nodes
-    unsigned height; //height in the tree. The root is 0 and each children is ancestor+1
     BStarTree<T> const * tree; //pointer to the tree
     std::list<T> keysList;     // Pointer for allocating dynamic memory store
     std::list<Node<T>*> childList;
