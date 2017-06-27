@@ -530,7 +530,7 @@ void BStarTree<T>::splitLeft(Node<T>* node)
 
     //accommodate children in the nodes.
     std::list<Node<T>*> auxListChildren(std::move(leftSibling->children()));
-    auxListChildren.merge(node->children());
+    auxListChildren.merge(node->children(), compareKeyNodes<T>);
 
     auto putChildren = [&auxListChildren](unsigned limit, Node<T>*& lNode){
         if (!auxListChildren.empty()) {
@@ -602,7 +602,7 @@ void BStarTree<T>::splitRight(Node<T>* node)
 
     //accommodate children in the nodes.
     std::list<Node<T>*> auxListChildren(std::move(node->children()));
-    auxListChildren.merge(rightSibling->children());
+    auxListChildren.merge(rightSibling->children(), compareKeyNodes<T>);
 
     auto putChildren = [&auxListChildren](unsigned limit, Node<T>*& lNode){
         if (!auxListChildren.empty()) {
@@ -723,8 +723,8 @@ void BStarTree<T>::merge(Node<T>* node)
 
     //move all childrens before removing the right sibling
     std::list<Node<T>*> auxListChildren( std::move(leftSibling->children()) );
-    auxListChildren.merge(node->children());
-    auxListChildren.merge(rightSibling->children());
+    auxListChildren.merge(node->children(), compareKeyNodes<T>);
+    auxListChildren.merge(rightSibling->children(), compareKeyNodes<T>);
 
     auto putChildren = [&auxListChildren](unsigned limit, Node<T>*& lNode){
         if (!auxListChildren.empty()) {
@@ -785,14 +785,6 @@ void BStarTree<T>::print() const
                 std::cout << "Printing the nodes with height: " << ++oldHeight << std::endl;
             }
 
-        std::cout << "Node's id, height and number of children: " << std::endl;
-        std::cout << currentNode->getId() << " | " << currentNode->getHeight() << " | ";
-        std::cout << currentNode->children().size() << std::endl;
-        std::cout << "Id of the acestor: " ;
-        if(currentNode != root){
-            std::cout << currentNode->getAncestor()->getId();
-        }
-        std::cout << std::endl;
         currentNode->print();
 
         for(Node<T>* child : currentNode->children()){

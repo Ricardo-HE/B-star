@@ -25,13 +25,14 @@ template <typename T>
 void Node<T>::print() const
 {
 
-    std::cout << "keys: ";
+    if(!keysList.empty()){
+        for(auto key : keysList){
+            std::cout << key << " - ";
+        }
+        std::cout << "\b\b \b"; //erases the last -
 
-    for(auto key : keysList){
-        std::cout << key << " ";
+        std::cout <<  "\n\n";
     }
-
-    std::cout <<  "\n\n";
 }
 
 template <typename T>
