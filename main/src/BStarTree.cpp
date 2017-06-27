@@ -1,17 +1,17 @@
 
 template <typename T>
 BStarTree<T>::BStarTree (int order): ORDER(order < 3 ? 3 : order), id(1),
-                        root(new RootNode<T>(this, nullptr, id, 1))
+                                     root(new RootNode<T>(this, nullptr, id))
 {
     ++id;
 
     maxKeysNormalNode = ORDER - 1;
-    maxKeysRootNode = 2 * floor( (2*ORDER - 2) / 3 );
-    minKeysNormalNode = std::ceil( (2*ORDER-1) / 3 ) - 1;
+    maxKeysRootNode = 2.0 * floor( (2.0*ORDER - 2.0) / 3.0 );
+    minKeysNormalNode = ceil( (2.0*ORDER-1.0) / 3.0 ) - 1.0;
     minKeysRootNode = 1;
-    keysSplitChild1 = std::floor( (2*ORDER - 2)/3 );
-    keysSplitChild2 = std::floor( (2*ORDER - 1)/3 );
-    keysSplitChild3 = std::floor( 2*ORDER/3 );
+    keysSplitChild1 = floor( (2.0*ORDER - 2.0)/3.0 );
+    keysSplitChild2 = floor( (2.0*ORDER - 1.0)/3.0 );
+    keysSplitChild3 = floor( 2.0*ORDER/3.0 );
 }
 
 template <typename T>
