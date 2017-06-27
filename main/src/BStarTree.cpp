@@ -773,22 +773,23 @@ void BStarTree<T>::print() const
 {
     Node<T>* currentNode;
     std::queue<Node<T>*> nodeQueue;
-    unsigned height = 0;
+    unsigned height = 1;
     Node<T>* lastNode = root;
+    Node<T>* prevNode = root;
 
-    nodeQueue.push(root);
+    std::cout << "----------Root----------" <<  std::endl;
+    this->root->print();
+
+    for(Node<T>* child : this->root->children()) nodeQueue.push(child);
 
     while (!nodeQueue.empty()) {
         currentNode = nodeQueue.front();
         nodeQueue.pop();
 
-        if(currentNode == lastNode){
-            std::cout << "Printing the nodes with height: " << ++height << std::endl;
-            if(!lastNode->isLeaf()){
-                lastNode = currentNode->children().back();
-            }else{
-                lastNode = nullptr;
-            }
+        if(prevNode == lastNode){
+            std::cout << "----------Level " << ++height << "----------" << std::endl;
+            if(!lastNode->isLeaf()) lastNode = lastNode->children().back();
+            else lastNode = nullptr;
         }
 
         currentNode->print();
@@ -796,6 +797,7 @@ void BStarTree<T>::print() const
         for(Node<T>* child : currentNode->children()){
             nodeQueue.push(child);
         }
+        prevNode = currentNode;
     }
 }
 
