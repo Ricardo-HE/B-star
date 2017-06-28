@@ -7,6 +7,8 @@
 #include <algorithm>
 #include <list>
 #include <queue>
+#include <array>
+#include <vector>
 
 template <typename T>
 class Node;
@@ -246,7 +248,7 @@ private:
      * @param node Node to take a key from and rotate it to the left.
      * @return An iterator pointing to the received node.
      */
-    typename std::list<Node<T>*>::iterator rotateLeft(Node<T>* node);
+    auto rotateLeft(Node<T>* node);
 
     /**
      * @brief Method to rotate a single time to the right, taking a key from the node
@@ -256,39 +258,35 @@ private:
      * @param node Node to take a key from and rotate it to the right.
      * @return An iterator pointing to the received node.
      */
-    typename std::list<Node<T>*>::iterator rotateRight(Node<T>* node);
+    auto rotateRight(Node<T>* node);
 
     /**
      * @brief Method to rotate to the left as long as a node is overloaded.
      * @pre The received node must not be the leftmost child of the acestor.
      * @param node Node to start the rotations to the left. This one should be overloaded.
-     * @return --
      */
-    bool rotateLeftAdd(Node<T>* node);
+    void rotateLeftAdd(Node<T>* node);
 
     /**
      * @brief Method to rotate to the right as long as a node is overloaded.
      * @pre The received node must not be the rightmost child of the acestor.
      * @param node Node to start the rotations to the right. This one should be overloaded.
-     * @return --
      */
-    bool rotateRightAdd(Node<T>* node);
+    void rotateRightAdd(Node<T>* node);
 
     /**
      * @brief Method to rotate to the right as long as a node is underloaded.
      * @pre The received node must not be the leftmost child of the acestor.
      * @param node Node to start the rotations to the right. This one should be underloaded.
-     * @return --
      */
-    bool rotateLeftErase(Node<T>* node);
+    void rotateLeftErase(Node<T>* node);
 
     /**
      * @brief Method to rotate to the left as long as a node is underloaded.
      * @pre The received node must not be the rightmost child of the acestor.
      * @param node Node to start the rotations to the left. This one should be overloaded.
-     * @return --
      */
-    bool rotateRightErase(Node<T>* node);
+    void rotateRightErase(Node<T>* node);
 
     /**
      * @brief Splits the root node, giving it a new children.
@@ -350,7 +348,7 @@ private:
      * @param node Get an iterator pointing to this node.
      * @return Iterator pointing to the received node or undefined in the case of the root.
      */
-    typename std::list<Node<T>*>::iterator getIterator(Node<T>* node) const;
+    auto getIterator(Node<T>* node) const;
 };
 
 #include "Node.h"

@@ -294,7 +294,7 @@ bool BStarTree<T>::isRightmost(Node<T>* node) const
 }
 
 template <typename T>
-typename std::list<Node<T>*>::iterator BStarTree<T>::getIterator(Node<T>* node) const
+auto BStarTree<T>::getIterator(Node<T>* node) const
 {
     auto it = node->getAncestor()->children().begin();
     while(*it != node){
@@ -317,14 +317,13 @@ Node<T>* BStarTree<T>::getRightSibling(Node<T>* node) const
 }
 
 template <typename T>
-typename std::list<Node<T>*>::iterator BStarTree<T>::rotateLeft(Node<T>* node)
+auto BStarTree<T>::rotateLeft(Node<T>* node)
 {
     Node<T> *ancestor, *leftSibling, *child;
-    typename std::list<T>::iterator ancestorKey;
     typename std::list<Node<T>*>::iterator nodeIt;
 
     ancestor = node->getAncestor();
-    ancestorKey = ancestor->keys().begin();
+    auto ancestorKey = ancestor->keys().begin();
     for(nodeIt = next(ancestor->children().begin()); *nodeIt != node; ++nodeIt){
         ++ancestorKey;
     }
@@ -345,14 +344,13 @@ typename std::list<Node<T>*>::iterator BStarTree<T>::rotateLeft(Node<T>* node)
 }
 
 template <typename T>
-typename std::list<Node<T>*>::iterator BStarTree<T>::rotateRight(Node<T>* node)
+auto BStarTree<T>::rotateRight(Node<T>* node)
 {
     Node<T> *ancestor, *rightSibling, *child;
-    typename std::list<T>::iterator ancestorKey;
     typename std::list<Node<T>*>::iterator nodeIt;
 
     ancestor = node->getAncestor();
-    ancestorKey = ancestor->keys().begin();
+    auto ancestorKey = ancestor->keys().begin();
     for(nodeIt = ancestor->children().begin(); *nodeIt != node; ++nodeIt){
         ++ancestorKey;
     }
@@ -373,7 +371,7 @@ typename std::list<Node<T>*>::iterator BStarTree<T>::rotateRight(Node<T>* node)
 }
 
 template <typename T>
-bool BStarTree<T>::rotateLeftAdd(Node<T>* node)
+void BStarTree<T>::rotateLeftAdd(Node<T>* node)
 {
     Node<T> *currentNode;
 
@@ -381,46 +379,38 @@ bool BStarTree<T>::rotateLeftAdd(Node<T>* node)
     do {
         currentNode = *prev(rotateLeft(currentNode));
     } while(!isLeftmost(currentNode) && currentNode->isOverloaded());
-
-     return true;
 }
 
 template <typename T>
-bool BStarTree<T>::rotateRightAdd(Node<T>* node)
+void BStarTree<T>::rotateRightAdd(Node<T>* node)
 {
     Node<T> *currentNode;
     currentNode = node;
     do {
         currentNode = *next(rotateRight(currentNode));
     } while(!isRightmost(currentNode) && currentNode->isOverloaded());
-
-    return true;
 }
 
 template <typename T>
-bool BStarTree<T>::rotateLeftErase(Node<T>* node)
+void BStarTree<T>::rotateLeftErase(Node<T>* node)
 {
-    typename std::list<Node<T>*>::iterator currentNode = getIterator(node);
+    auto currentNode = getIterator(node);
 
     do {
         currentNode = prev(currentNode);
         rotateRight(*currentNode);
     } while(!isLeftmost(*currentNode) && (*currentNode)->isUnderloaded());
-
-     return true;
 }
 
 template <typename T>
-bool BStarTree<T>::rotateRightErase(Node<T>* node)
+void BStarTree<T>::rotateRightErase(Node<T>* node)
 {
-    typename std::list<Node<T>*>::iterator currentNode = getIterator(node);
+    auto currentNode = getIterator(node);
 
     do {
         currentNode = next(currentNode);
         rotateLeft(*currentNode);
     } while(!isRightmost(*currentNode) && (*currentNode)->isUnderloaded());
-
-    return true;
 }
 
 template <typename T>
@@ -455,11 +445,10 @@ void BStarTree<T>::splitLeft(Node<T>* node)
 {
     Node<T> *leftSibling, *ancestor;
     T ancestorKeyCopy;
-    typename std::list<T>::iterator ancestorKey;
     typename std::list<Node<T>*>::iterator nodeIt;
 
     ancestor = node->getAncestor();
-    ancestorKey = ancestor->keys().begin();
+    auto ancestorKey = ancestor->keys().begin();
     for(nodeIt = next(ancestor->children().begin()); *nodeIt != node; ++nodeIt){
         ++ancestorKey;
     }
@@ -513,11 +502,10 @@ void BStarTree<T>::splitRight(Node<T>* node)
 {
     Node<T> *rightSibling, *ancestor;
     T ancestorKeyCopy;
-    typename std::list<T>::iterator ancestorKey;
     typename std::list<Node<T>*>::iterator nodeIt;
 
     ancestor = node->getAncestor();
-    ancestorKey = ancestor->keys().begin();
+    auto ancestorKey = ancestor->keys().begin();
     for(nodeIt = ancestor->children().begin(); *nodeIt != node; ++nodeIt){
         ++ancestorKey;
     }
@@ -600,17 +588,14 @@ void BStarTree<T>::mergeRootChildren(Node<T>* rootChildren)
     }
 }
 
-//Case where there are left and right siblings.
-//this can be used when mergin left and right
 template <typename T>
 void BStarTree<T>::merge(Node<T>* node)
 {
     Node<T> *ancestor, *leftSibling, *rightSibling;
-    typename std::list<T>::iterator ancestorKey;
     typename std::list<Node<T>*>::iterator nodeIt;
 
     ancestor = node->getAncestor();
-    ancestorKey = ancestor->keys().begin();
+    auto ancestorKey = ancestor->keys().begin();
     for(nodeIt = ancestor->children().begin(); *nodeIt != node; ++nodeIt){
         ++ancestorKey;
     }
@@ -675,9 +660,8 @@ Node<T>* BStarTree<T>::getGreaterMinor(Node<T> *node, T val) const
     }
 
     typename std::list<T>::iterator ancestorKey;
-    typename std::list<Node<T>*>::iterator childIt;
 
-    childIt = node->children().begin();
+    auto childIt = node->children().begin();
 
     for (ancestorKey = node->keys().begin(); *ancestorKey < val; ++ancestorKey) {
         ++childIt;
@@ -701,7 +685,15 @@ void BStarTree<T>::print() const
     Node<T>* lastNode = root;
     Node<T>* prevNode = root;
 
-    std::cout << "----------Root----------" <<  std::endl;
+    auto printSeparator = [](unsigned const & height){
+        std::cout << "----------------------------";
+        for(int i = height; i / 10 > 0; ++i) std::cout << '-';
+        std::cout << std::endl;
+    };
+
+    std::cout << "------------------------" << std::endl;
+    std::cout << "--------- Root ---------" <<  std::endl;
+    std::cout << "------------------------" << std::endl;
     this->root->print();
 
     for(Node<T>* child : this->root->children()) nodeQueue.push(child);
@@ -711,7 +703,9 @@ void BStarTree<T>::print() const
         nodeQueue.pop();
 
         if(prevNode == lastNode){
-            std::cout << "----------Level " << ++height << "----------" << std::endl;
+            printSeparator(height);
+            std::cout << "--------- Level " << ++height << " ----------" << std::endl;
+            printSeparator(height);
             if(!lastNode->isLeaf()) lastNode = lastNode->children().back();
             else lastNode = nullptr;
         }
