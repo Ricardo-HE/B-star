@@ -7,6 +7,9 @@
 #include "BStarTree.h"
 
 template <typename T>
+class NormalNode;
+
+template <typename T>
 class Node
 {
 public:
@@ -78,6 +81,58 @@ public:
      * @param child Child to add to the list.
      */
     void addChild(Node<T>* child);
+
+    /**
+     * @brief Pops the front key in the list and returns it.
+     * @pre The list must not be empty.
+     * @return The key at the front of the list or undefined behavior if the list is empty.
+     */
+    T popFrontKey();
+
+    /**
+     * @brief Pops the back key in the list and returns it.
+     * @pre The list must not be empty.
+     * @return The key at the back of the list or undefined behavior if the list is empty.
+     */
+    T popBackKey();
+
+    /**
+     * @brief Pops the front child in the list and returns it.
+     * @pre The list must not be empty.
+     * @return The child at the front of the list or undefined behavior if the list is empty.
+     */
+    Node<T>* popFrontChild();
+
+    /**
+     * @brief Pops the back child in the list and returns it.
+     * @pre The list must not be empty.
+     * @return The child at the back of the list or undefined behavior if the list is empty.
+     */
+    Node<T>* popBackChild();
+
+    /**
+     * @brief Adds from front of the received list up to limit elements to the back of the
+     *          keys list.
+     * @pre The received list must have at least limit number of elements or will result
+     *          in undefined behavior.
+     * @param takeList List whose elements on the front are going to be pushed back to the
+     *          keys list.
+     * @param limit Number of elements to take from the received list and put in the keys
+     *          list.
+     */
+    void putKeys(std::list<T>& takeList, int limit);
+
+    /**
+     * @brief Adds from front of the received list up to limit elements to the back of the
+     *          children list.
+     * @pre The received list must have at least limit number of elements or will result
+     *          in undefined behavior.
+     * @param takeList List whose elements on the front are going to be pushed back to the
+     *          children list.
+     * @param limit Number of elements to take from the received list and put in the children
+     *          list.
+     */
+    void putChildren(std::list<Node<T>*>& takeList, int limit);
 
     /**
      * @brief Gets the Id of the node.

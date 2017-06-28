@@ -89,8 +89,7 @@ bool BStarTree<T>::erase(T val)
 
     if (!nodeErase->isLeaf()) {
         currentNode = getGreaterMinor(nodeErase, val);
-        nodeErase->addItem(currentNode->keys().back());
-        currentNode->keys().pop_back();
+        nodeErase->addItem(currentNode->popBackKey());
     }
     nodeErase->keys().remove(val);
 
@@ -333,13 +332,11 @@ typename std::list<Node<T>*>::iterator BStarTree<T>::rotateLeft(Node<T>* node)
 
     //key rotation
     leftSibling->keys().push_back(*ancestorKey);
-    *ancestorKey = node->keys().front();
-    node->keys().pop_front();
+    *ancestorKey = node->popFrontKey();
 
     //child rotation
     if(!node->children().empty()){
-        child = node->children().front();
-        node->children().pop_front();
+        child = node->popFrontChild();
         dynamic_cast<NormalNode<T>*>(child)->setAncestor(leftSibling);
         leftSibling->children().push_back(child);
     }
@@ -363,13 +360,11 @@ typename std::list<Node<T>*>::iterator BStarTree<T>::rotateRight(Node<T>* node)
 
     //key rotation
     rightSibling->keys().push_front(*ancestorKey);
-    *ancestorKey = node->keys().back();
-    node->keys().pop_back();
+    *ancestorKey = node->popBackKey();
 
     //child rotation
     if(!node->children().empty()){
-        child = node->children().back();
-        node->children().pop_back();
+        child = node->popBackChild();
         dynamic_cast<NormalNode<T>*>(child)->setAncestor(rightSibling);
         rightSibling->children().push_front(child);
     }
@@ -436,39 +431,20 @@ void BStarTree<T>::splitRoot()
     child1 = new NormalNode<T>(this, root, id++);
     child2 = new NormalNode<T>(this, root, id++);
 
-    auto putKeys = [&](unsigned limit, Node<T>*& lNode){
-        for (std::size_t i = 0; i < limit; i++) {
-            lNode->keys().push_back( root->keys().front() );
-            root->keys().pop_front();
-        }
-    };
-
     unsigned limitRoot = maxKeysRootNode /2;
-    putKeys(limitRoot, child1);
+    child1->putKeys(root->keys(), limitRoot);
 
-    T auxKey = root->keys().front();
-    root->keys().pop_front();
+    T auxKey = root->popFrontKey();
 
-    putKeys(limitRoot, child2);
+    child2->putKeys(root->keys(), limitRoot);
 
     root->keys().push_front(auxKey);
-
-    auto putChildren = [&](unsigned limit, Node<T>*& lNode){
-        if(!root->children().empty()){
-            for (std::size_t i = 0; i < limit; i++) {
-                lNode->children().push_back( root->children().front() );
-                dynamic_cast<NormalNode<T>*>(lNode->children().back())->setAncestor(lNode);
-                root->children().pop_front();
-            }
-        }
-
-    };
 
     unsigned limitForChild1 = child1->keys().size() + 1;
     unsigned limitForChild2 = child2->keys().size() + 1;
 
-    putChildren(limitForChild1, child1);
-    putChildren(limitForChild2, child2);
+    if(!root->isLeaf()) child1->putChildren(root->children(), limitForChild1);
+    if(!root->isLeaf()) child2->putChildren(root->children(), limitForChild2);
 
     root->children().push_back(child1);
     root->children().push_back(child2);
@@ -502,49 +478,32 @@ void BStarTree<T>::splitLeft(Node<T>* node)
     Node<T> *newNode; //new node that goes in the middle of the current node and its left sibling
     newNode = new NormalNode<T>(this, ancestor, id++);
 
-    auto putKeys = [&auxList](unsigned limit, Node<T>*& lNode){
-        for (std::size_t i = 0; i < limit; i++) {
-            lNode->keys().push_back( auxList.front() );
-            auxList.pop_front();
-        }
-    };
-
     auto putKeyAncestor = [&ancestor, &auxList](){
         ancestor->addItem( auxList.front() );
         auxList.pop_front();
     };
 
     //accommodate keys in the nodes
-    unsigned limitOne = std::floor( (2*ORDER - 2)/3 );
-    putKeys(limitOne, leftSibling);
+    unsigned limitOne = keysSplitChild1;
+    leftSibling->putKeys(auxList, limitOne);
 
     putKeyAncestor();
 
-    unsigned limitTwo = std::floor( (2*ORDER - 1)/3 );
-    putKeys(limitTwo, newNode);
+    unsigned limitTwo = keysSplitChild2;
+    newNode->putKeys(auxList, limitTwo);
 
     putKeyAncestor();
 
-    unsigned limitThree = std::floor( 2*ORDER/3 );
-    putKeys(limitThree, node);
+    unsigned limitThree = keysSplitChild3;
+    node->putKeys(auxList, limitThree);
 
     //accommodate children in the nodes.
     std::list<Node<T>*> auxListChildren(std::move(leftSibling->children()));
     auxListChildren.merge(node->children(), compareKeyNodes<T>);
 
-    auto putChildren = [&auxListChildren](unsigned limit, Node<T>*& lNode){
-        if (!auxListChildren.empty()) {
-            for (std::size_t i = 0; i < limit; i++) {
-                lNode->children().push_back( auxListChildren.front() );
-                auxListChildren.pop_front();
-                dynamic_cast<NormalNode<T>*>(lNode->children().back())->setAncestor(lNode);
-            }
-        }
-    };
-
-    putChildren(limitOne+1, leftSibling);
-    putChildren(limitTwo+1, newNode);
-    putChildren(limitThree+1, node);
+    if(!auxListChildren.empty()) leftSibling->putChildren(auxListChildren, limitOne+1);
+    if(!auxListChildren.empty()) newNode->putChildren(auxListChildren, limitTwo+1);
+    if(!auxListChildren.empty()) node->putChildren(auxListChildren, limitThree+1);
 
     ancestor->addChild(newNode);
 }
@@ -577,46 +536,29 @@ void BStarTree<T>::splitRight(Node<T>* node)
     Node<T> *newNode; //new node that goes in the middle of the current node and its right sibling
     newNode = new NormalNode<T>(this, ancestor, id++);
 
-    auto putKeys = [&auxList](unsigned limit, Node<T>*& lNode){
-        for (std::size_t i = 0; i < limit; i++) {
-            lNode->keys().push_back( auxList.front() );
-            auxList.pop_front();
-        }
-    };
-
     auto putKeyAncestor = [&ancestor, &auxList](){
         ancestor->addItem( auxList.front() );
         auxList.pop_front();
     };
 
     unsigned limitOne = keysSplitChild1;
-    putKeys(limitOne, node);
+    node->putKeys(auxList, limitOne);
     putKeyAncestor();
 
     unsigned limitTwo = keysSplitChild2;
-    putKeys(limitTwo, newNode);
+    newNode->putKeys(auxList, limitTwo);
     putKeyAncestor();
 
     unsigned limitThree = keysSplitChild3;
-    putKeys(limitThree, rightSibling);
+    rightSibling->putKeys(auxList, limitThree);
 
     //accommodate children in the nodes.
     std::list<Node<T>*> auxListChildren(std::move(node->children()));
     auxListChildren.merge(rightSibling->children(), compareKeyNodes<T>);
 
-    auto putChildren = [&auxListChildren](unsigned limit, Node<T>*& lNode){
-        if (!auxListChildren.empty()) {
-            for (std::size_t i = 0; i < limit; i++) {
-                lNode->children().push_back( auxListChildren.front() );
-                auxListChildren.pop_front();
-                dynamic_cast<NormalNode<T>*>(lNode->children().back())->setAncestor(lNode);
-            }
-        }
-    };
-
-    putChildren(limitOne+1, node);
-    putChildren(limitTwo+1, newNode);
-    putChildren(limitThree+1, rightSibling);
+    if(!auxListChildren.empty()) node->putChildren(auxListChildren, limitOne+1);
+    if(!auxListChildren.empty()) newNode->putChildren(auxListChildren, limitTwo+1);
+    if(!auxListChildren.empty()) rightSibling->putChildren(auxListChildren, limitThree+1);
 
     ancestor->addChild(newNode);
 }
@@ -650,8 +592,7 @@ void BStarTree<T>::mergeRootChildren(Node<T>* rootChildren)
             for(Node<T> *child: (*root->children().begin())->children()){
                 root->children().push_front(child);
             }
-            delete root->children().front(); //deletes memory used
-            root->children().pop_front(); //removes the deallocated memory from the container
+            delete root->popFrontChild();
         };
 
         deleteRootChildren();
@@ -703,41 +644,24 @@ void BStarTree<T>::merge(Node<T>* node)
 
     auxList.merge(rightSibling->keys());
 
-    auto putKeys = [&auxList](unsigned limit, Node<T>*& lNode){
-        for (std::size_t i = 0; i < limit; i++) {
-            lNode->keys().push_back( auxList.front() );
-            auxList.pop_front();
-        }
-    };
-
     unsigned limitOne = auxList.size() / 2;
     unsigned limitTwo = limitOne;
     if(auxList.size() % 2 == 0){
         limitOne -= 1;
     }
 
-    putKeys(limitOne, leftSibling);
+    leftSibling->putKeys(auxList, limitOne);
     ancestor->addItem( auxList.front());
     auxList.pop_front();
-    putKeys(limitTwo, node);
+    node->putKeys(auxList, limitTwo);
 
     //move all childrens before removing the right sibling
     std::list<Node<T>*> auxListChildren( std::move(leftSibling->children()) );
     auxListChildren.merge(node->children(), compareKeyNodes<T>);
     auxListChildren.merge(rightSibling->children(), compareKeyNodes<T>);
 
-    auto putChildren = [&auxListChildren](unsigned limit, Node<T>*& lNode){
-        if (!auxListChildren.empty()) {
-            for (std::size_t i = 0; i < limit; i++) {
-                lNode->children().push_back( auxListChildren.front() );
-                auxListChildren.pop_front();
-                dynamic_cast<NormalNode<T>*>(lNode->children().back())->setAncestor(lNode);
-            }
-        }
-    };
-
-    putChildren(limitOne+1, leftSibling);
-    putChildren(limitTwo+1, node);
+    if(!auxListChildren.empty()) leftSibling->putChildren(auxListChildren, limitOne+1);
+    if(!auxListChildren.empty()) node->putChildren(auxListChildren, limitTwo+1);
 
     delete rightSibling; //erases the memory used by this node
     ancestor->children().remove(rightSibling);

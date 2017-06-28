@@ -21,6 +21,63 @@ void Node<T>::addChild(Node<T>* child)
     children().insert(childIt, child);
 }
 
+
+template <typename T>
+T Node<T>::popFrontKey()
+{
+    T copy = keys().front();
+    keys().pop_front();
+
+    return copy;
+}
+
+
+template <typename T>
+T Node<T>::popBackKey()
+{
+    T copy = keys().back();
+    keys().pop_back();
+
+    return copy;
+}
+
+template <typename T>
+Node<T>* Node<T>::popFrontChild()
+{
+    Node<T>* copy = children().front();
+    children().pop_front();
+
+    return copy;
+}
+
+template <typename T>
+Node<T>* Node<T>::popBackChild()
+{
+    Node<T>* copy = children().back();
+    children().pop_back();
+
+    return copy;
+}
+
+template <typename T>
+void Node<T>::putKeys(std::list<T>& takeList, int limit)
+{
+    for(int i = 0; i < limit; i++){
+        keys().push_back( takeList.front() );
+        takeList.pop_front();
+    }
+}
+
+template <typename T>
+void Node<T>::putChildren(std::list<Node<T>*>& takeList, int limit)
+{
+    for (int i = 0; i < limit; i++) {
+        children().push_back( takeList.front() );
+        takeList.pop_front();
+        dynamic_cast<NormalNode<T>*>(children().back())->setAncestor(this);
+    }
+}
+
 template <typename T>
 void Node<T>::print() const
 {
