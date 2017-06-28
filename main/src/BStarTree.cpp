@@ -1,6 +1,6 @@
 
 template <typename T>
-BStarTree<T>::BStarTree (int order): ORDER(order < 3 ? 3 : order), id(1),
+BStarTree<T>::BStarTree (int order): ORDER(order < 4 ? 4 : order), id(1),
                                      root(new RootNode<T>(this, nullptr, id))
 {
     ++id;

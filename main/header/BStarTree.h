@@ -22,7 +22,7 @@ public:
     /**
         @brief Constructor of the BStarTree.
         @param order The order of the b-tree. This controls the maximum numbers of keys and
-                children for each node. Minimum is 3.
+                children for each node. Minimum is 4.
     */
     BStarTree (int order);
 
