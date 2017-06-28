@@ -433,8 +433,10 @@ void BStarTree<T>::splitRoot()
     unsigned limitForChild1 = child1->keys().size() + 1;
     unsigned limitForChild2 = child2->keys().size() + 1;
 
-    if(!root->isLeaf()) child1->putChildren(root->children(), limitForChild1);
-    if(!root->isLeaf()) child2->putChildren(root->children(), limitForChild2);
+    if(!root->isLeaf()){
+        child1->putChildren(root->children(), limitForChild1);
+        child2->putChildren(root->children(), limitForChild2);
+    }
 
     root->children().push_back(child1);
     root->children().push_back(child2);
@@ -490,9 +492,11 @@ void BStarTree<T>::splitLeft(Node<T>* node)
     std::list<Node<T>*> auxListChildren(std::move(leftSibling->children()));
     auxListChildren.merge(node->children(), compareKeyNodes<T>);
 
-    if(!auxListChildren.empty()) leftSibling->putChildren(auxListChildren, limitOne+1);
-    if(!auxListChildren.empty()) newNode->putChildren(auxListChildren, limitTwo+1);
-    if(!auxListChildren.empty()) node->putChildren(auxListChildren, limitThree+1);
+    if(!auxListChildren.empty()){
+        leftSibling->putChildren(auxListChildren, limitOne+1);
+        newNode->putChildren(auxListChildren, limitTwo+1);
+        node->putChildren(auxListChildren, limitThree+1);
+    }
 
     ancestor->addChild(newNode);
 }
@@ -544,9 +548,11 @@ void BStarTree<T>::splitRight(Node<T>* node)
     std::list<Node<T>*> auxListChildren(std::move(node->children()));
     auxListChildren.merge(rightSibling->children(), compareKeyNodes<T>);
 
-    if(!auxListChildren.empty()) node->putChildren(auxListChildren, limitOne+1);
-    if(!auxListChildren.empty()) newNode->putChildren(auxListChildren, limitTwo+1);
-    if(!auxListChildren.empty()) rightSibling->putChildren(auxListChildren, limitThree+1);
+    if(!auxListChildren.empty()){
+        node->putChildren(auxListChildren, limitOne+1);
+        newNode->putChildren(auxListChildren, limitTwo+1);
+        rightSibling->putChildren(auxListChildren, limitThree+1);
+    }
 
     ancestor->addChild(newNode);
 }
