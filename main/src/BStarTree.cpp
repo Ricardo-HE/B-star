@@ -852,30 +852,7 @@ unsigned BStarTree<T>::eraseFromFile(std::string filepath /*=files/erase.txt*/)
 }
 
 template <typename T>
-void BStarTree<T>::generateFile(int size /*= 10*/, std::string filepath /*= files/add.txt*/) const
-{
-    std::ofstream oFile;
-
-    oFile.open(filepath);
-    if(!oFile.is_open()){
-        std::cerr << "Couldn't read file with path " << filepath << std::endl;
-    }
-
-    //creates a vector to put numbers from 0 to 9999, shuffles them and take size number of
-    //elements from it so there are no repetitions.
-    std::vector<T> vec(10000); //creates a vector with capacity 10000
-    for(unsigned i = 0; i < 10000; ++i) vec[i] = i; //puts numbers from 0 to 9999 in vec
-    std::random_shuffle(vec.begin(), vec.end()); //shuffles the vector
-
-    for(int i = 0; i < size; ++i){
-        oFile << vec[i]  << '\n'; //put the first size random elements in the file
-    }
-
-    oFile.close();
-}
-
-template <typename T>
-void BStarTree<T>::testAddAndDelete(int elementsToLeave /*= 0*/, std::string filepath /*= files/add.txt*/)
+void BStarTree<T>::addDelete(int elementsToLeave /*= 0*/, std::string filepath /*= files/add.txt*/)
 {
     std::ifstream iaddFile;
     T number;

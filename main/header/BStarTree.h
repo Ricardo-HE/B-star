@@ -78,22 +78,13 @@ public:
     void print() const;
 
     /**
-     * @brief Generates a file with as many numbers as the received size, 10 by default and
-     *          with the received filepath, by default "files/add.txt". The numbers are
-     *          randomly generated from 0 to 9999.
-     * @param size How many numbers to generate in the file.
-     * @param filepath What is the filepath of the file to put the numbers in.
-     */
-    void generateFile(int size = 10, std::string filepath = "files/add.txt") const;
-
-    /**
      * @brief Reads all the elements from the received file, adds them to the tree and then
-     *          erases until leaving elementsToLeave in the tree.
+     *          randomly erases until leaving elementsToLeave in the tree.
      * @param elementsToLeave Number of elements to leave in the tree. By default 0.
      * @param filepath Filepath of the file where the elements to read are at. By default is
      *          "files/add.txt"
      */
-    void testAddAndDelete(int elementsToLeave = 0, std::string filepath = "files/add.txt");
+    void addDelete(int elementsToLeave = 0, std::string filepath = "files/add.txt");
 
     //methods to get the constants for the nodes
     /**
