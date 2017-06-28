@@ -1,11 +1,7 @@
 #ifndef ROOTNODE_H
 #define ROOTNODE_H
 
-#include <iostream>
-#include <algorithm>
-
-#include "Node.h"
-#include "NormalNode.h"
+#include "Node.h"   //Node
 
 template <typename T>
 class RootNode : public Node<T>                      // Node is the base class, all public and
@@ -20,10 +16,11 @@ public:
     * @ancestor This tells the node what node is its ancestor.
     */
     RootNode(BStarTree<T> const * tree, Node<T>* ancestor = nullptr, unsigned id = 0);
+
     /**
      * @brief Default destructor of the class.
      */
-    ~RootNode(){}
+    virtual ~RootNode(){}
 
     //Definitions of Node class pure virtual functions
     /**

@@ -1,10 +1,10 @@
 #ifndef NODE_H
 #define NODE_H
 
-#include <iostream>
-#include <list>
+#include <iostream>     //std::cout, std::endl
+#include <list>         //std::list
 
-#include "BStarTree.h"
+#include "BStarTree.h"  //BStarTree
 
 template <typename T>
 class NormalNode;

@@ -651,8 +651,10 @@ void BStarTree<T>::merge(Node<T>* node)
     auxListChildren.merge(node->children(), compareKeyNodes<T>);
     auxListChildren.merge(rightSibling->children(), compareKeyNodes<T>);
 
-    if(!auxListChildren.empty()) leftSibling->putChildren(auxListChildren, limitOne+1);
-    if(!auxListChildren.empty()) node->putChildren(auxListChildren, limitTwo+1);
+    if(!auxListChildren.empty()){
+        leftSibling->putChildren(auxListChildren, limitOne+1);
+        node->putChildren(auxListChildren, limitTwo+1);
+    }
 
     delete rightSibling; //erases the memory used by this node
     ancestor->children().remove(rightSibling);

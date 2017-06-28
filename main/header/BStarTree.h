@@ -1,14 +1,13 @@
 #ifndef BSTARTREE_H
 #define BSTARTREE_H
 
-#include <iostream>
-#include <fstream>
-#include <cmath>
-#include <algorithm>
-#include <list>
-#include <queue>
-#include <array>
-#include <vector>
+#include <iostream>     //std::cout, std::endl
+#include <fstream>      //std::ofstream, std::ifstream
+#include <cmath>        //floor, ceil
+#include <algorithm>    //std::random_shuffle
+#include <list>         //std::list
+#include <queue>        //std::queue
+#include <vector>       //std::vector
 
 template <typename T>
 class Node;
@@ -130,6 +129,12 @@ public:
      * @return The number of keys for the third children when splitting.
      */
     unsigned getKeysSplitChild3() const { return keysSplitChild3; }
+
+    //don't let users use the following
+    BStarTree(BStarTree const &) = delete; //copy constructor
+    BStarTree(BStarTree&&) = delete; //move constructor
+    BStarTree& operator=(BStarTree const &) = delete; //copy assignment operator
+    BStarTree& operator=(BStarTree&&) = delete; //move assignment operator
 
 private:
     const int ORDER; //order of the tree
@@ -351,9 +356,9 @@ private:
     auto getIterator(Node<T>* node) const;
 };
 
-#include "Node.h"
-#include "NormalNode.h"
-#include "RootNode.h"
+#include "Node.h"       //Node
+#include "NormalNode.h" //NormalNode
+#include "RootNode.h"   //RootNode
 #include "../src/BStarTree.cpp"
 
 #endif //BSTARTREE_H

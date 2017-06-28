@@ -1,14 +1,10 @@
 #ifndef NORMALNODE_H
 #define NORMALNODE_H
 
-#include <cmath>
-#include <iostream>
-#include <algorithm>
-
-#include "Node.h"
+#include "Node.h"   //Node
 
 template <typename T>
-class NormalNode : public Node<T>                      // Node is the base class, all public and
+class NormalNode : public Node<T>                   // Node is the base class, all public and
 {                                                   // protected members of Node can be accessed
 public:                                             // by NormalNode
 
@@ -27,7 +23,7 @@ public:                                             // by NormalNode
     /**
      * @brief Default destructor.
      */
-    ~NormalNode(){}
+    virtual ~NormalNode(){}
 
     void setAncestor(Node<T>* newAncestor) { this->ancestor = newAncestor; }
 

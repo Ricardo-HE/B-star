@@ -1,5 +1,6 @@
-#include <iostream>
-#include <cmath>
+#include <iostream>     //std::cout, std::cin, std::endl, std::ofstream
+#include <array>        //std::array
+#include <algorithm>    //std::random_shuffle
 
 #include "../header/BStarTree.h"
 
@@ -21,7 +22,6 @@ int main()
     std::cin >> order;
 
     BStarTree<int> tree(order);
-    srand(time(NULL));
 
     int cap;
     std::cout << "Number of elements to add: ";
