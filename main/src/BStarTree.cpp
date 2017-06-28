@@ -17,17 +17,32 @@ BStarTree<T>::BStarTree (int order): ORDER(order < 4 ? 4 : order), id(1),
 template <typename T>
 BStarTree<T>::~BStarTree()
 {
+    empty();
+    delete root;
+}
+
+template <typename T>
+void BStarTree<T>::empty()
+{
     Node<T>* currentNode;
     std::queue<Node<T>*> nodeQueue;
 
-    nodeQueue.push(root);
+    for(Node<T>* child : root->children()) nodeQueue.push(child);
 
     while (!nodeQueue.empty()) {
         currentNode = nodeQueue.front();
         nodeQueue.pop();
 
+        for(Node<T>* child : currentNode->children()){
+            nodeQueue.push(child);
+        }
+
         delete currentNode;
     }
+
+    root->keys().clear();
+    root->children().clear();
+    id = 2; //the next node id will be two
 }
 
 template <typename T>
@@ -689,7 +704,7 @@ void BStarTree<T>::print() const
 {
     Node<T>* currentNode;
     std::queue<Node<T>*> nodeQueue;
-    unsigned height = 1;
+    unsigned height = 0;
     Node<T>* lastNode = root;
     Node<T>* prevNode = root;
 

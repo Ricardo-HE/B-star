@@ -31,6 +31,11 @@ public:
     ~BStarTree();
 
     /**
+     * @brief Method to empty the tree of all its elements and resets the ids.
+     */
+    void empty();
+
+    /**
         @brief Method to add an element to the tree.
         @pre The element must not be already in the tree.
         @param val The element to add to the tree.
