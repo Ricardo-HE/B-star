@@ -8,10 +8,13 @@ class NormalNode : public Node<T>                   // Node is the base class, a
 {                                                   // protected members of Node can be accessed
 public:                                             // by NormalNode
 
-    /**
-     * @brief Constructor without paramters.
-     */
-    NormalNode(){}
+    //use the default of the following
+    NormalNode() = default; //constructor
+    NormalNode(NormalNode const &) = default; //copy constructor
+    NormalNode(NormalNode&&) = default; //move constructor
+    NormalNode& operator=(NormalNode const &) = default; //copy assignment operator
+    NormalNode& operator=(NormalNode&&) = default; //move assignment operator
+    virtual ~NormalNode() = default;
 
     /**
     * @brief Constructor with parameters to initialize the variables from the class.
@@ -19,11 +22,6 @@ public:                                             // by NormalNode
     * @ancestor This tells the node what node is its ancestor.
     */
     NormalNode(BStarTree<T> const * tree, Node<T>* ancestor = nullptr, unsigned id = 0);
-
-    /**
-     * @brief Default destructor.
-     */
-    virtual ~NormalNode(){}
 
     void setAncestor(Node<T>* newAncestor) { this->ancestor = newAncestor; }
 

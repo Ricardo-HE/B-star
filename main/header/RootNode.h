@@ -10,17 +10,20 @@ class RootNode : public Node<T>                      // Node is the base class, 
 {
 public:
 
+    //use the default of the following
+    RootNode() = default; //constructor
+    RootNode(RootNode const &) = default; //copy constructor
+    RootNode(RootNode&&) = default; //move constructor
+    RootNode& operator=(RootNode const &) = default; //copy assignment operator
+    RootNode& operator=(RootNode&&) = default; //move assignment operator
+    virtual ~RootNode() = default;
+
     /**
     * @brief Constructor with parameters to initialize the variables from the class.
     * @param tree Constant pointer to the tree where the node is going to be.
     * @ancestor This tells the node what node is its ancestor.
     */
     RootNode(BStarTree<T> const * tree, Node<T>* ancestor = nullptr, unsigned id = 0);
-
-    /**
-     * @brief Default destructor of the class.
-     */
-    virtual ~RootNode(){}
 
     //Definitions of Node class pure virtual functions
     /**

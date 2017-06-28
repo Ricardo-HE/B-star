@@ -13,10 +13,13 @@ template <typename T>
 class Node
 {
 public:
-    /**
-     * @brief Constructor without paramters.
-     */
-    Node(){}
+    //use the default of the following
+    Node() = default; //constructor
+    Node(Node const &) = default; //copy constructor
+    Node(Node&&) = default; //move constructor
+    Node& operator=(Node const &) = default; //copy assignment operator
+    Node& operator=(Node&&) = default; //move assignment operator
+    virtual ~Node() = default;
 
     /**
     * @brief Constructor with parameters to initialize the variables from the class.
@@ -24,12 +27,6 @@ public:
     * @ancestor This tells the node what node is its ancestor.
     */
     Node(BStarTree<T> const * tree, Node<T>* ancestor = nullptr):tree(tree), ancestor(ancestor) {}
-
-    /**
-    *@brief Virtual destructor
-    */
-    virtual ~Node() {}
-
 
     //******************Pure virtual function***********************************
     /**
