@@ -18,8 +18,7 @@ void menu()
         std::cout << "[3] Generate numbers in a file" << std::endl;
         std::cout << "[4] Add and erase from the tree" << std::endl;
         std::cout << "[5] Look for an element in the tree" << std::endl;
-        std::cout << "[6] Print the tree" << std::endl;
-        std::cout << "[7] Empty the tree of all its elements" << std::endl;
+        std::cout << "[6] Print the tree by level" << std::endl;
         std::cout << "[0] Exit" << std::endl;
         std::cin >> option;
         std::cout << "--------------------" << std::endl << std::endl;
@@ -42,9 +41,6 @@ void menu()
                 break;
             case '6':
                 tree.print();
-                break;
-            case '7':
-                tree.empty();
                 break;
         }
     }while(option != '0');
@@ -82,6 +78,8 @@ void addMenu(BStarTree<T>& tree)
                 unsigned numberAditions = 0;
                 std::cout << "Capture and add element from a file" << std::endl;
                 std::cout << "Write the filepath of the file (it must not have spaces): " << std::endl;
+                std::cout << "There is already a file with filepath files/add.txt if you have ";
+                std::cout << "numbers in it." << std::endl;
                 std::cin >> filepath;
                 numberAditions = tree.addFromFile(filepath);
                 std::cout << "Added " << numberAditions << " elements from " << filepath << std::endl;
@@ -98,14 +96,22 @@ void eraseMenu(BStarTree<T>& tree)
     do{
         std::cout << std::endl << "--------------------" << std::endl;
         std::cout << "Select one of the following: " << std::endl;
-        std::cout << "[1] To capture and erase an element from the keyboard" << std::endl;
-        std::cout << "[2] To capture and erase elements from a file" << std::endl;
+        std::cout << "[1] To erase all the elements from the tree" << std::endl;
+        std::cout << "[2] To capture and erase an element from the keyboard" << std::endl;
+        std::cout << "[3] To capture and erase elements from a file" << std::endl;
         std::cout << "[0] To return to the main menu" << std::endl;
         std::cin >> option;
         std::cout << "--------------------" << std::endl << std::endl;
 
         switch(option){
+
             case '1':
+                std::cout << "Erasing elements..." << std::endl;
+                tree.empty();
+                std::cout << "Erased all elements from the tree" << std::endl;
+                break;
+
+            case '2':
                 T element;
                 std::cout << "Capture and erase element from keyboard" << std::endl;
                 std::cout << "Write the element you want to erase to the tree: ";
@@ -117,15 +123,18 @@ void eraseMenu(BStarTree<T>& tree)
                 }
                 break;
 
-            case '2':
+            case '3':
                 std::string filepath;
                 unsigned numberDelitions = 0;
                 std::cout << "Capture and erase element from a file" << std::endl;
                 std::cout << "Write the filepath of the file (it must not have spaces): " << std::endl;
+                std::cout << "There is already a file with filepath files/erase.txt if you have ";
+                std::cout << "numbers in it." << std::endl;
                 std::cin >> filepath;
                 numberDelitions = tree.eraseFromFile(filepath);
                 std::cout << "Erased " << numberDelitions << " elements from " << filepath << std::endl;
                 break;
+
         }
     }while(option != '0');
 }
@@ -153,6 +162,8 @@ void generateFileMenu()
                 std::cin >> number;
                 if(number < 0) number = 0;
                 std::cout << "Write the filepath of the file (it must not have spaces): " << std::endl;
+                std::cout << "There is already a file with filepath files/add.txt You can ";
+                std::cout << "choose to use it if you want." << std::endl;
                 std::cin >> filepath;
                 generateFile(number, filepath);
                 break;
@@ -183,6 +194,8 @@ void addEraseMenu(BStarTree<T>& tree)
                 std::cout << "Number of elements to leave: ";
                 std::cin >> elementsToLeave;
                 std::cout << "Write the filepath of the file (it must not have spaces): " << std::endl;
+                std::cout << "There is already a file with filepath files/add.txt if you have ";
+                std::cout << "numbers in it." << std::endl;
                 std::cin >> filepath;
                 tree.addDelete(elementsToLeave, filepath);
                 break;
