@@ -9,10 +9,10 @@
 #include <queue>        //std::queue
 #include <vector>       //std::vector
 
-template <typename T>
+
 class Node;
 
-template <typename T>
+
 class BStarTree
 {
 
@@ -41,7 +41,7 @@ public:
         @param val The element to add to the tree.
         @return True if the element didn't exist previously in the tree and got added, false otherwise.
     */
-    bool add(T val);
+    bool add(double val);
 
     /**
         @brief Method to erase an element to the tree.
@@ -49,14 +49,14 @@ public:
         @param val The element to erasen from the tree.
         @return True if the element existed previously in the tree and got erased, false otherwise.
     */
-    bool erase(T val);
+    bool erase(double val);
 
     /**
         @param Method to find an element in the tree.
         @param val Element to look for in the tree.
         @return True if the element exists in the tree, false otherwise.
     */
-    bool find(T val) const;
+    bool find(double val) const;
 
     /**
         @brief Method to add elements listed in a file.
@@ -144,7 +144,7 @@ public:
 private:
     const int ORDER; //order of the tree
     unsigned id; //id of the next element of the tree.
-    Node<T>* root;
+    Node* root;
     unsigned maxKeysNormalNode;
     unsigned maxKeysRootNode;
     unsigned minKeysNormalNode;
@@ -158,13 +158,13 @@ private:
      * @brief When a node is overloaded, this handles it by either rotating or splitting.
      * @param overloadedNode Node which is overloaded.
      */
-    void handleOverload(Node<T>* overloadedNode);
+    void handleOverload(Node* overloadedNode);
 
     /**
      * @brief When a node is underloaded, this handles it by either rotating or splitting.
      * @param underloadedNode Node which is overloaded.
      */
-    void handleUnderload(Node<T>* underloadedNode);
+    void handleUnderload(Node* underloadedNode);
 
     /**
      * @brief Finds wether or not a key exists in the tree, telling you if it does and with
@@ -174,21 +174,21 @@ private:
      *          the key existed in the tree.
      * @return True if the key was found, false if not.
      */
-    bool find(T val, Node<T>*& node) const;
+    bool find(double val, Node*& node) const;
 
     /**
      * @brief Gets the node where a new key should be inserted in.
      * @param val New key to insert in the tree.
      * @return Node where the new key should go or null if the key is already in the tree.
      */
-    Node<T>* findPlaceAdd(T val) const;
+    Node* findPlaceAdd(double val) const;
 
     /**
      * @brief Gets the node where there is the key to delete.
      * @param val Key to delete from the tree.
      * @return Node where the key is or null if the key is not already in the tree.
      */
-    Node<T>* findPlaceErase(T val) const;
+    Node* findPlaceErase(double val) const;
 
     /**
      * @brief Checks if the siblings have free space and if they do, this rotates until no
@@ -197,7 +197,7 @@ private:
      * @return True if some sibling had space and this rotated, leaving no node overloaded,
      *          false otherwise.
      */
-    bool searchSpace(Node<T>* node);
+    bool searchSpace(Node* node);
 
     /**
      * @brief Checks if the siblings don't have the minimum and if they do, this rotates until
@@ -206,49 +206,49 @@ private:
      * @return True if some sibling had space and this rotated, leaving no node underloaded,
      *          false otherwise.
      */
-    bool searchSpaceErase(Node<T>* node);
+    bool searchSpaceErase(Node* node);
 
     /**
      * @brief Checks if the node is the leftmost children of its ancestor.
      * @param node Node to check if its the leftmost.
      * @return True if the node is the leftmost children, false otherwise.
      */
-    bool isLeftmost(Node<T>* node) const;
+    bool isLeftmost(Node* node) const;
 
     /**
      * @brief Checks if the node is the rightmost children of its ancestor.
      * @param node Node to check if its the rightmost.
      * @return True if the node is the rightmost children, false otherwise.
      */
-    bool isRightmost(Node<T>* node) const;
+    bool isRightmost(Node* node) const;
 
     /**
      * @brief Checks if all the left siblings of the node are full.
      * @param node Node whose left siblings are going to be checked.
      * @return True if all the left siblings are full, false otherwise.
      */
-    bool areLeftSiblingsFull(Node<T>* node) const;
+    bool areLeftSiblingsFull(Node* node) const;
 
     /**
      * @brief Checks if all the right siblings of the node are full.
      * @param node Node whose right siblings are going to be checked.
      * @return True if all the right siblings are full, false otherwise.
      */
-    bool areRightSiblingsFull(Node<T>* node) const;
+    bool areRightSiblingsFull(Node* node) const;
 
     /**
      * @brief Checks if all the left siblings of the node are at their minimum.
      * @param node Node whose left siblings are going to be checked.
      * @return True if all the left siblings are at their minimum, false otherwise.
      */
-    bool areLeftSiblingsAtMinimum(Node<T>* node) const;
+    bool areLeftSiblingsAtMinimum(Node* node) const;
 
     /**
      * @brief Checks if all the right siblings of the node are at their minimum.
      * @param node Node whose right siblings are going to be checked.
      * @return True if all the right siblings are at their minimum, false otherwise.
      */
-    bool areRightSiblingsAtMinimum(Node<T>* node) const;
+    bool areRightSiblingsAtMinimum(Node* node) const;
 
     /**
      * @brief Method to rotate a single time to the left, taking a key from the node
@@ -258,7 +258,7 @@ private:
      * @param node Node to take a key from and rotate it to the left.
      * @return An iterator pointing to the received node.
      */
-    auto rotateLeft(Node<T>* node);
+    auto rotateLeft(Node* node);
 
     /**
      * @brief Method to rotate a single time to the right, taking a key from the node
@@ -268,35 +268,35 @@ private:
      * @param node Node to take a key from and rotate it to the right.
      * @return An iterator pointing to the received node.
      */
-    auto rotateRight(Node<T>* node);
+    auto rotateRight(Node* node);
 
     /**
      * @brief Method to rotate to the left as long as a node is overloaded.
      * @pre The received node must not be the leftmost child of the acestor.
      * @param node Node to start the rotations to the left. This one should be overloaded.
      */
-    void rotateLeftAdd(Node<T>* node);
+    void rotateLeftAdd(Node* node);
 
     /**
      * @brief Method to rotate to the right as long as a node is overloaded.
      * @pre The received node must not be the rightmost child of the acestor.
      * @param node Node to start the rotations to the right. This one should be overloaded.
      */
-    void rotateRightAdd(Node<T>* node);
+    void rotateRightAdd(Node* node);
 
     /**
      * @brief Method to rotate to the right as long as a node is underloaded.
      * @pre The received node must not be the leftmost child of the acestor.
      * @param node Node to start the rotations to the right. This one should be underloaded.
      */
-    void rotateLeftErase(Node<T>* node);
+    void rotateLeftErase(Node* node);
 
     /**
      * @brief Method to rotate to the left as long as a node is underloaded.
      * @pre The received node must not be the rightmost child of the acestor.
      * @param node Node to start the rotations to the left. This one should be overloaded.
      */
-    void rotateRightErase(Node<T>* node);
+    void rotateRightErase(Node* node);
 
     /**
      * @brief Splits the root node, giving it a new children.
@@ -307,20 +307,20 @@ private:
      * @brief Splits the node with its left node to divide their keys and make a third node.
      * @param node Node to split along with its left sibling.
      */
-    void splitLeft(Node<T>* node);
+    void splitLeft(Node* node);
 
     /**
      * @brief Splits the node with its right node to divide their keys and make a third node.
      * @param node Node to split along with its right sibling.
      */
-    void splitRight(Node<T>* node);
+    void splitRight(Node* node);
 
     /**
      * @brief Method to merge a root node children with its siblings, or when there are only
      *          two, with its single sibling.
      * @param nodeChildren Children of the root to merge.
      */
-    void mergeRootChildren(Node<T>* nodeChildren);
+    void mergeRootChildren(Node* nodeChildren);
 
     /**
      * @brief Merges a node along with its left and right siblings. In the case of the leftmost,
@@ -328,7 +328,7 @@ private:
      *          siblings.
      * @param node Node to merge with its two siblings.
      */
-    void merge(Node<T>* node);
+    void merge(Node* node);
 
     /**
      * @brief Gets the node which has the greater key of the left children of the key.
@@ -337,33 +337,28 @@ private:
      * @return The node with the greates key of the left siblings of the key or the received
      *          node.
      */
-    Node<T>* getGreaterMinor(Node<T>* node, T val) const;
+    Node* getGreaterMinor(Node* node, double val) const;
 
     /**
      * @brief Gets the left sibling of the node.
      * @param node Node whose left sibling you want to get.
      * @return The left sibling of the node.
      */
-    Node<T>* getLeftSibling(Node<T>* node) const;
+    Node* getLeftSibling(Node* node) const;
 
     /**
      * @brief Gets the right sibling of the node.
      * @param node Node whose right sibling you want to get.
      * @return The right sibling of the node.
      */
-    Node<T>* getRightSibling(Node<T>* node) const;
+    Node* getRightSibling(Node* node) const;
 
     /**
      * @brief Gets the an iterator of the node. This won't work for the root node.
      * @param node Get an iterator pointing to this node.
      * @return Iterator pointing to the received node or undefined in the case of the root.
      */
-    auto getIterator(Node<T>* node) const;
+    auto getIterator(Node* node) const;
 };
-
-#include "Node.h"       //Node
-#include "NormalNode.h" //NormalNode
-#include "RootNode.h"   //RootNode
-#include "../src/BStarTree.cpp"
 
 #endif //BSTARTREE_H

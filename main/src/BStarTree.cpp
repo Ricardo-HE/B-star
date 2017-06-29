@@ -1,7 +1,10 @@
+#include "../header/Node.h"       //Node
+#include "../header/NormalNode.h" //NormalNode
+#include "../header/RootNode.h"   //RootNode
+#include "../header/BStarTree.h"
 
-template <typename T>
-BStarTree<T>::BStarTree (int order): ORDER(order < 4 ? 4 : order), id(1),
-                                     root(new RootNode<T>(this, nullptr, id))
+BStarTree::BStarTree (int order): ORDER(order < 4 ? 4 : order), id(1),
+                                     root(new RootNode(this, nullptr, id))
 {
     ++id;
 
@@ -14,26 +17,26 @@ BStarTree<T>::BStarTree (int order): ORDER(order < 4 ? 4 : order), id(1),
     keysSplitChild3 = floor( 2.0*ORDER/3.0 );
 }
 
-template <typename T>
-BStarTree<T>::~BStarTree()
+
+BStarTree::~BStarTree()
 {
     empty();
     delete root;
 }
 
-template <typename T>
-void BStarTree<T>::empty()
-{
-    Node<T>* currentNode;
-    std::queue<Node<T>*> nodeQueue;
 
-    for(Node<T>* child : root->children()) nodeQueue.push(child);
+void BStarTree::empty()
+{
+    Node* currentNode;
+    std::queue<Node*> nodeQueue;
+
+    for(Node* child : root->children()) nodeQueue.push(child);
 
     while (!nodeQueue.empty()) {
         currentNode = nodeQueue.front();
         nodeQueue.pop();
 
-        for(Node<T>* child : currentNode->children()){
+        for(Node* child : currentNode->children()){
             nodeQueue.push(child);
         }
 
@@ -45,13 +48,13 @@ void BStarTree<T>::empty()
     id = 2; //the next node id will be two
 }
 
-template <typename T>
-bool BStarTree<T>::add(T val)
+
+bool BStarTree::add(double val)
 {
     bool added;
-    Node<T>* nodeAdd = nullptr;    //Node where it will add the number if the number
+    Node* nodeAdd = nullptr;    //Node where it will add the number if the number
                                 //doesn't exist in the tree.
-    Node<T>* currentNode;
+    Node* currentNode;
 
     nodeAdd = findPlaceAdd(val);
     if (nodeAdd != nullptr) {
@@ -70,8 +73,8 @@ bool BStarTree<T>::add(T val)
     return added;
 }
 
-template <typename T>
-void BStarTree<T>::handleOverload(Node<T>* overloadedNode)
+
+void BStarTree::handleOverload(Node* overloadedNode)
 {
     if (!overloadedNode->isRoot()) {
         if (!this->searchSpace(overloadedNode)) {
@@ -87,13 +90,13 @@ void BStarTree<T>::handleOverload(Node<T>* overloadedNode)
     }
 }
 
-template <typename T>
-bool BStarTree<T>::erase(T val)
+
+bool BStarTree::erase(double val)
 {
     bool erased;
-    Node<T>* nodeErase = nullptr;  //Node where it will add the number if the number
+    Node* nodeErase = nullptr;  //Node where it will add the number if the number
                                 //doesn't exist in the tree.
-    Node<T>* currentNode;
+    Node* currentNode;
 
     nodeErase = findPlaceErase(val);
     if (nodeErase == nullptr) {
@@ -108,7 +111,7 @@ bool BStarTree<T>::erase(T val)
     }
     nodeErase->keys().remove(val);
 
-    Node<T>* ancestor;
+    Node* ancestor;
     while (currentNode != root && currentNode->isUnderloaded()) {
         ancestor = currentNode->getAncestor();
         handleUnderload(currentNode);
@@ -120,8 +123,8 @@ bool BStarTree<T>::erase(T val)
     return erased;
 }
 
-template <typename T>
-void BStarTree<T>::handleUnderload(Node<T>* underloadedNode)
+
+void BStarTree::handleUnderload(Node* underloadedNode)
 {
     if(!searchSpaceErase(underloadedNode)){
         if (!underloadedNode->getAncestor()->isRoot()) {
@@ -133,17 +136,17 @@ void BStarTree<T>::handleUnderload(Node<T>* underloadedNode)
     }
 }
 
-template <typename T>
-bool BStarTree<T>::find(T val) const
+
+bool BStarTree::find(double val) const
 {
     return findPlaceAdd(val) == nullptr ? true : false;
 }
 
-template <typename T>
-bool BStarTree<T>::find(T val, Node<T>*& node) const
+
+bool BStarTree::find(double val, Node*& node) const
 {
     node = root;
-    typename std::list<Node<T>*>::iterator child;
+    std::list<Node*>::iterator child;
 
     while(!node->isLeaf()){
         child = node->children().begin();
@@ -166,10 +169,10 @@ bool BStarTree<T>::find(T val, Node<T>*& node) const
 
 //this search can be optimized because when searching a node there is no need to keep
 //searching for a value once the values of the node are bigger than the searched value.
-template <typename T>
-Node<T>* BStarTree<T>::findPlaceAdd(T val) const
+
+Node* BStarTree::findPlaceAdd(double val) const
 {
-    Node<T>* node = nullptr;
+    Node* node = nullptr;
     if(!find(val, node)){
         return node;
     }
@@ -178,10 +181,10 @@ Node<T>* BStarTree<T>::findPlaceAdd(T val) const
 }
 
 // can probably be more optimized
-template <typename T>
-Node<T>* BStarTree<T>::findPlaceErase(T val) const
+
+Node* BStarTree::findPlaceErase(double val) const
 {
-    Node<T>* node = nullptr;
+    Node* node = nullptr;
     if(find(val, node)){
         return node;
     }
@@ -189,8 +192,8 @@ Node<T>* BStarTree<T>::findPlaceErase(T val) const
     return nullptr;
 }
 
-template <typename T>
-bool BStarTree<T>::searchSpace(Node<T>* node)
+
+bool BStarTree::searchSpace(Node* node)
 {
     bool foundSpace;
     foundSpace = true;
@@ -208,8 +211,8 @@ bool BStarTree<T>::searchSpace(Node<T>* node)
     return foundSpace;
 }
 
-template <typename T>
-bool BStarTree<T>::searchSpaceErase(Node<T>* node)
+
+bool BStarTree::searchSpaceErase(Node* node)
 {
     bool foundSpace;
     foundSpace = true;
@@ -228,10 +231,10 @@ bool BStarTree<T>::searchSpaceErase(Node<T>* node)
 
 }
 
-template <typename T>
-bool BStarTree<T>::areLeftSiblingsFull(Node<T>* node) const
+
+bool BStarTree::areLeftSiblingsFull(Node* node) const
 {
-    Node<T>* ancestor = node->getAncestor();
+    Node* ancestor = node->getAncestor();
     bool nodeIsFull = true;
 
     //this checks all the nodes before the received one to see if at least one of them is
@@ -246,10 +249,10 @@ bool BStarTree<T>::areLeftSiblingsFull(Node<T>* node) const
     return nodeIsFull;
 }
 
-template <typename T>
-bool BStarTree<T>::areRightSiblingsFull(Node<T>* node) const
+
+bool BStarTree::areRightSiblingsFull(Node* node) const
 {
-    Node<T>* ancestor = node->getAncestor();
+    Node* ancestor = node->getAncestor();
     bool nodeIsFull = true;
 
     for(auto rightSibling = ancestor->children().rbegin(); *rightSibling != node; ++rightSibling){
@@ -262,10 +265,10 @@ bool BStarTree<T>::areRightSiblingsFull(Node<T>* node) const
     return nodeIsFull;
 }
 
-template <typename T>
-bool BStarTree<T>::areLeftSiblingsAtMinimum(Node<T>* node) const
+
+bool BStarTree::areLeftSiblingsAtMinimum(Node* node) const
 {
-    Node<T>* ancestor = node->getAncestor();
+    Node* ancestor = node->getAncestor();
     bool nodeIsAtMinimum = true;
 
     //this checks all the nodes before the received one to see if at least one of them is
@@ -280,10 +283,10 @@ bool BStarTree<T>::areLeftSiblingsAtMinimum(Node<T>* node) const
    return nodeIsAtMinimum;
 }
 
-template <typename T>
-bool BStarTree<T>::areRightSiblingsAtMinimum(Node<T>* node) const
+
+bool BStarTree::areRightSiblingsAtMinimum(Node* node) const
 {
-    Node<T>* ancestor = node->getAncestor();
+    Node* ancestor = node->getAncestor();
     bool nodeIsAtMinimum = true;
 
     for(auto rightSibling = ancestor->children().rbegin(); *rightSibling != node; ++rightSibling){
@@ -296,20 +299,20 @@ bool BStarTree<T>::areRightSiblingsAtMinimum(Node<T>* node) const
     return nodeIsAtMinimum;
 }
 
-template <typename T>
-bool BStarTree<T>::isLeftmost(Node<T>* node) const
+
+bool BStarTree::isLeftmost(Node* node) const
 {
     return *node->getAncestor()->children().begin() ==  node ? true : false;
 }
 
-template <typename T>
-bool BStarTree<T>::isRightmost(Node<T>* node) const
+
+bool BStarTree::isRightmost(Node* node) const
 {
     return *node->getAncestor()->children().rbegin() ==  node ? true : false;
 }
 
-template <typename T>
-auto BStarTree<T>::getIterator(Node<T>* node) const
+
+auto BStarTree::getIterator(Node* node) const
 {
     auto it = node->getAncestor()->children().begin();
     while(*it != node){
@@ -319,23 +322,23 @@ auto BStarTree<T>::getIterator(Node<T>* node) const
     return it;
 }
 
-template <typename T>
-Node<T>* BStarTree<T>::getLeftSibling(Node<T>* node) const
+
+Node* BStarTree::getLeftSibling(Node* node) const
 {
     return *prev(getIterator(node));
 }
 
-template <typename T>
-Node<T>* BStarTree<T>::getRightSibling(Node<T>* node) const
+
+Node* BStarTree::getRightSibling(Node* node) const
 {
     return *next(getIterator(node));
 }
 
-template <typename T>
-auto BStarTree<T>::rotateLeft(Node<T>* node)
+
+auto BStarTree::rotateLeft(Node* node)
 {
-    Node<T> *ancestor, *leftSibling, *child;
-    typename std::list<Node<T>*>::iterator nodeIt;
+    Node *ancestor, *leftSibling, *child;
+    std::list<Node*>::iterator nodeIt;
 
     ancestor = node->getAncestor();
     auto ancestorKey = ancestor->keys().begin();
@@ -351,18 +354,18 @@ auto BStarTree<T>::rotateLeft(Node<T>* node)
     //child rotation
     if(!node->children().empty()){
         child = node->popFrontChild();
-        dynamic_cast<NormalNode<T>*>(child)->setAncestor(leftSibling);
+        dynamic_cast<NormalNode*>(child)->setAncestor(leftSibling);
         leftSibling->children().push_back(child);
     }
 
     return nodeIt;
 }
 
-template <typename T>
-auto BStarTree<T>::rotateRight(Node<T>* node)
+
+auto BStarTree::rotateRight(Node* node)
 {
-    Node<T> *ancestor, *rightSibling, *child;
-    typename std::list<Node<T>*>::iterator nodeIt;
+    Node *ancestor, *rightSibling, *child;
+    std::list<Node*>::iterator nodeIt;
 
     ancestor = node->getAncestor();
     auto ancestorKey = ancestor->keys().begin();
@@ -378,17 +381,17 @@ auto BStarTree<T>::rotateRight(Node<T>* node)
     //child rotation
     if(!node->children().empty()){
         child = node->popBackChild();
-        dynamic_cast<NormalNode<T>*>(child)->setAncestor(rightSibling);
+        dynamic_cast<NormalNode*>(child)->setAncestor(rightSibling);
         rightSibling->children().push_front(child);
     }
 
     return nodeIt;
 }
 
-template <typename T>
-void BStarTree<T>::rotateLeftAdd(Node<T>* node)
+
+void BStarTree::rotateLeftAdd(Node* node)
 {
-    Node<T> *currentNode;
+    Node *currentNode;
 
     currentNode = node;
     do {
@@ -396,18 +399,18 @@ void BStarTree<T>::rotateLeftAdd(Node<T>* node)
     } while(!isLeftmost(currentNode) && currentNode->isOverloaded());
 }
 
-template <typename T>
-void BStarTree<T>::rotateRightAdd(Node<T>* node)
+
+void BStarTree::rotateRightAdd(Node* node)
 {
-    Node<T> *currentNode;
+    Node *currentNode;
     currentNode = node;
     do {
         currentNode = *next(rotateRight(currentNode));
     } while(!isRightmost(currentNode) && currentNode->isOverloaded());
 }
 
-template <typename T>
-void BStarTree<T>::rotateLeftErase(Node<T>* node)
+
+void BStarTree::rotateLeftErase(Node* node)
 {
     auto currentNode = getIterator(node);
 
@@ -417,8 +420,8 @@ void BStarTree<T>::rotateLeftErase(Node<T>* node)
     } while(!isLeftmost(*currentNode) && (*currentNode)->isUnderloaded());
 }
 
-template <typename T>
-void BStarTree<T>::rotateRightErase(Node<T>* node)
+
+void BStarTree::rotateRightErase(Node* node)
 {
     auto currentNode = getIterator(node);
 
@@ -428,18 +431,18 @@ void BStarTree<T>::rotateRightErase(Node<T>* node)
     } while(!isRightmost(*currentNode) && (*currentNode)->isUnderloaded());
 }
 
-template <typename T>
-void BStarTree<T>::splitRoot()
-{
-    Node<T> *child1, *child2;
 
-    child1 = new NormalNode<T>(this, root, id++);
-    child2 = new NormalNode<T>(this, root, id++);
+void BStarTree::splitRoot()
+{
+    Node *child1, *child2;
+
+    child1 = new NormalNode(this, root, id++);
+    child2 = new NormalNode(this, root, id++);
 
     unsigned limitRoot = maxKeysRootNode /2;
     child1->putKeys(root->keys(), limitRoot);
 
-    T auxKey = root->popFrontKey();
+    double auxKey = root->popFrontKey();
 
     child2->putKeys(root->keys(), limitRoot);
 
@@ -457,12 +460,12 @@ void BStarTree<T>::splitRoot()
     root->children().push_back(child2);
 }
 
-template <typename T>
-void BStarTree<T>::splitLeft(Node<T>* node)
+
+void BStarTree::splitLeft(Node* node)
 {
-    Node<T> *leftSibling, *ancestor;
-    T ancestorKeyCopy;
-    typename std::list<Node<T>*>::iterator nodeIt;
+    Node *leftSibling, *ancestor;
+    double ancestorKeyCopy;
+    std::list<Node*>::iterator nodeIt;
 
     ancestor = node->getAncestor();
     auto ancestorKey = ancestor->keys().begin();
@@ -476,13 +479,13 @@ void BStarTree<T>::splitLeft(Node<T>* node)
     leftSibling = *prev(nodeIt);
 
     //moves all the keys of the left sibling to an auxiliar list, leaving the sibling empty
-    std::list<T> auxList(std::move(leftSibling->keys()));
+    std::list<double> auxList(std::move(leftSibling->keys()));
     auxList.push_back(ancestorKeyCopy);
     //moves all the keys of the node to the auxiliar list, leaving the node empty
     auxList.merge(node->keys());
 
-    Node<T> *newNode; //new node that goes in the middle of the current node and its left sibling
-    newNode = new NormalNode<T>(this, ancestor, id++);
+    Node *newNode; //new node that goes in the middle of the current node and its left sibling
+    newNode = new NormalNode(this, ancestor, id++);
 
     auto putKeyAncestor = [&ancestor, &auxList](){
         ancestor->addItem( auxList.front() );
@@ -504,8 +507,8 @@ void BStarTree<T>::splitLeft(Node<T>* node)
     node->putKeys(auxList, limitThree);
 
     //accommodate children in the nodes.
-    std::list<Node<T>*> auxListChildren(std::move(leftSibling->children()));
-    auxListChildren.merge(node->children(), compareKeyNodes<T>);
+    std::list<Node*> auxListChildren(std::move(leftSibling->children()));
+    auxListChildren.merge(node->children(), compareKeyNodes);
 
     if(!auxListChildren.empty()){
         leftSibling->putChildren(auxListChildren, limitOne+1);
@@ -516,12 +519,12 @@ void BStarTree<T>::splitLeft(Node<T>* node)
     ancestor->addChild(newNode);
 }
 
-template <typename T>
-void BStarTree<T>::splitRight(Node<T>* node)
+
+void BStarTree::splitRight(Node* node)
 {
-    Node<T> *rightSibling, *ancestor;
-    T ancestorKeyCopy;
-    typename std::list<Node<T>*>::iterator nodeIt;
+    Node *rightSibling, *ancestor;
+    double ancestorKeyCopy;
+    std::list<Node*>::iterator nodeIt;
 
     ancestor = node->getAncestor();
     auto ancestorKey = ancestor->keys().begin();
@@ -535,13 +538,13 @@ void BStarTree<T>::splitRight(Node<T>* node)
     rightSibling = *next(nodeIt);
 
     //moves all the keys of the node to the auxiliar list, leaving the node empty
-    std::list<T> auxList(std::move(node->keys()));
+    std::list<double> auxList(std::move(node->keys()));
     auxList.push_back(ancestorKeyCopy);
     //moves all the keys of the right sibling to an auxiliar list, leaving the sibling empty
     auxList.merge(rightSibling->keys());
 
-    Node<T> *newNode; //new node that goes in the middle of the current node and its right sibling
-    newNode = new NormalNode<T>(this, ancestor, id++);
+    Node *newNode; //new node that goes in the middle of the current node and its right sibling
+    newNode = new NormalNode(this, ancestor, id++);
 
     auto putKeyAncestor = [&ancestor, &auxList](){
         ancestor->addItem( auxList.front() );
@@ -560,8 +563,8 @@ void BStarTree<T>::splitRight(Node<T>* node)
     rightSibling->putKeys(auxList, limitThree);
 
     //accommodate children in the nodes.
-    std::list<Node<T>*> auxListChildren(std::move(node->children()));
-    auxListChildren.merge(rightSibling->children(), compareKeyNodes<T>);
+    std::list<Node*> auxListChildren(std::move(node->children()));
+    auxListChildren.merge(rightSibling->children(), compareKeyNodes);
 
     if(!auxListChildren.empty()){
         node->putChildren(auxListChildren, limitOne+1);
@@ -572,8 +575,8 @@ void BStarTree<T>::splitRight(Node<T>* node)
     ancestor->addChild(newNode);
 }
 
-template <typename T>
-void BStarTree<T>::mergeRootChildren(Node<T>* rootChildren)
+
+void BStarTree::mergeRootChildren(Node* rootChildren)
 {
     if(root->keys().size() > 1){
         merge(rootChildren);
@@ -589,8 +592,8 @@ void BStarTree<T>::mergeRootChildren(Node<T>* rootChildren)
         auto deleteRootChildren = [this](){
             root->keys().merge( root->children().front()->keys() );
 
-            for(Node<T>* node : root->children().front()->children()){
-                dynamic_cast<NormalNode<T>*>(node)->setAncestor(root);
+            for(Node* node : root->children().front()->children()){
+                dynamic_cast<NormalNode*>(node)->setAncestor(root);
             }
             //adds all the children of the first children of the root to the end of the list of
             //children of the root.
@@ -598,7 +601,7 @@ void BStarTree<T>::mergeRootChildren(Node<T>* rootChildren)
                             root->children().front()->children().begin(),
                             root->children().front()->children().end());
 
-            for(Node<T> *child: (*root->children().begin())->children()){
+            for(Node *child: (*root->children().begin())->children()){
                 root->children().push_front(child);
             }
             delete root->popFrontChild();
@@ -609,11 +612,11 @@ void BStarTree<T>::mergeRootChildren(Node<T>* rootChildren)
     }
 }
 
-template <typename T>
-void BStarTree<T>::merge(Node<T>* node)
+
+void BStarTree::merge(Node* node)
 {
-    Node<T> *ancestor, *leftSibling, *rightSibling;
-    typename std::list<Node<T>*>::iterator nodeIt;
+    Node *ancestor, *leftSibling, *rightSibling;
+    std::list<Node*>::iterator nodeIt;
 
     ancestor = node->getAncestor();
     auto ancestorKey = ancestor->keys().begin();
@@ -640,7 +643,7 @@ void BStarTree<T>::merge(Node<T>* node)
         rightSibling = *next(nodeIt);
     }
 
-    std::list<T> auxList( std::move(leftSibling->keys()) );
+    std::list<double> auxList( std::move(leftSibling->keys()) );
     auxList.push_back(*prev(ancestorKey));
     ancestor->keys().erase(prev(ancestorKey));
 
@@ -662,9 +665,9 @@ void BStarTree<T>::merge(Node<T>* node)
     node->putKeys(auxList, limitTwo);
 
     //move all childrens before removing the right sibling
-    std::list<Node<T>*> auxListChildren( std::move(leftSibling->children()) );
-    auxListChildren.merge(node->children(), compareKeyNodes<T>);
-    auxListChildren.merge(rightSibling->children(), compareKeyNodes<T>);
+    std::list<Node*> auxListChildren( std::move(leftSibling->children()) );
+    auxListChildren.merge(node->children(), compareKeyNodes);
+    auxListChildren.merge(rightSibling->children(), compareKeyNodes);
 
     if(!auxListChildren.empty()){
         leftSibling->putChildren(auxListChildren, limitOne+1);
@@ -675,14 +678,14 @@ void BStarTree<T>::merge(Node<T>* node)
     ancestor->children().remove(rightSibling);
 }
 
-template <typename T>
-Node<T>* BStarTree<T>::getGreaterMinor(Node<T> *node, T val) const
+
+Node* BStarTree::getGreaterMinor(Node *node, double val) const
 {
     if (node->isLeaf()) {
         return nullptr;
     }
 
-    typename std::list<T>::iterator ancestorKey;
+    std::list<double>::iterator ancestorKey;
 
     auto childIt = node->children().begin();
 
@@ -690,7 +693,7 @@ Node<T>* BStarTree<T>::getGreaterMinor(Node<T> *node, T val) const
         ++childIt;
     }
 
-    Node<T>* greaterMinor;
+    Node* greaterMinor;
     greaterMinor = *childIt;
     while (!greaterMinor->isLeaf()) {
         greaterMinor = greaterMinor->children().back();
@@ -699,14 +702,14 @@ Node<T>* BStarTree<T>::getGreaterMinor(Node<T> *node, T val) const
     return greaterMinor;
 }
 
-template <typename T>
-void BStarTree<T>::print() const
+
+void BStarTree::print() const
 {
-    Node<T>* currentNode;
-    std::queue<Node<T>*> nodeQueue;
+    Node* currentNode;
+    std::queue<Node*> nodeQueue;
     unsigned height = 0;
-    Node<T>* lastNode = root;
-    Node<T>* prevNode = root;
+    Node* lastNode = root;
+    Node* prevNode = root;
 
     auto printSeparator = [](unsigned const & height){
         std::cout << "----------------------------";
@@ -719,7 +722,7 @@ void BStarTree<T>::print() const
     std::cout << "------------------------" << std::endl;
     this->root->print();
 
-    for(Node<T>* child : this->root->children()) nodeQueue.push(child);
+    for(Node* child : this->root->children()) nodeQueue.push(child);
 
     while (!nodeQueue.empty()) {
         currentNode = nodeQueue.front();
@@ -735,18 +738,18 @@ void BStarTree<T>::print() const
 
         currentNode->print();
 
-        for(Node<T>* child : currentNode->children()){
+        for(Node* child : currentNode->children()){
             nodeQueue.push(child);
         }
         prevNode = currentNode;
     }
 }
 
-template <typename T>
-unsigned BStarTree<T>::addFromFile(std::string filepath /*= files/add.txt*/)
+
+unsigned BStarTree::addFromFile(std::string filepath /*= files/add.txt*/)
 {
     std::ifstream file;
-    T number;
+    double number;
     unsigned addedCount = 0;
 
     file.open(filepath);
@@ -767,11 +770,11 @@ unsigned BStarTree<T>::addFromFile(std::string filepath /*= files/add.txt*/)
     return addedCount;
 }
 
-template <typename T>
-unsigned BStarTree<T>::eraseFromFile(std::string filepath /*=files/erase.txt*/)
+
+unsigned BStarTree::eraseFromFile(std::string filepath /*=files/erase.txt*/)
 {
     std::ifstream file;
-    T number;
+    double number;
     unsigned erasedCount = 0;
 
     file.open(filepath);
@@ -792,16 +795,16 @@ unsigned BStarTree<T>::eraseFromFile(std::string filepath /*=files/erase.txt*/)
     return erasedCount;
 }
 
-template <typename T>
-void BStarTree<T>::addDelete(int elementsToLeave /*= 0*/, std::string filepath /*= files/add.txt*/)
+
+void BStarTree::addDelete(int elementsToLeave /*= 0*/, std::string filepath /*= files/add.txt*/)
 {
     std::ifstream iaddFile;
-    T number;
+    double number;
 
     int j = 0;
     int k = 0;
 
-    std::vector<T> elements;
+    std::vector<double> elements;
     iaddFile.open(filepath);
     if(!iaddFile.is_open()){
         std::cerr << "Couldn't read file with path: " << filepath << std::endl;

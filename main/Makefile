@@ -1,6 +1,5 @@
 IDIR = header
 CXX = g++
-#WINCXX32 = /usr/bin/i686-w64-mingw32-g++
 WINCXX32 = i686-w64-mingw32-g++
 WINCXX64 = x86_64-w64-mingw32-g++
 
@@ -20,38 +19,36 @@ WINDIR64 = bin/Windows64
 
 GENMOD = BStarTree NormalNode RootNode Node menu
 
-TEMPLATE_SRC = $(patsubst %, $(SDIR)/%.cpp, $(GENMOD))
-
 _DEPS = 
 DEPS = $(patsubst %, $(IDIR)/%.h, $(_DEPS) $(GENMOD))
 
 _OBJ = main
-OBJ = $(patsubst %, $(ODIR)/%.o, $(_OBJ) )   #$(GENMOD))
+OBJ = $(patsubst %, $(ODIR)/%.o, $(_OBJ) $(GENMOD))
 
-DEBUGOBJ = $(patsubst %, $(DEBUGODIR)/%.o, $(_OBJ) )   #$(GENMOD))
+DEBUGOBJ = $(patsubst %, $(DEBUGODIR)/%.o, $(_OBJ) $(GENMOD))
 
-WINOBJ32 = $(patsubst %, $(WINODIR32)/%.o, $(_OBJ) )   #$(GENMOD))
-WINOBJ64 = $(patsubst %, $(WINODIR64)/%.o, $(_OBJ) )   #$(GENMOD))
+WINOBJ32 = $(patsubst %, $(WINODIR32)/%.o, $(_OBJ) $(GENMOD))
+WINOBJ64 = $(patsubst %, $(WINODIR64)/%.o, $(_OBJ) $(GENMOD))
 
-$(ODIR)/%.o: $(SDIR)/%.cpp $(DEPS) $(TEMPLATE_SRC)
+$(ODIR)/%.o: $(SDIR)/%.cpp $(DEPS) 
 	$(CXX) -c -o $@ $< $(CXXFLAGS)
 
 $(OUTDIR)/BStarTree: $(OBJ)
 	$(CXX) -o $@ $^ $(CXXFLAGS)
 
-$(DEBUGODIR)/%.o: $(SDIR)/%.cpp $(DEPS) $(TEMPLATE_SRC)
+$(DEBUGODIR)/%.o: $(SDIR)/%.cpp $(DEPS) 
 	$(CXX) -c -o $@ $< $(DEBUGFLAGS)
 
 $(DEBUGDIR)/BStarTreeDebug: $(DEBUGOBJ)
 	$(CXX) -o $@ $^ $(DEBUGFLAGS) 
 
-$(WINODIR32)/%.o: $(SDIR)/%.cpp $(DEPS) $(TEMPLATE_SRC)
+$(WINODIR32)/%.o: $(SDIR)/%.cpp $(DEPS) 
 	$(WINCXX32) -c -o $@ $< $(CXXFLAGS)
 
 $(WINDIR32)/BStarTree.exe: $(WINOBJ32)
 	$(WINCXX32) -o $@ $^ $(CXXFLAGS)
 
-$(WINODIR64)/%.o: $(SDIR)/%.cpp $(DEPS) $(TEMPLATE_SRC)
+$(WINODIR64)/%.o: $(SDIR)/%.cpp $(DEPS) 
 	$(WINCXX64) -c -o $@ $< $(CXXFLAGS)
 
 $(WINDIR64)/BStarTree.exe: $(WINOBJ64)

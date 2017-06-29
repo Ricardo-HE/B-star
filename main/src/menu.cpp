@@ -1,5 +1,5 @@
+#include "../header/menu.h"
 
-template <typename T>
 void menu()
 {
     std::cout << "This programs lets you add, delete find and print in a B* star tree" << std::endl;
@@ -7,7 +7,7 @@ void menu()
     std::cout << "Order of the tree: ";
     std::cin >> order;
 
-    BStarTree<T> tree(order);
+    BStarTree tree(order);
 
     char option;
     do{
@@ -25,19 +25,19 @@ void menu()
 
         switch(option){
             case '1':
-                addMenu<T>(tree);
+                addMenu(tree);
                 break;
             case '2':
-                eraseMenu<T>(tree);
+                eraseMenu(tree);
                 break;
             case '3':
                 generateFileMenu();
                 break;
             case '4':
-                addEraseMenu<T>(tree);
+                addEraseMenu(tree);
                 break;
             case '5':
-                findMenu<T>(tree);
+                findMenu(tree);
                 break;
             case '6':
                 tree.print();
@@ -46,8 +46,8 @@ void menu()
     }while(option != '0');
 }
 
-template <typename T>
-void addMenu(BStarTree<T>& tree)
+
+void addMenu(BStarTree& tree)
 {
     char option;
     std::cout << "You selected to add an element to the tree" << std::endl;
@@ -62,7 +62,7 @@ void addMenu(BStarTree<T>& tree)
 
         switch(option){
             case '1':
-                T element;
+                double element;
                 std::cout << "Capture and add element from keyboard" << std::endl;
                 std::cout << "Write the element you want to add to the tree: ";
                 std::cin >> element;
@@ -88,8 +88,8 @@ void addMenu(BStarTree<T>& tree)
     }while(option != '0');
 }
 
-template <typename T>
-void eraseMenu(BStarTree<T>& tree)
+
+void eraseMenu(BStarTree& tree)
 {
     char option;
     std::cout << "You selected to erase an element from the tree" << std::endl;
@@ -112,7 +112,7 @@ void eraseMenu(BStarTree<T>& tree)
                 break;
 
             case '2':
-                T element;
+                double element;
                 std::cout << "Capture and erase element from keyboard" << std::endl;
                 std::cout << "Write the element you want to erase to the tree: ";
                 std::cin >> element;
@@ -171,8 +171,8 @@ void generateFileMenu()
     }while(option != '0');
 }
 
-template <typename T>
-void addEraseMenu(BStarTree<T>& tree)
+
+void addEraseMenu(BStarTree& tree)
 {
     char option;
     std::cout << "You selected to add and erase. What this does is, it adds elements from a file";
@@ -203,8 +203,8 @@ void addEraseMenu(BStarTree<T>& tree)
     }while(option != '0');
 }
 
-template <typename T>
-void findMenu(BStarTree<T>& tree)
+
+void findMenu(BStarTree& tree)
 {
     char option;
     std::cout << "You selected to find an element in the tree" << std::endl;
@@ -218,7 +218,7 @@ void findMenu(BStarTree<T>& tree)
 
         switch(option){
             case '1':
-                T element;
+                double element;
                 std::cout << "Capture and find element from keyboard" << std::endl;
                 std::cout << "Write the element you want to find in the tree: ";
                 std::cin >> element;

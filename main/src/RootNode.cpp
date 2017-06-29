@@ -1,30 +1,30 @@
+#include "../header/RootNode.h"
 
-template <typename T>
-RootNode<T>::RootNode(BStarTree<T> const * tree, Node<T>* ancestor, unsigned id): Node<T>(tree, ancestor)
+RootNode::RootNode(BStarTree const * tree, Node* ancestor, unsigned id): Node(tree, ancestor)
 {
     this->id = id;
 }
 
-template <typename T>
-bool RootNode<T>::isOverloaded() const
+
+bool RootNode::isOverloaded() const
 {
     return this->keysList.size() > this->tree->maxKeysRNode() ? true : false;
 }
 
-template <typename T>
-bool RootNode<T>::isFull() const
+
+bool RootNode::isFull() const
 {
     return this->keysList.size() == this->tree->maxKeysRNode() ? true : false;
 }
 
-template <typename T>
-bool RootNode<T>::isUnderloaded() const
+
+bool RootNode::isUnderloaded() const
 {
     return this->keysList.size() < this->tree->minKeysRNode() ? true : false;
 }
 
-template <typename T>
-bool RootNode<T>::isAtMinimum() const
+
+bool RootNode::isAtMinimum() const
 {
     return this->keysList.size() == this->tree->minKeysRNode() ? true : false;
 }

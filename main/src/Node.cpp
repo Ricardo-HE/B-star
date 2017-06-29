@@ -1,6 +1,7 @@
+#include "../header/Node.h"
+#include "../header/NormalNode.h"
 
-template <typename T>
-void Node<T>::addItem(T elem)
+void Node::addItem(double elem)
 {
     auto key = keys().begin();
     while(*key < elem && key != keys().end()){
@@ -10,8 +11,8 @@ void Node<T>::addItem(T elem)
     keys().insert(key, elem);
 }
 
-template <typename T>
-void Node<T>::addChild(Node<T>* child)
+
+void Node::addChild(Node* child)
 {
     auto childIt = children().begin();
     while(compareKeyNodes(*childIt, child) && childIt != children().end()){
@@ -22,45 +23,45 @@ void Node<T>::addChild(Node<T>* child)
 }
 
 
-template <typename T>
-T Node<T>::popFrontKey()
+
+double Node::popFrontKey()
 {
-    T copy = keys().front();
+    double copy = keys().front();
     keys().pop_front();
 
     return copy;
 }
 
 
-template <typename T>
-T Node<T>::popBackKey()
+
+double Node::popBackKey()
 {
-    T copy = keys().back();
+    double copy = keys().back();
     keys().pop_back();
 
     return copy;
 }
 
-template <typename T>
-Node<T>* Node<T>::popFrontChild()
+
+Node* Node::popFrontChild()
 {
-    Node<T>* copy = children().front();
+    Node* copy = children().front();
     children().pop_front();
 
     return copy;
 }
 
-template <typename T>
-Node<T>* Node<T>::popBackChild()
+
+Node* Node::popBackChild()
 {
-    Node<T>* copy = children().back();
+    Node* copy = children().back();
     children().pop_back();
 
     return copy;
 }
 
-template <typename T>
-void Node<T>::putKeys(std::list<T>& takeList, int limit)
+
+void Node::putKeys(std::list<double>& takeList, int limit)
 {
     for(int i = 0; i < limit; i++){
         keys().push_back( takeList.front() );
@@ -68,18 +69,18 @@ void Node<T>::putKeys(std::list<T>& takeList, int limit)
     }
 }
 
-template <typename T>
-void Node<T>::putChildren(std::list<Node<T>*>& takeList, int limit)
+
+void Node::putChildren(std::list<Node*>& takeList, int limit)
 {
     for (int i = 0; i < limit; i++) {
         children().push_back( takeList.front() );
         takeList.pop_front();
-        dynamic_cast<NormalNode<T>*>(children().back())->setAncestor(this);
+        dynamic_cast<NormalNode*>(children().back())->setAncestor(this);
     }
 }
 
-template <typename T>
-void Node<T>::print() const
+
+void Node::print() const
 {
 
     std::cout << "Id: " << this->id << " | ";
@@ -94,8 +95,8 @@ void Node<T>::print() const
     std::cout <<  "\n\n";
 }
 
-template <typename T>
-bool compareKeyNodes(Node<T>* nodeA, Node<T>* nodeB)
+
+bool compareKeyNodes(Node* nodeA, Node* nodeB)
 {
     return *nodeA->keys().begin() < *nodeB->keys().begin();
 }

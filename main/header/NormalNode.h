@@ -3,8 +3,8 @@
 
 #include "Node.h"   //Node
 
-template <typename T>
-class NormalNode : public Node<T>                   // Node is the base class, all public and
+
+class NormalNode : public Node                   // Node is the base class, all public and
 {                                                   // protected members of Node can be accessed
 public:                                             // by NormalNode
 
@@ -21,9 +21,9 @@ public:                                             // by NormalNode
     * @param tree Constant pointer to the tree where the node is going to be.
     * @ancestor This tells the node what node is its ancestor.
     */
-    NormalNode(BStarTree<T> const * tree, Node<T>* ancestor = nullptr, unsigned id = 0);
+    NormalNode(BStarTree const * tree, Node* ancestor = nullptr, unsigned id = 0);
 
-    void setAncestor(Node<T>* newAncestor) { this->ancestor = newAncestor; }
+    void setAncestor(Node* newAncestor) { this->ancestor = newAncestor; }
 
     //Definitions of Node class pure virtual functions
     /**
@@ -56,7 +56,5 @@ public:                                             // by NormalNode
     */
     bool isRoot() const { return false; }
 };
-
-#include "../src/NormalNode.cpp"
 
 #endif

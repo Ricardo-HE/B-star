@@ -26,36 +26,34 @@ void generateFileMenu();
  *          empty a tree. You can also generate a file to then add the numbers generated
  *          to the tree.
  */
-template <typename T> void menu();
+ void menu();
 
 /**
  * @brief Menu to add elements to the tree. You can add elements by using your keyboard
  *          or by providing a file to take the elements from.
  * @param tree Target tree to put the elements in.
  */
-template <typename T> void addMenu(BStarTree<T>& tree);
+ void addMenu(BStarTree& tree);
 
 /**
  * @brief Menu to erase an element from the tree. You can erase elements by using your keyboard
  *          or by providing a file to take the elements from.
  * @param tree Target tree to take the elements from.
  */
-template <typename T> void eraseMenu(BStarTree<T>& tree);
+ void eraseMenu(BStarTree& tree);
 
 /**
  * @brief Menu to add elements from a file and then randomly erase elements from the tree until
  *          leaving a certain number of elements.
  * @param tree Target tree to take the elements from.
  */
-template <typename T> void addEraseMenu(BStarTree<T>& tree);
+ void addEraseMenu(BStarTree& tree);
 
 /**
  * @brief Menu to find an element in the tree. The element to add must be take from your
  *          keyboard.
  * @param tree Target tree to put the elements in.
  */
-template <typename T> void findMenu(BStarTree<T>& tree);
-
-#include "../src/menu.cpp"
+ void findMenu(BStarTree& tree);
 
 #endif //MENU_H

@@ -1,30 +1,30 @@
+#include "../header/NormalNode.h"
 
-template <typename T>
-NormalNode<T>::NormalNode(BStarTree<T> const * tree, Node<T>* ancestor, unsigned id): Node<T>(tree, ancestor)
+NormalNode::NormalNode(BStarTree const * tree, Node* ancestor, unsigned id): Node(tree, ancestor)
 {
     this->id = id;
 }
 
-template <typename T>
-bool NormalNode<T>::isOverloaded() const
+
+bool NormalNode::isOverloaded() const
 {
     return this->keysList.size() > this->tree->maxKeysNNode() ? true : false;
 }
 
-template <typename T>
-bool NormalNode<T>::isFull() const
+
+bool NormalNode::isFull() const
 {
     return this->keysList.size() == this->tree->maxKeysNNode() ? true : false;
 }
 
-template <typename T>
-bool NormalNode<T>::isUnderloaded() const
+
+bool NormalNode::isUnderloaded() const
 {
     return this->keysList.size() < this->tree->minKeysNNode() ? true : false;
 }
 
-template <typename T>
-bool NormalNode<T>::isAtMinimum() const
+
+bool NormalNode::isAtMinimum() const
 {
     return this->keysList.size() == this->tree->minKeysNNode() ? true : false;
 }

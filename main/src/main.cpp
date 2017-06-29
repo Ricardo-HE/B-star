@@ -4,7 +4,7 @@
 
 int main()
 {
-    menu<double>();
+    menu();
 
 
     std::cout << "Pause" << std::endl;
