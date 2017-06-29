@@ -94,7 +94,7 @@ template <typename T>
 void eraseMenu(BStarTree<T>& tree)
 {
     char option;
-        std::cout << "You selected to erase an element from the tree" << std::endl;
+    std::cout << "You selected to erase an element from the tree" << std::endl;
     do{
         std::cout << std::endl << "--------------------" << std::endl;
         std::cout << "Select one of the following: " << std::endl;
@@ -149,7 +149,7 @@ void generateFileMenu()
                 int number;
                 std::string filepath;
                 std::cout << "Generate a file" << std::endl;
-                std::cout << "How many numbers you want to generate? " << std::endl;
+                std::cout << "How many numbers you want to generate? ";
                 std::cin >> number;
                 if(number < 0) number = 0;
                 std::cout << "Write the filepath of the file (it must not have spaces): " << std::endl;
@@ -180,10 +180,10 @@ void addEraseMenu(BStarTree<T>& tree)
                 std::string filepath;
                 int elementsToLeave = 0;
                 std::cout << "Add and erase elements from file" << std::endl;
-                std::cout << "Write the filepath of the file (it must not have spaces): " << std::endl;
-                std::cin >> filepath;
                 std::cout << "Number of elements to leave: ";
                 std::cin >> elementsToLeave;
+                std::cout << "Write the filepath of the file (it must not have spaces): " << std::endl;
+                std::cin >> filepath;
                 tree.addDelete(elementsToLeave, filepath);
                 break;
         }

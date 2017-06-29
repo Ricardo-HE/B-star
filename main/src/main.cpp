@@ -6,6 +6,7 @@ int main()
 {
     menu<double>();
 
+
     std::cout << "Pause" << std::endl;
     std::cin.ignore();
 

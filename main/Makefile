@@ -1,5 +1,9 @@
 IDIR = header
 CXX = g++
+#WINCXX32 = /usr/bin/i686-w64-mingw32-g++
+WINCXX32 = i686-w64-mingw32-g++
+WINCXX64 = x86_64-w64-mingw32-g++
+
 CXXFLAGS = -std=c++14 -O2 -Wall -I$(IDIR)
 DEBUGFLAGS = -std=c++14 -g -Wall -I$(IDIR)
 
@@ -8,6 +12,11 @@ SDIR = src
 OUTDIR = bin
 DEBUGODIR = obj/Debug
 DEBUGDIR = bin/Debug
+WINODIR32 = obj/Windows32
+WINDIR32 = bin/Windows32
+
+WINODIR64 = obj/Windows64
+WINDIR64 = bin/Windows64
 
 GENMOD = BStarTree NormalNode RootNode Node menu
 
@@ -21,6 +30,9 @@ OBJ = $(patsubst %, $(ODIR)/%.o, $(_OBJ) )   #$(GENMOD))
 
 DEBUGOBJ = $(patsubst %, $(DEBUGODIR)/%.o, $(_OBJ) )   #$(GENMOD))
 
+WINOBJ32 = $(patsubst %, $(WINODIR32)/%.o, $(_OBJ) )   #$(GENMOD))
+WINOBJ64 = $(patsubst %, $(WINODIR64)/%.o, $(_OBJ) )   #$(GENMOD))
+
 $(ODIR)/%.o: $(SDIR)/%.cpp $(DEPS) $(TEMPLATE_SRC)
 	$(CXX) -c -o $@ $< $(CXXFLAGS)
 
@@ -32,6 +44,18 @@ $(DEBUGODIR)/%.o: $(SDIR)/%.cpp $(DEPS) $(TEMPLATE_SRC)
 
 $(DEBUGDIR)/BStarTreeDebug: $(DEBUGOBJ)
 	$(CXX) -o $@ $^ $(DEBUGFLAGS) 
+
+$(WINODIR32)/%.o: $(SDIR)/%.cpp $(DEPS) $(TEMPLATE_SRC)
+	$(WINCXX32) -c -o $@ $< $(CXXFLAGS)
+
+$(WINDIR32)/BStarTree.exe: $(WINOBJ32)
+	$(WINCXX32) -o $@ $^ $(CXXFLAGS)
+
+$(WINODIR64)/%.o: $(SDIR)/%.cpp $(DEPS) $(TEMPLATE_SRC)
+	$(WINCXX64) -c -o $@ $< $(CXXFLAGS)
+
+$(WINDIR64)/BStarTree.exe: $(WINOBJ64)
+	$(WINCXX64) -o $@ $^ $(CXXFLAGS)
 
 .PHONY: clean
 
